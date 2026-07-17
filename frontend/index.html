@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuitarApp - Aprende Guitarra</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🎸 GuitarApp</h1>
+    <nav>
+      <a href="pages/login.html">Iniciar sesión</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Lecciones</h2>
+    <div id="lista-lecciones">Cargando lecciones...</div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script>
+    async function cargarLecciones() {
+      const contenedor = document.getElementById("lista-lecciones");
+      try {
+        const lecciones = await obtenerLecciones();
+        contenedor.innerHTML = lecciones.map(leccion => `
+          <div class="tarjeta-leccion">
+            <h3>Lección ${leccion.numero}: ${leccion.titulo}</h3>
+            <p>${leccion.descripcion ?? ""}</p>
+            <p><strong>Nivel:</strong> ${leccion.nivel} | <strong>Duración:</strong> ${leccion.duracion ?? "N/A"}</p>
+          </div>
+        `).join("");
+      } catch (err) {
+        contenedor.innerHTML = "<p>Error al cargar lecciones. ¿Está corriendo el backend?</p>";
+        console.error(err);
+      }
+    }
+
+    cargarLecciones();
+  </script>
+
+</body>
+</html>
