@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GuitarApp - Aprende Guitarra</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
   <header>
     <h1>🎸 GuitarApp</h1>
-    <nav>
+    <nav id="nav-sesion">
       <a href="pages/login.html">Iniciar sesión</a>
     </nav>
   </header>
@@ -20,10 +21,30 @@
     <div id="lista-lecciones">Cargando lecciones...</div>
   </main>
 
+  <script src="js/supabaseClient.js"></script>
   <script src="js/api.js"></script>
   <script>
+    async function mostrarEstadoSesion() {
+      const nav = document.getElementById("nav-sesion");
+      const { data } = await supabaseClient.auth.getSession();
+      if (data.session) {
+        nav.innerHTML = `
+          <span>👤 ${data.session.user.email}</span>
+          <a href="#" id="btn-logout">Cerrar sesión</a>
+        `;
+        document.getElementById("btn-logout").addEventListener("click", async (e) => {
+          e.preventDefault();
+          await cerrarSesion();
+          window.location.reload();
+        });
+      }
+    }
+
     async function cargarLecciones() {
       const contenedor = document.getElementById("lista-lecciones");
+      const { data: sesion } = await supabaseClient.auth.getSession();
+      const hayUsuario = !!sesion.session;
+
       try {
         const lecciones = await obtenerLecciones();
         contenedor.innerHTML = lecciones.map(leccion => `
@@ -31,14 +52,36 @@
             <h3>Lección ${leccion.numero}: ${leccion.titulo}</h3>
             <p>${leccion.descripcion ?? ""}</p>
             <p><strong>Nivel:</strong> ${leccion.nivel} | <strong>Duración:</strong> ${leccion.duracion ?? "N/A"}</p>
+            ${hayUsuario
+              ? `<button class="btn-completar" data-id="${leccion.id}">Marcar como completada</button>
+                 <span class="estado-guardado" data-estado="${leccion.id}"></span>`
+              : `<p><em>Inicia sesión para guardar tu progreso</em></p>`
+            }
           </div>
         `).join("");
+
+        if (hayUsuario) {
+          document.querySelectorAll(".btn-completar").forEach(btn => {
+            btn.addEventListener("click", async () => {
+              const id = parseInt(btn.dataset.id);
+              const estado = document.querySelector(`.estado-guardado[data-estado="${id}"]`);
+              try {
+                await guardarProgreso({ tipo: "leccion", contenido_id: id, porcentaje: 100, completado: true });
+                estado.textContent = "✅ Guardado";
+              } catch (err) {
+                estado.textContent = "❌ " + err.message;
+                console.error(err);
+              }
+            });
+          });
+        }
       } catch (err) {
         contenedor.innerHTML = "<p>Error al cargar lecciones. ¿Está corriendo el backend?</p>";
         console.error(err);
       }
     }
 
+    mostrarEstadoSesion();
     cargarLecciones();
   </script>
 

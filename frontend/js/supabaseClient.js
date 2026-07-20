@@ -9,8 +9,8 @@
 // 2. Copia la "Project URL" y la "anon public key"
 // 3. Reemplaza los valores de abajo
 
-const SUPABASE_URL = "https://TU-PROYECTO.supabase.co";
-const SUPABASE_ANON_KEY = "TU-ANON-KEY-AQUI";
+const SUPABASE_URL = "https://lwqbmvqebnglntlvbedq.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3cWJtdnFlYm5nbG50bHZiZWRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMzc0NDUsImV4cCI6MjA5OTgxMzQ0NX0.ucusRTIM4xOm-xaHSf5WWtSOueEs6e3THlf9F2FAyWA";
 
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

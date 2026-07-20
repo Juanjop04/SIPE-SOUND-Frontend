@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuitarApp - Registro</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Librería oficial de Supabase para el navegador -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <main class="contenedor-login">
+    <h2>Crear cuenta</h2>
+    <form id="form-registro">
+      <input type="text" id="nombre" placeholder="Nombre" required>
+      <input type="email" id="email" placeholder="Correo" required>
+      <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required minlength="6">
+      <button type="submit">Registrarme</button>
+    </form>
+    <p id="mensaje"></p>
+    <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+  </main>
+
+  <script src="../js/supabaseClient.js"></script>
+  <script>
+    document.getElementById("form-registro").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const mensaje = document.getElementById("mensaje");
+
+      try {
+        await registrarUsuario(email, password, nombre);
+        mensaje.style.color = "green";
+        mensaje.textContent = "¡Cuenta creada! Ya puedes iniciar sesión.";
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1500);
+      } catch (err) {
+        mensaje.style.color = "crimson";
+        mensaje.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
+
+</body>
+</html>
