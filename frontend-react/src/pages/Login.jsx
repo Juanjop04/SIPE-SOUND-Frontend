@@ -26,7 +26,7 @@ export default function Login() {
     <div className="min-h-screen bg-ink flex items-center justify-center px-4">
       <div className="w-full max-w-sm bg-surface rounded-xl p-6">
         <div className="flex flex-col items-center mb-5">
-          <img src={logo} alt="GuitarApp" className="w-16 h-16 object-contain mb-2" />
+          <img src={logo} alt="SIPE-SOUND" className="w-16 h-16 object-contain mb-2" />
           <h2 className="font-display font-semibold text-paper text-lg">Iniciar sesion</h2>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">

@@ -21,8 +21,8 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-surface">
       <div className="flex items-center gap-2">
-        <img src={logo} alt="GuitarApp" className="w-9 h-9 object-contain" />
-        <span className="font-display font-semibold text-paper text-lg">GuitarApp</span>
+        <img src={logo} alt="SIPE-SOUND" className="w-9 h-9 object-contain" />
+        <span className="font-display font-semibold text-paper text-lg">SIPE-SOUND</span>
       </div>
       <nav className="flex items-center gap-4 text-sm">
         {usuario ? (
