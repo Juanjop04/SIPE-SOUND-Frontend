@@ -62,7 +62,7 @@ export default function Registro() {
         {error && <p className="text-danger text-sm mt-3">{error}</p>}
         {exito && <p className="text-success text-sm mt-3">Cuenta creada! Redirigiendo...</p>}
         <p className="text-muted text-sm mt-4 text-center">
-          Ya tienes cuenta?{" "}
+          ¿Ya tienes cuenta?{" "}
           <Link to="/login" className="text-primary hover:underline">
             Inicia sesion
           </Link>
