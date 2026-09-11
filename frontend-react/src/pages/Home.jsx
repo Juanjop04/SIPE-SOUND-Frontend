@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
 import Header from "../components/Header.jsx";
 import { Card } from "../components/ui/card.jsx";
@@ -45,9 +46,12 @@ export default function Home() {
         <div className="flex flex-col gap-4">
           {lecciones.map((leccion) => (
             <Card key={leccion.id}>
-              <h3 className="font-medium text-paper text-base mb-1">
-                Leccion {leccion.numero}: {leccion.titulo}
-              </h3>
+              {/* El título ahora es un link a /leccion/:id */}
+              <Link to={`/leccion/${leccion.id}`}>
+                <h3 className="font-medium text-paper text-base mb-1 hover:text-accent transition-colors">
+                  Leccion {leccion.numero}: {leccion.titulo}
+                </h3>
+              </Link>
               <p className="text-muted text-sm mb-2">{leccion.descripcion}</p>
               <p className="font-mono text-xs text-muted/70 mb-3">
                 {leccion.nivel} - {leccion.duracion ?? "N/A"}
