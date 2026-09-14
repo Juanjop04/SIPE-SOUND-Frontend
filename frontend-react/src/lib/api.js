@@ -8,6 +8,12 @@ export async function obtenerLecciones() {
   return res.json();
 }
 
+export async function obtenerLeccion(id) {
+  const res = await fetch(`${API_URL}/lecciones/${id}`);
+  if (!res.ok) throw new Error("Error al obtener la leccion");
+  return res.json();
+}
+
 export async function obtenerAcordes() {
   const res = await fetch(`${API_URL}/acordes`);
   if (!res.ok) throw new Error("Error al obtener acordes");
