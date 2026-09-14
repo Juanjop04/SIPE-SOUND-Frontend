@@ -4,6 +4,7 @@ import Login from "./pages/Login.jsx";
 import Registro from "./pages/Registro.jsx";
 import LeccionDetalle from "./pages/LeccionDetalle.jsx";
 import Acordes from "./pages/Acordes.jsx";
+import Ejercicios from "./pages/Ejercicios.jsx";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Route path="/registro" element={<Registro />} />
       <Route path="/leccion/:id" element={<LeccionDetalle />} />
       <Route path="/acordes" element={<Acordes />} />
+      <Route path="/ejercicios" element={<Ejercicios />} />
     </Routes>
   );
 }
