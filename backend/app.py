@@ -80,7 +80,30 @@ def auth_required(f):
 @app.route("/api/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok", "mensaje": "Backend funcionando"})
+# -------------------------------------------------------
+# Buscar email por nombre de usuario
+# (para login con nombre de usuario en vez de email)
+# -------------------------------------------------------
+@app.route("/api/buscar-usuario", methods=["POST"])
+def buscar_usuario():
+    datos = request.get_json(silent=True)
+    if not datos:
+        return jsonify({"error": "Cuerpo vacío"}), 400
 
+    nombre = datos.get("nombre", "").strip()
+    if not nombre:
+        return jsonify({"error": "El nombre es obligatorio"}), 400
+
+    # Busca en la tabla profiles por nombre
+    resultado = supabase.table("profiles") \
+        .select("email") \
+        .eq("nombre", nombre) \
+        .execute()
+
+    if not resultado.data:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    return jsonify({"email": resultado.data[0]["email"]}), 200
 
 # ---------------------------------------------------------
 # Traer todas las lecciones
