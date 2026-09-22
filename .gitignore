@@ -1,5 +1,5 @@
 # Backend Python
-backend/venv/
+backend/.venv/
 backend/__pycache__/
 backend/.env
 *.pyc
@@ -10,3 +10,5 @@ Thumbs.db
 
 # Editor
 .vscode/
+
+node_modules/
