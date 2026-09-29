@@ -1,0 +1,10 @@
+{
+  "name": "sipesound",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c blue,magenta \"cd backend && uv run python run.py\" \"cd frontend-react && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

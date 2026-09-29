@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header.jsx";
 import { Card } from "../components/ui/card.jsx";
+import ChordDiagram from "../components/ChordDiagram.jsx";
 import { obtenerAcordes } from "../lib/api.js";
 
 const DIFICULTAD_COLOR = {
@@ -34,14 +35,18 @@ export default function Acordes() {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {acordes.map((acorde) => (
             <Card key={acorde.id} className="text-center border-l-0">
-              <p className="font-display font-semibold text-paper text-xl">{acorde.nombre}</p>
-              <p className="font-mono text-xs text-muted mt-1">{acorde.tipo}</p>
+              <p className="font-display font-semibold text-paper text-xl mb-2">{acorde.nombre}</p>
+
+              {acorde.diagram ? (
+                <ChordDiagram {...acorde.diagram} />
+              ) : (
+                <p className="text-muted text-xs py-8">Sin diagrama todavia</p>
+              )}
+
+              <p className="font-mono text-xs text-muted mt-2">{acorde.tipo}</p>
               <p className={`text-xs mt-1 ${DIFICULTAD_COLOR[acorde.dificultad] ?? "text-muted"}`}>
                 {acorde.dificultad}
               </p>
-              {acorde.descripcion && (
-                <p className="text-muted text-xs mt-2">{acorde.descripcion}</p>
-              )}
             </Card>
           ))}
         </div>

@@ -1,6 +1,9 @@
 import { supabase } from "./supabaseClient.js";
 
-const API_URL = "http://localhost:5000/api";
+// Antes esto estaba escrito directo en el codigo (hardcodeado).
+// Ahora viene del .env, para no tener que editar codigo cuando
+// el backend viva en otra direccion (ej. al desplegar el proyecto).
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function obtenerLecciones() {
   const res = await fetch(`${API_URL}/lecciones`);
@@ -26,11 +29,11 @@ export async function obtenerEjercicios() {
   return res.json();
 }
 
-// --- Progreso (requieren sesión activa) ---
+// --- Progreso (requieren sesion activa) ---
 
 async function obtenerToken() {
   const { data } = await supabase.auth.getSession();
-  if (!data.session) throw new Error("No has iniciado sesión");
+  if (!data.session) throw new Error("No has iniciado sesion");
   return data.session.access_token;
 }
 
