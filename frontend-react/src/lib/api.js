@@ -1,8 +1,5 @@
 import { supabase } from "./supabaseClient.js";
 
-// Antes esto estaba escrito directo en el codigo (hardcodeado).
-// Ahora viene del .env, para no tener que editar codigo cuando
-// el backend viva en otra direccion (ej. al desplegar el proyecto).
 const API_URL = import.meta.env.VITE_API_URL;
 
 export async function obtenerLecciones() {
@@ -29,7 +26,19 @@ export async function obtenerEjercicios() {
   return res.json();
 }
 
-// --- Progreso (requieren sesion activa) ---
+export async function obtenerBloques() {
+  const res = await fetch(`${API_URL}/bloques`);
+  if (!res.ok) throw new Error("Error al obtener bloques");
+  return res.json();
+}
+
+export async function obtenerQuiz(bloqueId) {
+  const res = await fetch(`${API_URL}/quiz/${bloqueId}`);
+  if (!res.ok) throw new Error("Error al obtener el quiz");
+  return res.json();
+}
+
+// --- Rutas que requieren sesion activa ---
 
 async function obtenerToken() {
   const { data } = await supabase.auth.getSession();
@@ -58,5 +67,21 @@ export async function guardarProgreso({ tipo, contenido_id, porcentaje = 0, comp
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Error al guardar el progreso");
+  return data;
+}
+
+// respuestas: { [preguntaId]: indiceElegido }
+export async function verificarQuiz(bloqueId, respuestas) {
+  const token = await obtenerToken();
+  const res = await fetch(`${API_URL}/quiz/${bloqueId}/verificar`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ respuestas }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Error al calificar el quiz");
   return data;
 }

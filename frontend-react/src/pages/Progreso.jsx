@@ -4,10 +4,15 @@ import { CheckCircle2, Circle } from "lucide-react";
 import Header from "../components/Header.jsx";
 import { Card } from "../components/ui/card.jsx";
 import { supabase } from "../lib/supabaseClient.js";
-import { obtenerProgreso, obtenerLecciones, obtenerEjercicios } from "../lib/api.js";
+import {
+  obtenerProgreso,
+  obtenerLecciones,
+  obtenerEjercicios,
+  obtenerBloques,
+} from "../lib/api.js";
 
 export default function Progreso() {
-  const [hayUsuario, setHayUsuario] = useState(null); // null = aun no se sabe
+  const [hayUsuario, setHayUsuario] = useState(null);
   const [items, setItems] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -23,18 +28,18 @@ export default function Progreso() {
       }
 
       try {
-        // Traemos las 3 fuentes al mismo tiempo: el progreso guardado,
-        // y los catalogos de lecciones/ejercicios (para saber los titulos)
-        const [progreso, lecciones, ejercicios] = await Promise.all([
+        const [progreso, lecciones, ejercicios, bloques] = await Promise.all([
           obtenerProgreso(),
           obtenerLecciones(),
           obtenerEjercicios(),
+          obtenerBloques(),
         ]);
 
-        // Unimos cada registro de progreso con su titulo real,
-        // buscandolo en el catalogo correspondiente segun el "tipo"
+        // Segun el "tipo" del registro, buscamos su titulo en el catalogo correcto
+        const catalogos = { leccion: lecciones, ejercicio: ejercicios, bloque: bloques };
+
         const combinados = progreso.map((registro) => {
-          const catalogo = registro.tipo === "leccion" ? lecciones : ejercicios;
+          const catalogo = catalogos[registro.tipo] ?? [];
           const encontrado = catalogo.find((item) => item.id === registro.contenido_id);
           return {
             ...registro,
@@ -42,9 +47,7 @@ export default function Progreso() {
           };
         });
 
-        // Mas reciente primero
         combinados.sort((a, b) => new Date(b.actualizado_en) - new Date(a.actualizado_en));
-
         setItems(combinados);
       } catch (err) {
         setError("No se pudo cargar tu progreso.");
@@ -56,13 +59,14 @@ export default function Progreso() {
 
   const totalLecciones = items.filter((i) => i.tipo === "leccion" && i.completado).length;
   const totalEjercicios = items.filter((i) => i.tipo === "ejercicio" && i.completado).length;
+  const totalBloques = items.filter((i) => i.tipo === "bloque" && i.completado).length;
 
   return (
     <div className="min-h-screen bg-ink">
       <Header />
       <main className="max-w-2xl mx-auto px-6 py-8">
         <h2 className="font-display font-semibold text-paper text-xl mb-1">Mi progreso</h2>
-        <p className="text-muted text-sm mb-6">Historial de lecciones y ejercicios completados.</p>
+        <p className="text-muted text-sm mb-6">Historial de bloques, lecciones y ejercicios completados.</p>
 
         {hayUsuario === false && (
           <p className="text-muted text-sm">
@@ -79,7 +83,11 @@ export default function Progreso() {
 
         {hayUsuario && !cargando && !error && (
           <>
-            <div className="flex gap-4 mb-6">
+            <div className="flex gap-3 mb-6">
+              <Card className="text-center border-l-0 flex-1">
+                <p className="font-display font-semibold text-success text-2xl">{totalBloques}</p>
+                <p className="text-muted text-xs mt-1">bloques aprobados</p>
+              </Card>
               <Card className="text-center border-l-0 flex-1">
                 <p className="font-display font-semibold text-success text-2xl">{totalLecciones}</p>
                 <p className="text-muted text-xs mt-1">lecciones completadas</p>
@@ -104,7 +112,7 @@ export default function Progreso() {
                   <div className="flex-1">
                     <p className="text-paper text-sm">{item.titulo}</p>
                     <p className="font-mono text-xs text-muted/70">
-                      {item.tipo} - {item.porcentaje}%
+                      {item.tipo === "bloque" ? "quiz de bloque" : item.tipo} - {item.porcentaje}%
                     </p>
                   </div>
                   <span className="font-mono text-xs text-muted/60">
@@ -116,7 +124,7 @@ export default function Progreso() {
 
             {items.length === 0 && (
               <p className="text-muted text-sm">
-                Aun no has completado ninguna leccion o ejercicio.{" "}
+                Aun no has completado nada.{" "}
                 <Link to="/" className="text-primary hover:underline">
                   Empieza aqui
                 </Link>
