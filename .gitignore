@@ -1,0 +1,14 @@
+# Backend Python
+backend/.venv/
+backend/__pycache__/
+backend/.env
+*.pyc
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+
+node_modules/
