@@ -27,9 +27,17 @@ export default function Header() {
         </Link>
       </div>
       <nav className="flex items-center gap-4 text-sm">
-        <Link to="/acordes" className="text-muted hover:text-primary">
-          Acordes
+       <Link to="/acordes" className="text-muted hover:text-primary">
+         Acordes
         </Link>
+        <Link to="/ejercicios" className="text-muted hover:text-primary">
+          Ejercicios
+        </Link>
+        {usuario && (
+          <Link to="/progreso" className="text-muted hover:text-primary">
+            Mi progreso
+          </Link>
+        )}
         {usuario ? (
           <>
             <span className="text-muted">{usuario.email}</span>
