@@ -1,81 +1,122 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Check } from "lucide-react";
+import { Lock, CheckCircle2 } from "lucide-react";
 import Header from "../components/Header.jsx";
 import { Card } from "../components/ui/card.jsx";
-import { Button } from "../components/ui/button.jsx";
 import { supabase } from "../lib/supabaseClient.js";
-import { obtenerLecciones, guardarProgreso } from "../lib/api.js";
+import { obtenerBloques, obtenerLecciones, obtenerProgreso } from "../lib/api.js";
 
 export default function Home() {
+  const [bloques, setBloques] = useState([]);
   const [lecciones, setLecciones] = useState([]);
+  const [progresoBloques, setProgresoBloques] = useState({}); // { [bloque_id]: {completado, porcentaje} }
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [hayUsuario, setHayUsuario] = useState(false);
-  const [guardadas, setGuardadas] = useState({});
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setHayUsuario(!!data.session);
-    });
+    supabase.auth.getSession().then(async ({ data }) => {
+      const sesionActiva = !!data.session;
+      setHayUsuario(sesionActiva);
 
-    obtenerLecciones()
-      .then(setLecciones)
-      .catch(() => setError("No se pudo conectar con el backend. Esta corriendo?"))
-      .finally(() => setCargando(false));
+      try {
+        const [bloquesData, leccionesData, progresoData] = await Promise.all([
+          obtenerBloques(),
+          obtenerLecciones(),
+          sesionActiva ? obtenerProgreso() : Promise.resolve([]),
+        ]);
+
+        setBloques(bloquesData);
+        setLecciones(leccionesData);
+
+        const mapaBloques = {};
+        progresoData
+          .filter((p) => p.tipo === "bloque")
+          .forEach((p) => {
+            mapaBloques[p.contenido_id] = p;
+          });
+        setProgresoBloques(mapaBloques);
+      } catch (err) {
+        setError("No se pudo conectar con el backend. Esta corriendo?");
+      } finally {
+        setCargando(false);
+      }
+    });
   }, []);
 
-  async function marcarCompletada(leccionId) {
-    try {
-      await guardarProgreso({ tipo: "leccion", contenido_id: leccionId, porcentaje: 100, completado: true });
-      setGuardadas((prev) => ({ ...prev, [leccionId]: "ok" }));
-    } catch (err) {
-      setGuardadas((prev) => ({ ...prev, [leccionId]: "error" }));
-    }
+  // Un bloque esta desbloqueado si es el primero, o si el bloque
+  // anterior (por orden_index) ya fue aprobado.
+  function bloqueDesbloqueado(bloque, index) {
+    if (index === 0) return true;
+    const anterior = bloques[index - 1];
+    return !!progresoBloques[anterior.id]?.completado;
   }
 
   return (
     <div className="min-h-screen bg-ink">
       <Header />
       <main className="max-w-2xl mx-auto px-6 py-8">
-        <h2 className="font-display font-semibold text-paper text-xl mb-4">Lecciones</h2>
+        <h2 className="font-display font-semibold text-paper text-xl mb-1">Bloques de aprendizaje</h2>
+        <p className="text-muted text-sm mb-6">
+          Completa el quiz de cada bloque (80% o mas) para desbloquear el siguiente.
+        </p>
 
-        {cargando && <p className="text-muted">Cargando lecciones...</p>}
+        {cargando && <p className="text-muted">Cargando...</p>}
         {error && <p className="text-danger text-sm">{error}</p>}
 
-        <div className="flex flex-col gap-4">
-          {lecciones.map((leccion) => (
-            <Card key={leccion.id}>
-              {/* El título ahora es un link a /leccion/:id */}
-              <Link to={`/leccion/${leccion.id}`}>
-                <h3 className="font-medium text-paper text-base mb-1 hover:text-accent transition-colors">
-                  Leccion {leccion.numero}: {leccion.titulo}
-                </h3>
-              </Link>
-              <p className="text-muted text-sm mb-2">{leccion.descripcion}</p>
-              <p className="font-mono text-xs text-muted/70 mb-3">
-                {leccion.nivel} - {leccion.duracion ?? "N/A"}
-              </p>
+        <div className="flex flex-col gap-5">
+          {bloques.map((bloque, index) => {
+            const desbloqueado = bloqueDesbloqueado(bloque, index);
+            const progresoDeEste = progresoBloques[bloque.id];
+            const leccionesDelBloque = lecciones.filter((l) => l.bloque_id === bloque.id);
 
-              {hayUsuario ? (
-                <div className="flex items-center gap-3">
-                  <Button variant="success" onClick={() => marcarCompletada(leccion.id)}>
-                    Marcar como completada
-                  </Button>
-                  {guardadas[leccion.id] === "ok" && (
-                    <span className="flex items-center gap-1 text-success text-sm">
-                      <Check size={16} aria-hidden="true" /> guardado
-                    </span>
+            return (
+              <Card key={bloque.id} className={desbloqueado ? "border-l-0" : "border-l-0 opacity-60"}>
+                <div className="flex items-center gap-2 mb-1">
+                  {!desbloqueado && <Lock size={16} className="text-muted" aria-hidden="true" />}
+                  {progresoDeEste?.completado && (
+                    <CheckCircle2 size={16} className="text-success" aria-hidden="true" />
                   )}
-                  {guardadas[leccion.id] === "error" && (
-                    <span className="text-danger text-sm">no se pudo guardar</span>
-                  )}
+                  <h3 className="font-display font-semibold text-paper text-base">
+                    Bloque {bloque.numero}: {bloque.titulo}
+                  </h3>
                 </div>
-              ) : (
-                <p className="text-muted text-sm italic">Inicia sesion para guardar tu progreso</p>
-              )}
-            </Card>
-          ))}
+                <p className="text-muted text-sm mb-3">{bloque.descripcion}</p>
+
+                {desbloqueado ? (
+                  <>
+                    <div className="flex flex-col gap-1 mb-3">
+                      {leccionesDelBloque.map((leccion) => (
+                        <Link
+                          key={leccion.id}
+                          to={`/leccion/${leccion.id}`}
+                          className="text-paper text-sm hover:text-accent transition-colors"
+                        >
+                          • Leccion {leccion.numero}: {leccion.titulo}
+                        </Link>
+                      ))}
+                    </div>
+
+                    {hayUsuario ? (
+                      <Link to={`/quiz/${bloque.id}`}>
+                        <button className="text-sm px-3 py-2 rounded-lg border border-primary text-primary hover:bg-primary/10 transition-colors">
+                          {progresoDeEste
+                            ? `Repetir quiz (mejor resultado: ${progresoDeEste.porcentaje}%)`
+                            : "Hacer el quiz del bloque"}
+                        </button>
+                      </Link>
+                    ) : (
+                      <p className="text-muted text-xs italic">Inicia sesion para hacer el quiz</p>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-muted text-xs italic">
+                    Aprueba el quiz del bloque anterior para desbloquear este.
+                  </p>
+                )}
+              </Card>
+            );
+          })}
         </div>
       </main>
     </div>
