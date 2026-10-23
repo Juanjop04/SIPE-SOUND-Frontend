@@ -69,8 +69,8 @@ export function ResultadoEvaluacion(props: ResultadoEvaluacionProps) {
         <Link
           to={
             siguienteBloque && intento.aprobado
-              ? `${paths.inicio}?bloque=${siguienteBloque.id}`
-              : paths.inicio
+              ? `${paths.ruta}?bloque=${siguienteBloque.id}`
+              : paths.ruta
           }
           className={claseBoton({ variante: intento.aprobado ? "primario" : "secundario" })}
         >

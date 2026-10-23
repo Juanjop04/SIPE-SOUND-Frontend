@@ -23,6 +23,7 @@ import AuthLayout from "@/app/layouts/AuthLayout.jsx";
 import { EstudianteLayout } from "@/app/layouts/EstudianteLayout";
 import { ErrorDeRuta } from "./ErrorDeRuta.jsx";
 import { NoEncontradoPage } from "./PaginasDeError";
+import { PaginaRaiz } from "./PaginaRaiz";
 import { RequireAuth } from "./RequireAuth.jsx";
 import { RequireRole } from "./RequireRole";
 
@@ -46,7 +47,9 @@ export const router = createBrowserRouter([
       {
         element: <EstudianteLayout />,
         children: [
-          { path: paths.inicio, lazy: pagina(cargarRutaPage) },
+          // Con sesión de estudiante, el inicio; si no, la ruta pública (HU-F-315).
+          { path: paths.inicio, element: <PaginaRaiz /> },
+          { path: paths.ruta, lazy: pagina(cargarRutaPage) },
           { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
           { path: paths.acordes, lazy: pagina(cargarAcordesPage) },
           { path: paths.ejercicios, lazy: pagina(cargarEjerciciosPage) },

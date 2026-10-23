@@ -21,5 +21,7 @@ export interface BloqueRuta {
   estado: EstadoBloque;
   evaluacion_id: number | null;
   mejor_puntaje: number | null;
+  /** Acordes distintos de sus lecciones, máx. 6 (HU-B-324). Ausente si el backend es anterior. */
+  acordes?: string[];
   lecciones: LeccionRuta[];
 }

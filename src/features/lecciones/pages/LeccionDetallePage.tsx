@@ -21,7 +21,7 @@ function Lectura({ leccion }: { leccion: Leccion }) {
     <article className="mx-auto max-w-[68ch]">
       <p className="font-mono text-sm text-muted">
         {bloque && (
-          <Link to={`${paths.inicio}?bloque=${bloque.id}`} className="hover:text-accent">
+          <Link to={`${paths.ruta}?bloque=${bloque.id}`} className="hover:text-accent">
             Bloque {bloque.numero}
           </Link>
         )}

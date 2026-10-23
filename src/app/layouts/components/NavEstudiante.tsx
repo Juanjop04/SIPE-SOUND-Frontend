@@ -12,7 +12,7 @@ interface Destino {
 }
 
 const DESTINOS: Destino[] = [
-  { to: paths.inicio, etiqueta: "Ruta", Icono: Map, exacto: true },
+  { to: paths.ruta, etiqueta: "Ruta", Icono: Map },
   { to: paths.acordes, etiqueta: "Acordes", Icono: Music },
   { to: paths.ejercicios, etiqueta: "Ejercicios", Icono: Timer },
   { to: paths.progreso, etiqueta: "Mi progreso", Icono: Activity },
