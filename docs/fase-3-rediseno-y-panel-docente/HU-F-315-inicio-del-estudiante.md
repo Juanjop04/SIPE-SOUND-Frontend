@@ -5,7 +5,7 @@
 | Fase | 3 · Rediseño |
 | Prioridad | Must |
 | Estimación | 8 puntos |
-| Depende de | HU-F-314, HU-F-316, HU-F-306 · opcional **HU-B-324** (actividad y acordes por bloque) |
+| Depende de | HU-F-314, HU-F-316, HU-F-320, HU-F-306 · opcional **HU-B-324** (actividad y acordes por bloque) |
 | Rama | `hu/HU-F-315-inicio-estudiante` |
 
 ## Historia

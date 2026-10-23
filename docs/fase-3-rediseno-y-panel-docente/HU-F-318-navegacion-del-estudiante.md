@@ -5,7 +5,7 @@
 | Fase | 3 · Rediseño |
 | Prioridad | Should |
 | Estimación | 3 puntos |
-| Depende de | HU-F-315 |
+| Depende de | HU-F-315, HU-F-320 |
 | Rama | `hu/HU-F-318-navegacion-estudiante` |
 
 ## Historia
@@ -43,7 +43,7 @@ tiene un "siguiente" claro: debe volver a la ruta y elegir.
 ## Diseño
 - Escritorio: los cinco destinos como texto en la barra superior; activo con subrayado `accent` de
   2 px **y** `aria-current="page"` (no solo color).
-- Móvil: barra inferior fija en `ink-2` con borde superior `linea`; activo con ícono y etiqueta en
+- Móvil: barra inferior fija en `ink-2` (HU-F-320) con borde superior `linea`; activo con ícono y etiqueta en
   `accent` más un punto bajo el ícono.
 - Las acciones de continuidad siguen la regla de un solo primario por vista (sistema de diseño §2.2).
 
