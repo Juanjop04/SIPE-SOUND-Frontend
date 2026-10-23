@@ -26,4 +26,6 @@ export const LIMITES = {
   aprobacion: { min: 50, max: 100 },
   intentosMax: { min: 1, max: 10 },
   busqueda: { max: 80 },
+  // app/schemas/curso.py (MAXIMO_BLOQUES_EN_RUTA)
+  bloquesEnRuta: { max: 100 },
 } as const;

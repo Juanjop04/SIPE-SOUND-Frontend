@@ -4,6 +4,7 @@ import { cargarDocentesPage } from "@/features/admin";
 import { cargarLoginPage, cargarRegistroPage, ROLES_ADMIN, ROLES_ATRIL } from "@/features/auth";
 import {
   cargarContenidoPage,
+  cargarCursoDetallePage,
   cargarCursosPage,
   cargarEvaluacionesPage,
   cargarResumenPage,
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
                 children: [
                   { path: paths.docente.inicio, lazy: pagina(cargarResumenPage) },
                   { path: paths.docente.cursos, lazy: pagina(cargarCursosPage) },
+                  { path: paths.docente.curso(), lazy: pagina(cargarCursoDetallePage) },
                   { path: paths.docente.contenido, lazy: pagina(cargarContenidoPage) },
                   { path: paths.docente.evaluaciones, lazy: pagina(cargarEvaluacionesPage) },
                 ],
