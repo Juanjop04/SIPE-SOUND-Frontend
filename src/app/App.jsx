@@ -4,7 +4,7 @@ import Login from "@/pages/Login.jsx";
 import Registro from "@/pages/Registro.jsx";
 import { LeccionDetallePage as LeccionDetalle } from "@/features/lecciones";
 import { AcordesPage as Acordes } from "@/features/acordes";
-import Ejercicios from "@/pages/Ejercicios.jsx";
+import { EjerciciosPage as Ejercicios } from "@/features/ejercicios";
 import Progreso from "@/pages/Progreso.jsx";
 import QuizBloque from "@/pages/QuizBloque.jsx";
 
