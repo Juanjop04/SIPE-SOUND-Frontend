@@ -81,7 +81,9 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 
 ## 3. Contraste verificado
 
-Cálculo WCAG 2.1 sobre la paleta real:
+Referencia: **WCAG 2.2 nivel AA** (4.5:1 texto normal, 3:1 texto grande y componentes). La tabla
+es el cálculo sobre los colores puros; HU-F-314 revalida las combinaciones reales (opacidades,
+estados hover/foco/deshabilitado, `ink-2`) y registra aquí cada ajuste de luminosidad.
 
 | Texto / elemento | Sobre `ink` | Sobre `surface` | Uso permitido |
 |---|---|---|---|
@@ -110,11 +112,14 @@ Consecuencias directas sobre el código actual:
 | `ChordDiagram` | Ya existe; se mantiene y se tipa. |
 | `Fretboard` | Ya existe (animación de cuerdas); se extrae de `AuthLayout` y se reutiliza al aprobar una evaluación. |
 | `Tablatura` | Fila de datos en mono con separadores verticales tipo compás: `♩ 60 BPM │ 4/4 │ 20 min`. |
+| `Boca` | Anillo de progreso con la forma de la **boca de la guitarra** (HU-F-315): cifra en mono al centro, arco ámbar cuando suena el 100 %. Es el **único indicador circular** permitido y se usa una vez por pantalla, solo para el avance global del estudiante. `role="progressbar"`. |
+| Ilustraciones (`shared/music/ilustraciones/`) | SVG propios en trazo de línea con tokens: guitarra acústica, mano en acorde, atril, estuche (HU-F-316). El texto nunca va encima de una ilustración. |
 
 ## 5. Patrones de pantalla
 
 ### Estudiante
-- **Ruta (inicio)**: columna izquierda con el mástil vertical (bloques como trastes, `MarcaEstado` en cada uno, `Cuerda` de avance a lo largo); columna derecha con el bloque seleccionado: lecciones como lista numerada en mono, ejercicios, y botón único "Presentar evaluación". En móvil el mástil se vuelve una tira horizontal desplazable arriba.
+- **Inicio** (`/` con sesión, HU-F-315): saludo con el nombre y una frase concreta, **siguiente paso** con la única acción primaria, `Boca` + franja de cifras del avance, ruta resumida por bloques (filas como trastes, no tarjetas) y lo último que hizo. Solo datos reales; si falta un dato, estado vacío.
+- **Ruta** (`/ruta`; sin sesión también en `/`): columna izquierda con el mástil vertical (bloques como trastes, `MarcaEstado` en cada uno, `Cuerda` de avance a lo largo); columna derecha con el bloque seleccionado: lecciones como lista numerada en mono, ejercicios, y botón único "Presentar evaluación". En móvil el mástil se vuelve una tira horizontal desplazable arriba.
 - **Lección**: lectura editorial (una columna ≤ 68 caracteres), diagramas de acordes en una fila, `Tablatura` con duración y nivel, acción "Marcar como practicada" al final.
 - **Evaluación**: una pregunta por pantalla en móvil, todas en escritorio; opciones como filas completas seleccionables (no radios diminutos); resultado con `Fretboard` vibrando si aprueba.
 
@@ -135,11 +140,12 @@ Consecuencias directas sobre el código actual:
 | Tarjetas con borde izquierdo de color como único recurso (hoy `Card` usa `border-l-4`) | `TrasteDivider` y espacio en blanco. |
 | Emojis como íconos, ícono de destellos (✨ `Sparkles`), cohetes 🚀 | `MarcaEstado`, símbolos musicales, lucide solo para acciones (editar, borrar, buscar). |
 | Textos de marketing vacíos: "Desbloquea tu potencial", "Bienvenido de nuevo 👋", "Lleva tu música al siguiente nivel" | Voz de profesor de música, concreta: "Hoy: cambio de Em a Am. 10 minutos." |
-| *Hero* centrado con título gigante + subtítulo + dos botones | Contenido útil desde el primer pantallazo (la ruta). |
+| *Hero* centrado con título gigante + subtítulo + dos botones | Encabezado alineado a la izquierda con el nombre, una frase concreta y **una** acción (el siguiente paso), junto a una ilustración propia. |
 | Sombras grandes en todo, `rounded-2xl/3xl` en todo | Una sombra, dos radios. |
 | Animación de entrada (fade-up) en cada elemento | Movimiento solo con significado (cuerda que suena). |
 | Píldoras "Nuevo" / "Pro" decorativas | Sin insignias que no informen algo real. |
-| Ilustraciones 3D o de stock | Diagramas y elementos de la guitarra dibujados en SVG. |
+| Ilustraciones 3D, de *stock* o fotografías de bancos de imágenes | Diagramas y elementos de la guitarra dibujados en SVG (HU-F-316). Fotografías: fuera de esta fase (peso y licencias). |
+| Gráficos decorativos o con datos de ejemplo | Un gráfico solo con datos reales, con alternativa en tabla; sin datos, estado vacío (HU-F-317). |
 | Tablero docente con 4 tarjetas KPI y gráfico de dona | Franja de cifras + lista accionable. |
 
 ## 7. Voz y microcopia
@@ -148,3 +154,4 @@ Consecuencias directas sobre el código actual:
 - Errores: qué pasó + qué hacer ("El código no existe o el curso ya cerró. Pídele a tu docente un código nuevo.").
 - Estados vacíos con siguiente paso concreto ("Aún no tienes estudiantes. Comparte el código **K7M2Q9XA** con tu grupo.").
 - Sin signos de exclamación dobles ni mayúsculas sostenidas.
+- Saludo del inicio: "Hola, Ana." + un dato concreto ("Vas en el bloque 2 · Cambio entre Em y Am."), no "Bienvenido de nuevo 👋".

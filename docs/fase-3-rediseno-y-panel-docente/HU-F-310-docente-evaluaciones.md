@@ -5,7 +5,7 @@
 | Fase | 3 · Panel docente |
 | Prioridad | Must |
 | Estimación | 8 puntos |
-| Depende de | HU-F-308, **HU-B-311** |
+| Depende de | HU-F-308, HU-F-314, **HU-B-311** |
 | Rama | `hu/HU-F-310-docente-evaluaciones` |
 
 ## Historia
@@ -30,6 +30,12 @@
 - **Preguntas de la más difícil a la más fácil**: cada fila con enunciado y una `Cuerda` de % de aciertos (ámbar si ≥ 80 %, `paper` si menos). Es la vista principal: responde "¿qué repaso mañana?".
 - Tabla de estudiantes: mejor puntaje, intentos, aprobado (`●` / `×`), enlace al detalle (HU-F-309).
 - Quienes no han presentado: lista aparte con acción "Enviar recordatorio" (crea una retroalimentación).
+- La `Cuerda` de aciertos siempre va con su % en mono (el color ámbar no es la única señal, 1.4.1).
+- Sin intentos todavía: `EstadoVacio` con la ilustración `Atril` (HU-F-316): "Nadie ha presentado esta evaluación. Los resultados aparecen con el primer intento."
+
+### Adaptable (rediseño)
+- **Menos de 768 px**: tablas de lista y de resultados como filas apiladas, sin desplazamiento horizontal.
+- Editor: preguntas a ancho completo; Subir/Bajar/Eliminar con objetivo ≥ 24 px (WCAG 2.5.8) y etiqueta accesible con el número de la pregunta.
 
 ## Alcance
 **Incluye**: `features/docente/evaluaciones` (api, hooks, editor, resultados), esquemas Zod alineados con HU-B-311.

@@ -5,7 +5,7 @@
 | Fase | 3 · Panel docente |
 | Prioridad | Must |
 | Estimación | 5 puntos |
-| Depende de | HU-F-307, **HU-B-310** |
+| Depende de | HU-F-307, HU-F-314, **HU-B-310** |
 | Rama | `hu/HU-F-309-docente-estudiantes` |
 
 ## Historia
@@ -20,6 +20,9 @@
 - Tabla: Nombre · Correo (enmascarado, mono) · Avance (`Cuerda` + % mono) · Bloques aprobados (`2/6` mono) · Último avance (fecha relativa: "hace 3 días") · Acciones (Ver, Comentar, Retirar).
 - Filas con más de 14 días sin actividad: fecha en `danger` + texto "sin actividad" (no solo color).
 - Exportar CSV de la vista actual (generado en el navegador con `Blob`; sin librería).
+- **Menos de 768 px** (rediseño, HU-F-314): la tabla pasa a filas apiladas (nombre; `Cuerda` + % en mono;
+  último avance; acciones en un menú) sin desplazamiento horizontal. El orden y el buscador se mantienen arriba.
+- Sin estudiantes: `EstadoVacio` con la ilustración `Atril` (HU-F-316): "Aún no tienes estudiantes. Comparte el código **K7M2Q9XA** con tu grupo."
 
 ### Detalle del estudiante (`Drawer` ancho o `/docente/cursos/:id/estudiantes/:eid`)
 - Encabezado: nombre, curso, fecha de inscripción.
@@ -67,6 +70,11 @@ Escenario: Exportar
   Cuando exporto la tabla filtrada
   Entonces el CSV abre correctamente en Excel con tildes
 ```
+
+## Accesibilidad (WCAG 2.2 AA)
+- "Sin actividad" se comunica con texto además del color `danger` (1.4.1).
+- El avance usa la misma definición que ve el estudiante en su inicio (HU-F-315): el % lo calcula el backend (`avance_pct`).
+- Acciones de fila con objetivo ≥ 24 px (2.5.8); el foco de la fila no queda tapado por la cabecera fija (2.4.11).
 
 ## Verificación manual
 Curso con ≥ 25 estudiantes de prueba (semilla del backend): paginar, ordenar, buscar, exportar, comentar, retirar; 1280/375 px; teclado.
