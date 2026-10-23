@@ -5,7 +5,8 @@ import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
 import { supabase } from "@/shared/lib/supabase.js";
-import { obtenerLeccion, obtenerAcordes, guardarProgreso } from "../lib/api.js";
+import { obtenerLeccion, guardarProgreso } from "@/lib/api.js";
+import { obtenerAcordes } from "@/features/acordes";
 
 export default function LeccionDetalle() {
   // useParams() lee el ":id" de la URL. Si visitas /leccion/2, aquí id === "2"

@@ -3,7 +3,7 @@ import Home from "@/pages/Home.jsx";
 import Login from "@/pages/Login.jsx";
 import Registro from "@/pages/Registro.jsx";
 import LeccionDetalle from "@/pages/LeccionDetalle.jsx";
-import Acordes from "@/pages/Acordes.jsx";
+import { AcordesPage as Acordes } from "@/features/acordes";
 import Ejercicios from "@/pages/Ejercicios.jsx";
 import Progreso from "@/pages/Progreso.jsx";
 import QuizBloque from "@/pages/QuizBloque.jsx";

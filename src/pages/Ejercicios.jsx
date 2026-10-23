@@ -4,7 +4,7 @@ import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
 import { supabase } from "@/shared/lib/supabase.js";
-import { obtenerEjercicios, guardarProgreso } from "../lib/api.js";
+import { obtenerEjercicios, guardarProgreso } from "@/lib/api.js";
 
 export default function Ejercicios() {
   const [ejercicios, setEjercicios] = useState([]);
