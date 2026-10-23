@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase, cerrarSesion } from "../lib/supabaseClient.js";
+import { supabase } from "@/shared/lib/supabase.js";
+import { cerrarSesion } from "@/features/auth";
 import logo from "../assets/logo.png";
 
 export default function Header() {

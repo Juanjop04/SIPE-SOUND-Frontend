@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { registrarUsuario } from "../lib/supabaseClient.js";
+import { registrarUsuario } from "@/features/auth";
 import { Input } from "../components/ui/input.jsx";
 import { Button } from "../components/ui/button.jsx";
 import AuthLayout from "../components/AuthLayout.jsx";

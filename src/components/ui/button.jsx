@@ -1,4 +1,4 @@
-import { cn } from "../../lib/utils.js";
+import { cn } from "@/shared/lib/cn.js";
 
 const variants = {
   primary: "bg-primary hover:bg-primary-hover text-paper",

@@ -1,4 +1,4 @@
-import { supabase } from "./supabaseClient.js";
+import { obtenerToken } from "@/shared/api/obtenerToken.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -39,12 +39,6 @@ export async function obtenerQuiz(bloqueId) {
 }
 
 // --- Rutas que requieren sesion activa ---
-
-async function obtenerToken() {
-  const { data } = await supabase.auth.getSession();
-  if (!data.session) throw new Error("No has iniciado sesion");
-  return data.session.access_token;
-}
 
 export async function obtenerProgreso() {
   const token = await obtenerToken();

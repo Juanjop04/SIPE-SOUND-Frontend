@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Lock, CheckCircle2 } from "lucide-react";
 import Header from "../components/Header.jsx";
 import { Card } from "../components/ui/card.jsx";
-import { supabase } from "../lib/supabaseClient.js";
+import { supabase } from "@/shared/lib/supabase.js";
 import { obtenerBloques, obtenerLecciones, obtenerProgreso } from "../lib/api.js";
 
 export default function Home() {
