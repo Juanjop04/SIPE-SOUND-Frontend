@@ -1,23 +1,6 @@
-import { Routes, Route } from "react-router-dom";
-import { RutaPage as Home } from "@/features/ruta";
-import { LoginPage as Login, RegistroPage as Registro } from "@/features/auth";
-import { LeccionDetallePage as LeccionDetalle } from "@/features/lecciones";
-import { AcordesPage as Acordes } from "@/features/acordes";
-import { EjerciciosPage as Ejercicios } from "@/features/ejercicios";
-import { ProgresoPage as Progreso } from "@/features/progreso";
-import { QuizBloquePage as QuizBloque } from "@/features/evaluaciones";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router/router.jsx";
 
 export default function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/registro" element={<Registro />} />
-      <Route path="/leccion/:id" element={<LeccionDetalle />} />
-      <Route path="/acordes" element={<Acordes />} />
-      <Route path="/ejercicios" element={<Ejercicios />} />
-      <Route path="/progreso" element={<Progreso />} />
-      <Route path="/quiz/:bloqueId" element={<QuizBloque />} />
-    </Routes>
-  );
+  return <RouterProvider router={router} />;
 }

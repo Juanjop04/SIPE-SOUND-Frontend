@@ -1,2 +1,2 @@
-export { default as AcordesPage } from "./pages/AcordesPage.jsx";
+export const cargarAcordesPage = () => import("./pages/AcordesPage.jsx");
 export { useAcordes } from "./hooks/useAcordes.js";

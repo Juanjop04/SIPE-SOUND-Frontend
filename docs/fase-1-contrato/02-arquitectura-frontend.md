@@ -39,7 +39,6 @@ SIPE-SOUND-FULLSTACK/
     │   ├── providers/AppProviders.tsx  # QueryClient + AuthProvider
     │   ├── router/
     │   │   ├── router.tsx            # createBrowserRouter, lazy por ruta
-    │   │   ├── paths.ts              # constantes de rutas (sin strings sueltos)
     │   │   ├── RequireAuth.tsx
     │   │   └── RequireRole.tsx
     │   └── layouts/
@@ -76,6 +75,7 @@ SIPE-SOUND-FULLSTACK/
     │   │   ├── ApiError.ts
     │   │   └── queryClient.ts
     │   ├── config/env.ts             # lectura y validación de import.meta.env
+    │   ├── config/paths.ts           # constantes de rutas (aquí y no en app: las usan las páginas, HU-F-205)
     │   ├── lib/
     │   │   ├── cn.ts
     │   │   └── formato.ts            # fechas, porcentajes
@@ -98,7 +98,8 @@ features/<nombre>/
 ├── pages/          # una por ruta; orquestan hooks + componentes
 ├── utils/          # funciones puras de la feature
 ├── types.ts        # tipos del dominio (desde Fase 3)
-└── index.ts        # exporta SOLO lo que otras capas pueden usar
+└── index.ts        # exporta SOLO lo que otras capas pueden usar; las páginas, como
+                    # cargadores perezosos: export const cargarXPage = () => import("./pages/XPage")
 ```
 
 ## 3. Reglas de dependencia
@@ -114,7 +115,7 @@ app  →  features  →  shared
 | Sin imports profundos entre features | `@/features/progreso` ✅ · `@/features/progreso/hooks/useResumen` ❌ (desde otra feature) | ESLint patrón `@/features/*/*` |
 | Las páginas no llaman `fetch` | Todo pasa por `features/*/api` + hooks | Revisión + grep `fetch(` fuera de `shared/api` |
 | Los componentes de `components/` no hacen peticiones | Reciben datos por props | Revisión |
-| Rutas solo desde `paths.ts` | Nada de `"/leccion/" + id` suelto | Revisión |
+| Rutas solo desde `shared/config/paths.ts` | Nada de `"/leccion/" + id` suelto | Revisión |
 | Imports con alias `@/` | Nada de `../../../` | ESLint |
 
 ## 4. SOLID aplicado a React
