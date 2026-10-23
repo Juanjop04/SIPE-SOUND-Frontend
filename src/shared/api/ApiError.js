@@ -3,6 +3,12 @@ export const MENSAJE_SIN_CONEXION = "No pudimos conectar. Revisa tu conexión e 
 
 // Error de la API con la respuesta estándar (contrato 04 §2). `message` ya viene en español.
 export class ApiError extends Error {
+  /**
+   * @param {number} statusCode
+   * @param {string} status   VALIDACION, NO_ENCONTRADO…
+   * @param {string} message  ya en español
+   * @param {string[]} [errors]
+   */
   constructor(statusCode, status, message, errors = []) {
     super(message);
     this.name = "ApiError";
@@ -11,7 +17,10 @@ export class ApiError extends Error {
     this.errors = errors;
   }
 
-  /** "nombre: Debe tener…" → { nombre: "Debe tener…" }. Los textos sin campo quedan en `general`. */
+  /**
+   * "nombre: Debe tener…" → { nombre: "Debe tener…" }. Los textos sin campo quedan en `general`.
+   * @returns {Record<string, string>}
+   */
   get porCampo() {
     return Object.fromEntries(
       this.errors.map((texto) => {

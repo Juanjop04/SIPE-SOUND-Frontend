@@ -17,7 +17,7 @@ export default function AuthLayout() {
       <aside className="relative hidden flex-col justify-between overflow-hidden bg-surface p-12 lg:flex">
         <div className="relative flex items-center gap-3">
           <img src={logo} alt="" className="h-10 w-10 object-contain" />
-          <span className="font-display text-xl font-semibold">Sipe Sound</span>
+          <span className="font-display text-xl font-semibold">SIPE-SOUND</span>
         </div>
 
         <div className="relative">
@@ -28,15 +28,15 @@ export default function AuthLayout() {
           <p className="mt-4 max-w-md text-muted">{descripcion}</p>
         </div>
 
-        <p className="relative text-sm text-muted">&copy; {new Date().getFullYear()} Sipe Sound</p>
+        <p className="relative text-sm text-muted">&copy; {new Date().getFullYear()} SIPE-SOUND</p>
       </aside>
 
       {/* Contenido (formulario) */}
       <main className="flex min-h-screen items-center justify-center px-4 py-10 sm:px-8">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-md">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
             <img src={logo} alt="" className="h-10 w-10 object-contain" />
-            <span className="font-display text-xl font-semibold">Sipe Sound</span>
+            <span className="font-display text-xl font-semibold">SIPE-SOUND</span>
           </div>
           <Outlet context={contexto} />
         </div>

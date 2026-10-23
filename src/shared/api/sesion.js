@@ -37,14 +37,6 @@ function auth(metodo, ruta, opciones = {}) {
   );
 }
 
-// Errores de validación: "campo: mensaje" → solo los mensajes, en una línea.
-function conDetalle(error) {
-  if (error instanceof ApiError && error.status === "VALIDACION" && error.errors.length) {
-    error.message = Object.values(error.porCampo).join(" ");
-  }
-  throw error;
-}
-
 function guardar(datos) {
   sinSesionConfirmado = false;
   sesionActual = {
@@ -84,14 +76,8 @@ export function olvidarSesion() {
   notificar();
 }
 
-export async function registrarCuenta({ nombre, email, password }) {
-  return auth("POST", "/registro", { body: { nombre, email, password } }).catch(conDetalle);
-}
-
 export async function iniciarSesion(email, password) {
-  const sesion = guardar(
-    await auth("POST", "/sesion", { body: { email, password } }).catch(conDetalle),
-  );
+  const sesion = guardar(await auth("POST", "/sesion", { body: { email, password } }));
   canal?.postMessage(AVISO_INICIO);
   return sesion;
 }

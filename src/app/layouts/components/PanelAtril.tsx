@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useSession } from "@/features/auth";
+import { ROL, useSession } from "@/features/auth";
 import { cn } from "@/shared/lib/cn.js";
 import { paths } from "@/shared/config/paths.js";
 import { Button } from "@/shared/ui";
@@ -21,7 +21,11 @@ function claseEnlace({ isActive }: { isActive: boolean }) {
 
 /** Contenido de la barra lateral del atril; en móvil se muestra dentro de un Drawer. */
 export function PanelAtril({ alNavegar }: { alNavegar?: () => void }) {
-  const { usuario, perfil, cerrarSesion } = useSession();
+  const { usuario, perfil, rol, cerrarSesion } = useSession();
+  const secciones =
+    rol === ROL.admin
+      ? [...SECCIONES, { to: paths.admin.docentes, etiqueta: "Docentes", exacto: false }]
+      : SECCIONES;
   const navigate = useNavigate();
 
   async function handleCerrarSesion() {
@@ -34,7 +38,7 @@ export function PanelAtril({ alNavegar }: { alNavegar?: () => void }) {
     <div className="flex h-full flex-col justify-between gap-8">
       <nav aria-label="Atril">
         <ul className="flex flex-col gap-1">
-          {SECCIONES.map(({ to, etiqueta, exacto }) => (
+          {secciones.map(({ to, etiqueta, exacto }) => (
             <li key={to}>
               <NavLink to={to} end={exacto} className={claseEnlace} onClick={alNavegar}>
                 {etiqueta}
