@@ -8,7 +8,7 @@ import {
   cargarEvaluacionesPage,
   cargarResumenPage,
 } from "@/features/docente";
-import { cargarEjerciciosPage } from "@/features/ejercicios";
+import { cargarEjercicioDetallePage, cargarEjerciciosPage } from "@/features/ejercicios";
 import { cargarQuizBloquePage } from "@/features/evaluaciones";
 import { cargarLeccionDetallePage } from "@/features/lecciones";
 import { cargarTerminosPage } from "@/features/legal";
@@ -47,6 +47,7 @@ export const router = createBrowserRouter([
           { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
           { path: paths.acordes, lazy: pagina(cargarAcordesPage) },
           { path: paths.ejercicios, lazy: pagina(cargarEjerciciosPage) },
+          { path: paths.ejercicio(), lazy: pagina(cargarEjercicioDetallePage) },
           { path: paths.terminos, lazy: pagina(cargarTerminosPage) },
           {
             element: <RequireAuth />,

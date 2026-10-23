@@ -43,6 +43,17 @@ export default {
         rapida: "120ms",
         panel: "200ms",
       },
+      // Movimiento con significado (contrato 05 §2.4): la cuerda vibra al completar algo.
+      keyframes: {
+        vibrar: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "25%": { transform: "translateY(-2px)" },
+          "75%": { transform: "translateY(2px)" },
+        },
+      },
+      animation: {
+        vibrar: "vibrar 80ms ease-in-out 6",
+      },
       boxShadow: {
         // La única sombra del sistema: diálogos y menús flotantes.
         dialogo: "0 12px 32px rgb(var(--color-ink) / 0.6)",
