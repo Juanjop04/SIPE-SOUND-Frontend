@@ -4,7 +4,7 @@ import { CheckCircle2, Circle } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { supabase } from "@/shared/lib/supabase.js";
-import { obtenerBloques } from "@/lib/api.js";
+import { obtenerBloques } from "@/features/ruta";
 import { obtenerProgreso } from "../api/progresoApi.js";
 import { obtenerEjercicios } from "@/features/ejercicios";
 import { obtenerLecciones } from "@/features/lecciones";

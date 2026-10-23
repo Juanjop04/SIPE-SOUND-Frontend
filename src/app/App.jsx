@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "@/pages/Home.jsx";
+import { RutaPage as Home } from "@/features/ruta";
 import Login from "@/pages/Login.jsx";
 import Registro from "@/pages/Registro.jsx";
 import { LeccionDetallePage as LeccionDetalle } from "@/features/lecciones";
