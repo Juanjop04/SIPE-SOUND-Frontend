@@ -1,6 +1,13 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
-import { EstadoVacio, MensajeError, Skeleton, Table, type ColumnaTabla } from "@/shared/ui";
+import {
+  type ColumnaTabla,
+  EncabezadoPagina,
+  EstadoVacio,
+  MensajeError,
+  Skeleton,
+  Table,
+} from "@/shared/ui";
 import { FiltroNivel } from "../components/FiltroNivel";
 import { useEjercicios } from "../hooks/useEjercicios";
 import type { Ejercicio } from "../types";
@@ -52,16 +59,16 @@ export default function EjerciciosPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-display text-3xl font-semibold text-paper">Ejercicios</h1>
-          <p className="mt-2 text-sm text-muted">Rutinas para practicar a tempo, paso a paso.</p>
-        </div>
+      <EncabezadoPagina
+        titulo="Ejercicios"
+        descripcion="Rutinas para practicar a tempo, paso a paso."
+        foto="practica-ritmo"
+      >
         <FiltroNivel
           valor={nivel}
           onCambiar={(valor) => setParametros(valor ? { nivel: valor } : {}, { replace: true })}
         />
-      </div>
+      </EncabezadoPagina>
       <div className="mt-8" aria-live="polite">
         <Contenido nivel={nivel} />
       </div>

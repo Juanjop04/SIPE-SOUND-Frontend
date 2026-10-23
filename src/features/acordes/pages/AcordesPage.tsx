@@ -2,7 +2,7 @@ import { useCallback, useId, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { CLASE_TESELA, TeselaAcorde, TrasteDivider } from "@/shared/music";
 import { cn } from "@/shared/lib/cn.js";
-import { EstadoVacio, MensajeError, Select, Skeleton } from "@/shared/ui";
+import { EncabezadoPagina, EstadoVacio, MensajeError, Select, Skeleton } from "@/shared/ui";
 import { PanelAcorde } from "../components/PanelAcorde";
 import { useAcordes } from "../hooks/useAcordes";
 import type { Acorde } from "../types";
@@ -59,13 +59,11 @@ export default function AcordesPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-display text-3xl font-semibold text-paper">Acordes</h1>
-          <p className="mt-2 text-sm text-muted">
-            Toca un acorde para ver en qué lecciones aparece.
-          </p>
-        </div>
+      <EncabezadoPagina
+        titulo="Acordes"
+        descripcion="Toca un acorde para ver en qué lecciones aparece."
+        foto="diapason"
+      >
         <div className="flex items-center gap-3">
           <label htmlFor={idFiltro} className="text-sm text-muted">
             Dificultad
@@ -86,7 +84,7 @@ export default function AcordesPage() {
             ))}
           </Select>
         </div>
-      </div>
+      </EncabezadoPagina>
 
       <div className="mt-8" aria-live="polite">
         {isPending && <Skeleton lineas={3} className="h-32 w-full" />}
