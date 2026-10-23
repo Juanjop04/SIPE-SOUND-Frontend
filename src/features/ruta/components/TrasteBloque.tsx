@@ -18,7 +18,7 @@ interface TrasteBloqueProps {
   onSeleccionar: () => void;
 }
 
-const COLOR = (sonando: boolean) => (sonando ? "bg-success" : "bg-linea");
+const COLOR = (sonando: boolean) => (sonando ? "bg-suena" : "bg-linea");
 
 // Cada traste dibuja su tramo de cuerda (antes y después de su marca): la cuerda queda ámbar
 // exactamente hasta el último bloque aprobado, sin importar la altura de cada traste.

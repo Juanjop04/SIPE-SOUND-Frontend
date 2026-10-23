@@ -5,7 +5,7 @@ import { puedeUsarAtril, useSession } from "@/features/auth";
 import { paths } from "@/shared/config/paths.js";
 
 const OPCION =
-  "block w-full rounded-md px-3 py-2 text-left text-sm text-muted transition-colors duration-rapida hover:bg-ink-2 hover:text-paper";
+  "block w-full rounded-md px-3 py-2 text-left text-sm text-muted transition-colors duration-rapida hover:bg-surface hover:text-paper";
 
 /** Menú de la cuenta del estudiante: botón con el nombre que despliega las opciones. */
 export function MenuCuenta() {
@@ -57,7 +57,7 @@ export function MenuCuenta() {
       {abierto && (
         <div
           id={idMenu}
-          className="absolute right-0 top-full z-50 mt-2 w-56 rounded-caja border border-linea bg-surface p-1 shadow-dialogo"
+          className="absolute right-0 top-full z-50 mt-2 w-56 rounded-caja border border-linea bg-surface-2 p-1 shadow-dialogo"
         >
           {puedeUsarAtril(rol) && (
             <Link to={paths.docente.inicio} className={OPCION} onClick={() => setAbierto(false)}>

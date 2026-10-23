@@ -4,17 +4,20 @@
  * así funcionan las opacidades (bg-primary/10). JavaScript los lee con leerColorToken().
  */
 :root {
-  --color-ink: 27 16 48; /* #1B1030 · fondo de la aplicación */
-  --color-ink-2: 34 22 64; /* #221640 · capa intermedia (barra lateral, filas alternas) */
-  --color-surface: 42 27 77; /* #2A1B4D · superficies elevadas */
-  --color-linea: 74 52 112; /* #4A3470 · trastes y divisores decorativos */
-  --color-linea-fuerte: 122 102 163; /* #7A66A3 · bordes de controles (≥ 3:1) */
-  --color-primary: 124 58 237; /* #7C3AED · fondo de la acción principal; nunca texto */
-  --color-primary-hover: 107 47 209; /* #6B2FD1 */
-  --color-primary-claro: 167 139 250; /* #A78BFA · texto violeta sobre fondo oscuro */
-  --color-accent: 226 157 224; /* #E29DE0 · enlaces, foco, selección actual */
-  --color-success: 245 185 66; /* #F5B942 · solo logro: completado, aprobado, "suena" */
-  --color-danger: 245 108 114; /* #F56C72 · errores y acciones destructivas (HU-F-314: +5 % luz, ≥ 4.5 en paneles) */
-  --color-muted: 201 190 224; /* #C9BEE0 · texto secundario */
-  --color-paper: 243 238 251; /* #F3EEFB · texto principal */
+  /* Paleta del rediseño (HU-F-320, maqueta aprobada con ajustes AA). Capas: página → barras → tarjetas → lo que flota. */
+  --color-ink: 11 16 32; /* #0B1020 · fondo de la página */
+  --color-ink-2: 16 22 43; /* #10162B · barra lateral, encabezado, barras fijas, pistas de progreso */
+  --color-surface: 23 29 51; /* #171D33 · tarjetas, tablas, controles (siempre con borde linea) */
+  --color-surface-2: 31 39 68; /* #1F2744 · lo que flota: Drawer, Dialog, menús, avisos */
+  --color-linea: 58 70 115; /* #3A4673 · bordes de tarjetas y divisores */
+  --color-linea-fuerte: 107 120 168; /* #6B78A8 · bordes de controles (≥ 3:1 en toda capa) */
+  --color-primary: 98 87 245; /* #6257F5 · fondo de botón y relleno de progreso; nunca texto */
+  --color-primary-hover: 83 72 230; /* #5348E6 · más oscuro: el texto del botón gana contraste */
+  --color-primary-claro: 154 148 250; /* #9A94FA · violeta legible como texto o trazo */
+  --color-accent: 185 200 255; /* #B9C8FF · lavanda: enlaces, foco, íconos, gráficos */
+  --color-success: 52 211 153; /* #34D399 · verde: solo logro (completado, aprobado) */
+  --color-suena: 245 185 66; /* #F5B942 · ámbar: solo la cuerda que suena */
+  --color-danger: 247 112 122; /* #F7707A · errores y acciones destructivas */
+  --color-muted: 174 182 216; /* #AEB6D8 · texto secundario */
+  --color-paper: 245 246 255; /* #F5F6FF · texto principal */
 }

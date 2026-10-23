@@ -43,7 +43,7 @@ export function ControlBpm({ id, bpm, onCambiar }: ControlBpmProps) {
         onChange={(e) => setBorrador(e.target.value)}
         onBlur={confirmar}
         onKeyDown={(e) => e.key === "Enter" && confirmar()}
-        className="w-24 rounded-md border border-linea-fuerte bg-ink py-1 text-center font-mono text-4xl tabular-nums text-paper focus-visible:border-accent"
+        className="w-24 rounded-md border border-linea-fuerte bg-ink-2 py-1 text-center font-mono text-4xl tabular-nums text-paper focus-visible:border-accent"
       />
       <Button
         variante="secundario"

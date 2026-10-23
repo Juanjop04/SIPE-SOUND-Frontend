@@ -4,6 +4,11 @@
 > SIPE-SOUND se reconozca como **una herramienta de música hecha para el aula**,
 > no como una plantilla genérica generada por IA.
 
+> **Enmienda 2026-10-23 (rediseño del estudiante).** El equipo aprobó una maqueta de inicio con
+> paleta azul profunda, tarjetas de cifras con ícono, fotografías de guitarra y verde para los logros
+> (HU-F-320, HU-F-321, HU-F-315). Esta versión del documento ya la incorpora; los cambios respecto a
+> la anterior están marcados con *(enmienda)*.
+
 ## 1. Concepto
 
 La interfaz toma su lenguaje de la **anatomía de la guitarra** y de la
@@ -13,37 +18,40 @@ tablatura). No se decora con música: se **organiza** como música.
 | Elemento de la guitarra | Uso en la interfaz |
 |---|---|
 | **Mástil** | Eje vertical de la ruta de aprendizaje. Los bloques son trastes que se recorren de arriba abajo. |
-| **Trastes** | Divisores: líneas finas de 1 px (`linea`) en lugar de tarjetas con sombra. |
-| **Cuerdas** | Barras de progreso: una línea de 2–3 px que pasa de lila (`paper` al 55 %) a **ámbar** (`success`) cuando "suena" (completado). Es la misma lógica de color que ya usa la animación de `AuthLayout`. |
+| **Trastes** | Divisores: líneas finas de 1 px (`linea`). |
+| **Cuerdas** | Barras de progreso: pista `ink-2` y relleno `primary` mientras se avanza; **verde** (`success`) al completar *(enmienda)*. |
+| **La cuerda que suena** | Vibración y color **ámbar** (`suena`) solo en las animaciones de cuerdas (`Fretboard`, `GuitarraAcustica`) y en la cuerda del mástil hasta el último bloque aprobado *(enmienda)*. |
 | **Marcadores del mástil** (puntos en trastes 3, 5, 7, 9, 12) | Hitos de la ruta: aparecen solo en bloques que cierran nivel. |
-| **Símbolos del diagrama de acorde** | Estados: `×` (cuerda muda) = bloqueado · `○` (cuerda al aire) = disponible · `●` ámbar = aprobado. Coinciden con `ChordDiagram`, que el estudiante ya lee. |
+| **Símbolos del diagrama de acorde** | Estados: `×` (cuerda muda) = bloqueado · `○` (cuerda al aire) = disponible · `●` verde = aprobado. Coinciden con `ChordDiagram`, que el estudiante ya lee. |
 | **Tablatura** | Datos numéricos (BPM, compás, %, fechas, puntajes) en **IBM Plex Mono**, alineados como una tablatura. |
 | **Atril** | Nombre visual del panel docente: superficie de trabajo densa y ordenada, como una partitura sobre el atril. |
 
 ## 2. Tokens
 
-### 2.1 Color (paleta actual, sin cambios de tono)
+### 2.1 Color *(enmienda: paleta de la maqueta con ajustes AA, HU-F-320)*
 
 Los valores se definen **una sola vez** en `src/styles/tokens.css` como
 canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 
 | Token CSS | Clase Tailwind | Hex | Rol |
 |---|---|---|---|
-| `--color-ink` | `ink` | `#1B1030` | Fondo de la aplicación. |
-| `--color-ink-2` *(derivado)* | `ink-2` | `#221640` | Capa intermedia (barra lateral, filas alternas). |
-| `--color-surface` | `surface` | `#2A1B4D` | Superficies elevadas (paneles, diálogos). |
-| `--color-linea` | `linea` | `#4A3470` | Trastes y divisores **decorativos**. |
-| `--color-linea-fuerte` *(derivado)* | `linea-fuerte` | `#7A66A3` | Bordes de **controles** (inputs, selects) — cumple 3:1. |
-| `--color-primary` | `primary` | `#7C3AED` | Acción principal (fondo de botón). |
-| `--color-primary-hover` | `primary-hover` | `#6B2FD1` | Hover de acción principal. |
-| `--color-primary-claro` *(derivado)* | `primary-claro` | `#A78BFA` | Texto violeta sobre fondo oscuro cuando hace falta. |
-| `--color-accent` | `accent` | `#E29DE0` | Enlaces, foco (`anillo`), selección actual. |
-| `--color-success` | `success` | `#F5B942` | **Solo logro**: completado, aprobado, "suena". |
-| `--color-danger` | `danger` | `#F56C72` | Errores y acciones destructivas (HU-F-314: +5 % de luz sobre `#F2545B`). |
-| `--color-muted` | `muted` | `#C9BEE0` | Texto secundario. |
-| `--color-paper` | `paper` | `#F3EEFB` | Texto principal. |
+| `--color-ink` | `ink` | `#0B1020` | Capa 0: fondo de la página. |
+| `--color-ink-2` | `ink-2` | `#10162B` | Capa 1: barra lateral, encabezado, barras fijas, pistas de progreso. |
+| `--color-surface` | `surface` | `#171D33` | Capa 2: tarjetas, paneles, tablas, controles. **Siempre con borde `linea`** (frente al fondo solo da 1.14:1). |
+| `--color-surface-2` | `surface-2` | `#1F2744` | Capa 3: lo que flota (`Drawer`, `Dialog`, menús, avisos) y el hover de una tarjeta. |
+| `--color-linea` | `linea` | `#3A4673` | Bordes de tarjetas y divisores (2.08 sobre `ink`). |
+| `--color-linea-fuerte` | `linea-fuerte` | `#6B78A8` | Bordes de **controles** y trazos que hay que leer (`ChordDiagram`): ≥ 3:1 en todas las capas. |
+| `--color-primary` | `primary` | `#6257F5` | Violeta brillante: fondo de botón primario, relleno de progreso, ítem activo de la barra lateral. **Nunca texto.** |
+| `--color-primary-hover` | `primary-hover` | `#5348E6` | Hover del botón primario (más oscuro: el texto gana contraste). |
+| `--color-primary-claro` | `primary-claro` | `#9A94FA` | Violeta legible como texto o trazo: puntos del acorde, categorías, cifras destacadas. |
+| `--color-accent` | `accent` | `#B9C8FF` | Lavanda: enlaces, foco (`anillo`), íconos y series de gráficos. |
+| `--color-success` | `success` | `#34D399` | **Verde: logro** (completado, aprobado). *(enmienda: antes ámbar)* |
+| `--color-suena` | `suena` | `#F5B942` | **Ámbar: la cuerda que suena**, solo en animaciones de cuerdas y en la cuerda del mástil. |
+| `--color-danger` | `danger` | `#F7707A` | Errores y acciones destructivas. |
+| `--color-muted` | `muted` | `#AEB6D8` | Texto secundario. |
+| `--color-paper` | `paper` | `#F5F6FF` | Texto principal. |
 
-> La clase `border` de la configuración actual se renombra a `linea` en
+> La clase `border` de la configuración original se renombró a `linea` en
 > HU-F-301 porque `border` choca con la utilidad homónima de Tailwind
 > (`border-border`).
 
@@ -51,11 +59,12 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 
 | Color | Proporción aproximada |
 |---|---|
-| `ink` / `ink-2` / `surface` | ~70 % |
+| `ink` / `ink-2` / `surface` / `surface-2` | ~70 % |
 | `paper` / `muted` (texto) | ~20 % |
-| `primary` | ≤ 8 % — un único botón primario por vista |
-| `accent` | ≤ 2 % |
+| `primary` | ≤ 8 % — un único botón primario por vista, rellenos de progreso, ítem activo |
+| `accent` | ≤ 4 % — enlaces, foco, íconos de tarjeta, series de gráficos |
 | `success` | Solo donde hay un logro real |
+| `suena` | Solo en la cuerda que suena |
 
 ### 2.3 Tipografía
 
@@ -72,66 +81,66 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 
 | Token | Valor |
 |---|---|
-| Espaciado | escala de 4 px de Tailwind; secciones separadas por 48–64 px |
+| Espaciado | escala de 4 px de Tailwind; secciones separadas por 24–48 px (inicio en retícula) o 48–64 px (lectura) |
 | Radio controles | 6 px (`rounded-md`) |
 | Radio contenedores | 10 px (token `rounded-caja` definido en `tailwind.config.js`) |
-| Sombras | **Una sola**: `shadow-dialogo` para diálogos y menús flotantes. Nada más tiene sombra. |
+| Sombras | **Una sola**: `shadow-dialogo` para diálogos y menús flotantes. Las tarjetas se separan con borde, no con sombra. |
 | Duración | 120 ms (hover) · 200 ms (paneles) |
-| Movimiento con significado | Vibración de cuerda al completar o enviar (ya existe en `Fretboard`). Siempre con `prefers-reduced-motion`. |
+| Movimiento con significado | Vibración de cuerda al completar o enviar (`Fretboard`, `GuitarraAcustica`). Siempre con `prefers-reduced-motion`. |
 
 ## 3. Contraste verificado
 
-Referencia: **WCAG 2.2 nivel AA** (4.5:1 texto normal, 3:1 texto grande y componentes). La tabla
-es el cálculo sobre los colores puros; HU-F-314 revalida las combinaciones reales (opacidades,
-estados hover/foco/deshabilitado, `ink-2`) y registra aquí cada ajuste de luminosidad.
+Referencia: **WCAG 2.2 nivel AA** (4.5:1 texto normal, 3:1 texto grande y componentes). Cálculo
+sobre los colores puros de la paleta de HU-F-320; el detalle por estado está en el
+[informe AUD-2026-01](../auditorias/AUD-2026-01-interfaz-y-contraste.md).
 
-| Texto / elemento | Sobre `ink` | Sobre `surface` | Uso permitido |
-|---|---|---|---|
-| `paper` | 15.8 | 13.5 | Todo texto |
-| `muted` | 10.3 | 8.8 | Todo texto |
-| `accent` | 8.7 | 7.4 | Enlaces, foco, texto |
-| `success` | 10.2 | 8.7 | Texto y marcas de logro |
-| `danger` | 6.3 | 5.3 | Texto de error (AA), también sobre `danger/10` (4.6) |
-| `primary-claro` | 6.6 | 5.7 | Texto violeta |
-| `primary` | **3.2** | **2.7** | ❌ **Nunca como color de texto ni de foco.** Solo fondo de botón (texto `paper` encima: 5.0). |
-| `linea-fuerte` | 3.7 | 3.1 | Bordes de controles (WCAG 1.4.11) |
-| `linea` | 1.7 | 1.5 | Solo decorativo (trastes, divisores). Nunca en gráficos que hay que leer (`ChordDiagram`, umbrales): ahí `linea-fuerte`. |
+| Texto / elemento | `ink` | `ink-2` | `surface` | `surface-2` | Uso permitido |
+|---|---|---|---|---|---|
+| `paper` | 17.6 | 16.7 | 15.5 | 13.6 | Todo texto |
+| `muted` | 9.5 | 9.0 | 8.3 | 7.3 | Todo texto |
+| `accent` | 11.5 | 10.9 | 10.1 | 8.9 | Enlaces, foco, íconos, texto |
+| `primary-claro` | 7.2 | 6.8 | 6.3 | 5.6 | Texto y trazos violeta |
+| `success` | 9.9 | 9.3 | 8.7 | 7.6 | Texto y marcas de logro |
+| `suena` | 10.7 | 10.2 | 9.5 | 8.3 | Cuerda que suena |
+| `danger` | 6.8 | 6.5 | 6.0 | 5.3 | Texto de error |
+| `linea-fuerte` | 4.4 | 4.2 | 3.9 | 3.4 | Bordes de controles (1.4.11) |
+| `linea` | 2.1 | — | 1.8 | 1.6 | Bordes de tarjetas y divisores (decorativos) |
+| `primary` | **3.8** | 3.6 | **3.3** | — | ❌ **Nunca como texto** (no llega a 4.5). Fondo de botón (texto `paper` encima: 4.64; en hover `primary-hover`: 5.68) y relleno de progreso sobre pista `ink-2` (3.59). |
 
-Ajustes de HU-F-314 ([informe AUD-2026-01](../auditorias/AUD-2026-01-interfaz-y-contraste.md)):
-- Puntos de dedos del `ChordDiagram` en `primary-claro` con número en `ink` (`primary` sobre `surface` daba 2.7).
-- *Placeholder* en `muted/70`; controles deshabilitados sin opacidad (`bg-ink-2 text-muted`, borde intacto).
-- Enlaces dentro de una frase siempre subrayados (1.4.1): el color solo no basta frente a `muted`.
+Reglas que se mantienen de HU-F-314:
+- Puntos de dedos del `ChordDiagram` en `primary-claro` con número en `ink`.
+- *Placeholder* en `muted/70` (4.77 sobre `surface`); controles deshabilitados sin opacidad.
+- Enlaces dentro de una frase siempre subrayados (1.4.1).
 - Barras fijas marcadas con `data-fijo="arriba|abajo"` para que el foco no quede tapado (2.4.11).
-
-Consecuencias directas sobre el código anterior (ya aplicadas en HU-F-301/F-302):
-- `hover:text-primary` en enlaces de `Header.jsx` → cambiar a `hover:text-accent`.
-- `focus:border-primary` en `input.jsx` → anillo `accent`.
-- `border-border` en inputs → `border-linea-fuerte`.
 
 ## 4. Componentes clave con identidad
 
-| Componente (`shared/music/`) | Descripción |
+| Componente | Descripción |
 |---|---|
-| `Cuerda` | Barra de progreso de una línea. Props: `valor` (0–100), `grosor` (1–3), `sonando` (bool → ámbar). Con `role="progressbar"` y `aria-valuenow`. |
-| `TrasteDivider` | Separador horizontal de 1 px con un pequeño número de traste en mono a la izquierda (opcional). Sustituye a `<hr>` y a las tarjetas apiladas. |
+| `Cuerda` (`shared/music`) | Barra de progreso: pista `ink-2`, relleno `primary`; `completado` → `success`. `role="progressbar"` y `aria-valuenow`. |
+| `TrasteDivider` | Separador horizontal de 1 px con un pequeño número de traste en mono a la izquierda (opcional). |
 | `MarcaEstado` | Símbolo `×` / `○` / `●` con texto accesible ("Bloqueado", "Disponible", "Aprobado"). |
-| `ChordDiagram` | Ya existe; se mantiene y se tipa. |
-| `Fretboard` | Ya existe (animación de cuerdas); se extrae de `AuthLayout` y se reutiliza al aprobar una evaluación. |
+| `ChordDiagram` | Diagrama del acorde; trazos `linea-fuerte`, dedos `primary-claro`. |
+| `Fretboard` | Animación de cuerdas que suenan en ámbar (`suena`). |
 | `Tablatura` | Fila de datos en mono con separadores verticales tipo compás: `♩ 60 BPM │ 4/4 │ 20 min`. |
-| `Boca` | Anillo de progreso con la forma de la **boca de la guitarra** (HU-F-315): cifra en mono al centro, arco ámbar cuando suena el 100 %. Es el **único indicador circular** permitido y se usa una vez por pantalla, solo para el avance global del estudiante. `role="progressbar"`. |
-| Ilustraciones (`shared/music/ilustraciones/`) | SVG propios en trazo de línea con tokens: guitarra acústica, mano en acorde, atril, estuche (HU-F-316). El texto nunca va encima de una ilustración. |
+| `Boca` | Anillo de progreso con la forma de la **boca de la guitarra** (HU-F-315): pista `ink-2`, arco `primary` (verde al 100 %), cifra en mono al centro. Uno por pantalla, solo para el avance global. |
+| `TarjetaCifra` *(enmienda)* | Tarjeta de una cifra real: ícono lucide en un recuadro `ink-2` (decorativo, `aria-hidden`), etiqueta, cifra en mono `hecho / total` y `Cuerda`. Máximo 4 por fila; **nunca** una cifra inventada ni un dato que la API no da. |
+| `TeselaAcorde` | Acorde como objeto: `surface` con borde `linea`, sin sombra. |
+| Ilustraciones (`shared/music/ilustraciones/`) | SVG propios: guitarra, mano en acorde, atril, estuche (HU-F-316). |
+| Fotografías (`src/assets/fotos/`) *(enmienda)* | Fotos de guitarra locales con licencia registrada (HU-F-321). |
 
 ## 5. Patrones de pantalla
 
-### Estudiante
-- **Inicio** (`/` con sesión, HU-F-315): saludo con el nombre y una frase concreta, **siguiente paso** con la única acción primaria, `Boca` + franja de cifras del avance, ruta resumida por bloques (filas como trastes, no tarjetas) y lo último que hizo. Solo datos reales; si falta un dato, estado vacío.
-- **Ruta** (`/ruta`; sin sesión también en `/`): columna izquierda con el mástil vertical (bloques como trastes, `MarcaEstado` en cada uno, `Cuerda` de avance a lo largo); columna derecha con el bloque seleccionado: lecciones como lista numerada en mono, ejercicios, y botón único "Presentar evaluación". En móvil el mástil se vuelve una tira horizontal desplazable arriba.
-- **Lección**: lectura editorial (una columna ≤ 68 caracteres), diagramas de acordes en una fila, `Tablatura` con duración y nivel, acción "Marcar como practicada" al final.
-- **Evaluación**: una pregunta por pantalla en móvil, todas en escritorio; opciones como filas completas seleccionables (no radios diminutos); resultado con `Fretboard` vibrando si aprueba.
+### Estudiante *(enmienda: maqueta aprobada, HU-F-315 y HU-F-318)*
+- **Barra lateral** en `ink-2` (escritorio): Inicio · Ruta · Ejercicios · Acordes · Mi progreso; ítem activo con fondo `primary`. En móvil, barra inferior con los mismos destinos.
+- **Inicio** (`/` con sesión): encabezado con saludo, nivel y foto de guitarra (texto nunca encima de la foto sin un fondo que garantice 4.5:1) junto a la `Boca` del avance global; fila de `TarjetaCifra` (lecciones, bloques, días con avance); "Continuar aprendiendo" con el siguiente paso y su único botón primario; progreso por bloques; evolución por día; bloques de la ruta con su estado; actividad reciente. Solo datos reales; si falta un dato, estado vacío.
+- **Ruta** (`/ruta`; sin sesión también en `/`): mástil vertical con el bloque seleccionado al lado; en móvil, tira horizontal desplazable arriba.
+- **Lección**: lectura editorial (una columna ≤ 68 caracteres), acordes en teselas, `Tablatura` con duración y nivel, acción "Marcar como practicada" al final.
+- **Evaluación**: una pregunta por pantalla en móvil, todas en escritorio; opciones como filas completas seleccionables; resultado con `Fretboard` vibrando si aprueba.
 
 ### Docente ("Atril")
 - Barra lateral fija con: Resumen · Cursos · Contenido · Evaluaciones.
-- **Resumen**: una franja horizontal de cifras en mono separadas por trastes (no tarjetas con íconos), seguida de "Estudiantes sin actividad en 14 días" como lista accionable.
+- **Resumen**: franja de cifras + "Estudiantes sin actividad en 14 días" como lista accionable.
 - **Tablas densas**: filas de 44 px, cabecera fija, orden por columna, `Cuerda` fina para el avance, filtros en la URL.
 - **Edición**: panel lateral (drawer) sobre la tabla, no páginas nuevas para editar campos simples.
 
@@ -139,19 +148,20 @@ Consecuencias directas sobre el código anterior (ya aplicadas en HU-F-301/F-302
 
 | ❌ No | ✅ En su lugar |
 |---|---|
-| Degradados violeta → rosa en fondos, textos o botones | Colores planos de la paleta. |
-| Manchas difuminadas (`blur-3xl`, "blobs") — hoy existe una en `AuthLayout` | El propio `Fretboard` como elemento gráfico. |
+| Degradados en fondos, textos, botones **o rellenos de gráficos** | Colores planos de la paleta. |
+| Manchas difuminadas (`blur-3xl`, "blobs") y brillos decorativos | Bordes `linea` y capas sólidas. |
 | *Glassmorphism* (`backdrop-blur`, `bg-white/10`) | `surface` sólido. |
-| Grilla de 3 tarjetas con ícono dentro de un círculo + título + párrafo | Lista o tabla con jerarquía tipográfica. |
-| Tarjetas con borde izquierdo de color como único recurso (hoy `Card` usa `border-l-4`) | `TrasteDivider` y espacio en blanco. |
-| Emojis como íconos, ícono de destellos (✨ `Sparkles`), cohetes 🚀 | `MarcaEstado`, símbolos musicales, lucide solo para acciones (editar, borrar, buscar). |
-| Textos de marketing vacíos: "Desbloquea tu potencial", "Bienvenido de nuevo 👋", "Lleva tu música al siguiente nivel" | Voz de profesor de música, concreta: "Hoy: cambio de Em a Am. 10 minutos." |
-| *Hero* centrado con título gigante + subtítulo + dos botones | Encabezado alineado a la izquierda con el nombre, una frase concreta y **una** acción (el siguiente paso), junto a una ilustración propia. |
+| Grilla de tarjetas con ícono + título + párrafo de marketing | `TarjetaCifra` solo con una cifra real; si no hay dato, la tarjeta no existe. |
+| Tarjetas con borde izquierdo de color como único recurso | Borde completo `linea` y espacio. |
+| Emojis como íconos, ícono de destellos (✨ `Sparkles`), cohetes 🚀 | `MarcaEstado`, símbolos musicales, lucide para acciones y para el ícono de `TarjetaCifra`. |
+| Textos de marketing vacíos y frases motivacionales de relleno ("La práctica constante hace la diferencia", "Desbloquea tu potencial") | Voz de profesor de música, concreta: "Hoy: cambio de Em a Am. 10 minutos." |
+| *Hero* centrado con título gigante + dos botones | Encabezado alineado a la izquierda con nombre, nivel y una frase concreta; la acción va en "Continuar aprendiendo". |
 | Sombras grandes en todo, `rounded-2xl/3xl` en todo | Una sombra, dos radios. |
 | Animación de entrada (fade-up) en cada elemento | Movimiento solo con significado (cuerda que suena). |
-| Píldoras "Nuevo" / "Pro" decorativas | Sin insignias que no informen algo real. |
-| Ilustraciones 3D, de *stock* o fotografías de bancos de imágenes | Diagramas y elementos de la guitarra dibujados en SVG (HU-F-316). Fotografías: fuera de esta fase (peso y licencias). |
+| Píldoras "Nuevo" / "Pro" decorativas | Píldoras de estado solo con estado real (Completado, En curso, Pendiente), con texto. |
+| Fotos de *stock* sin licencia, por URL externa o que simulen el contenido de una lección concreta | Fotos locales con licencia registrada (HU-F-321), por tipo de contenido. |
 | Gráficos decorativos o con datos de ejemplo | Un gráfico solo con datos reales, con alternativa en tabla; sin datos, estado vacío (HU-F-317). |
+| Enlaces a funciones que no existen (Logros, Perfil, Notificaciones) | Se agregan cuando exista su HU. |
 | Tablero docente con 4 tarjetas KPI y gráfico de dona | Franja de cifras + lista accionable. |
 
 ## 7. Voz y microcopia
@@ -160,4 +170,4 @@ Consecuencias directas sobre el código anterior (ya aplicadas en HU-F-301/F-302
 - Errores: qué pasó + qué hacer ("El código no existe o el curso ya cerró. Pídele a tu docente un código nuevo.").
 - Estados vacíos con siguiente paso concreto ("Aún no tienes estudiantes. Comparte el código **K7M2Q9XA** con tu grupo.").
 - Sin signos de exclamación dobles ni mayúsculas sostenidas.
-- Saludo del inicio: "Hola, Ana." + un dato concreto ("Vas en el bloque 2 · Cambio entre Em y Am."), no "Bienvenido de nuevo 👋".
+- Saludo del inicio: "Hola, Ana." + un dato concreto ("Vas en el bloque 2 · Cambio entre Em y Am.").

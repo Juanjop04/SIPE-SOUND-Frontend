@@ -106,3 +106,40 @@ calculan como color compuesto (`a·frente + (1 − a)·fondo`).
 | HU | Alcance | Estimación |
 |---|---|---|
 | HU-F-319 · Tablas del atril en móvil | `TablaCursos` y `TablaContenido` como filas apiladas bajo 768 px, como en HU-F-309/F-310 (M-7). | 2 puntos |
+
+## 6. Después de HU-F-320
+
+Revisión del 2026-10-23 sobre capturas reales de `/acordes`, `/ejercicios` y `/ejercicios/1`: el
+texto cumplía, pero **las capas no se distinguían**. El equipo aprobó después una maqueta de inicio con
+su paleta; [HU-F-320](../fase-3-rediseno-y-panel-docente/HU-F-320-capas-y-calidez-de-la-paleta.md) la
+adopta con ajustes AA (enlaces en lavanda y no en violeta, borde en toda tarjeta, hover más oscuro,
+pista de progreso en `ink-2`).
+
+Matriz recalculada con el mismo script (66 combinaciones): **64 cumplen**; las 2 restantes son las
+excepciones ya documentadas (B-3 exenta, M-8 decorativa: la cuerda del mástil sin sonar, 2.08).
+
+| Separación | Antes | Después |
+|---|---|---|
+| Tarjeta (`surface`) / fondo | 1.17, sin borde | 1.14 **+ borde `linea` 2.08** |
+| Lo que flota (`surface-2`) / fondo | — | 1.29 + sombra de diálogo |
+| Divisores (`linea`) / fondo | 1.73 | 2.08 |
+
+| Combinación | Relación |
+|---|---|
+| `paper` sobre `ink` · `ink-2` · `surface` · `surface-2` | 17.59 · 16.65 · 15.48 · 13.62 |
+| `muted` sobre `ink` · `surface` · `surface-2` | 9.45 · 8.32 · 7.32 |
+| `accent` (enlaces, foco) sobre `ink` · `surface` · `surface-2` | 11.51 · 10.13 · 8.92 |
+| `success` (logro, verde) sobre `ink` · `surface` | 9.85 · 8.67 |
+| `danger` sobre `ink-2` (`MensajeError`) · `surface` · `surface-2` | 6.45 · 5.99 · 5.28 |
+| `primary-claro` (dedos del acorde, etiquetas) sobre `ink` · `surface` | 7.20 · 6.34 |
+| `paper` sobre `primary` · `primary-hover` (botón) | 4.64 · 5.68 |
+| `ink` sobre `danger` (botón peligro) | 6.81 |
+| `linea-fuerte` sobre `ink` · `ink-2` · `surface` · `surface-2` | 4.40 · 4.16 · 3.87 · 3.41 |
+| Relleno `primary` de `Cuerda` frente a su pista `ink-2` · completado `success` | 3.59 · 9.32 |
+| Cuerda que suena (`suena`, ámbar) sobre `ink` | 10.73 |
+| *Placeholder* `muted/70` sobre `ink` | 5.14 |
+
+`primary` (`#6257F5`) no se usa como texto en ninguna parte: sobre el fondo daría 3.79.
+
+Comprobado en Chrome sin interfaz con el CSS de producción; las pantallas con datos del backend
+quedan para la verificación manual del PR.

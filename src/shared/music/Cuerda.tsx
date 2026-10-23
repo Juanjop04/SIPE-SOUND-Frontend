@@ -8,7 +8,7 @@ export interface CuerdaProps {
   /** Nombre accesible: "Avance del bloque 2". */
   etiqueta: string;
   grosor?: GrosorCuerda;
-  /** Completado: la cuerda "suena" y pasa a ámbar (success). */
+  /** Completado: el relleno pasa de violeta (primary) a verde (success, logro). */
   sonando?: boolean;
   className?: string;
 }
@@ -29,12 +29,12 @@ export function Cuerda({ valor, etiqueta, grosor = 2, sonando = false, className
       aria-valuenow={avance}
       aria-valuemin={0}
       aria-valuemax={100}
-      className={cn("w-full rounded-full bg-linea", GROSORES[grosor], className)}
+      className={cn("w-full rounded-full bg-ink-2", GROSORES[grosor], className)}
     >
       <div
         className={cn(
           "h-full rounded-full transition-[width,background-color] duration-panel",
-          sonando ? "bg-success" : "bg-paper/55",
+          sonando ? "bg-success" : "bg-primary",
         )}
         // Valor calculado: el único style permitido (contrato 03 §5).
         style={{ width: `${avance}%` }}

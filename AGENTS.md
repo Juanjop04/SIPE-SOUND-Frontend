@@ -21,7 +21,8 @@ API en el repositorio hermano `SIPE-SOUND-BACKEND`.
 - `fetch` solo en `src/shared/api/httpClient`. Datos del servidor con TanStack Query.
 - El frontend no usa Supabase: la autenticación pasa por el backend (`/auth/*`, HU-F-207).
 - Colores solo con tokens; nada de hex ni `bg-[#…]`.
-- Nada de UI genérica de IA: sin degradados, blobs, glassmorphism, grillas de tarjetas con ícono, emojis.
+- Nada de UI genérica de IA: sin degradados, blobs, glassmorphism, tarjetas con ícono sin un dato real, emojis
+  (`05-sistema-de-diseno.md` §6; enmienda del 2026-10-23).
 - Código nuevo en TypeScript. Sin pruebas unitarias en esta etapa (decisión del equipo).
 - Español en interfaz, docs, comentarios y commits.
 

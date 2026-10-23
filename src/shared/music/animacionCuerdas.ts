@@ -82,9 +82,9 @@ export function useAnimacionCuerdas(
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
-    // Cuerda quieta (paper) y sonando (success), leídos una sola vez de tokens.css.
+    // Cuerda quieta (paper) y sonando (suena, ámbar), leídos una sola vez de tokens.css.
     const quieta = leerColorToken("paper");
-    const sonando = leerColorToken("success");
+    const sonando = leerColorToken("suena");
     const mezclar = (brillo: number) =>
       quieta.map((canal, i) => Math.round(canal + (sonando[i] - canal) * brillo)).join(", ");
 

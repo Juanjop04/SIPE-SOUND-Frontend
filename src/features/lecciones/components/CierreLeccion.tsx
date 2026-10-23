@@ -18,7 +18,7 @@ function CuerdaQueSuena({ vibrar }: { vibrar: boolean }) {
   return (
     <div
       aria-hidden="true"
-      className={`h-1.5 w-full rounded-full bg-success ${vibrar ? "motion-safe:animate-vibrar" : ""}`}
+      className={`h-1.5 w-full rounded-full bg-suena ${vibrar ? "motion-safe:animate-vibrar" : ""}`}
     />
   );
 }

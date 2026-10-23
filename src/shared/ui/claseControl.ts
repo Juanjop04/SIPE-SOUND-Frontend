@@ -3,7 +3,7 @@ import { cn } from "@/shared/lib/cn.js";
 // Base común de Input, Textarea y Select: borde de control (linea-fuerte, ≥ 3:1) y,
 // si el valor es inválido, borde danger. El foco lo pinta el :focus-visible global.
 const BASE =
-  "w-full rounded-md border bg-ink px-3 py-2 text-sm text-paper transition-colors duration-rapida placeholder:text-muted/70 disabled:cursor-not-allowed disabled:bg-ink-2 disabled:text-muted";
+  "w-full rounded-md border bg-surface px-3 py-2 text-sm text-paper transition-colors duration-rapida placeholder:text-muted/70 disabled:cursor-not-allowed disabled:bg-ink-2 disabled:text-muted";
 
 export function claseControl(invalido: boolean, className?: string): string {
   return cn(

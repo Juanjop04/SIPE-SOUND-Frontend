@@ -9,3 +9,4 @@ export {
   type Cejilla,
 } from "./ChordDiagram";
 export { Fretboard, type FretboardProps } from "./Fretboard";
+export { CLASE_TESELA, TeselaAcorde, type TeselaAcordeProps } from "./TeselaAcorde";
