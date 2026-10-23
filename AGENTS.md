@@ -19,7 +19,7 @@ API en el repositorio hermano `SIPE-SOUND-BACKEND`.
 - Una HU por rama y por PR. No salgas del alcance.
 - `app → features → shared`. Entre features, solo vía `index.ts`. `shared` no importa features.
 - `fetch` solo en `src/shared/api/httpClient`. Datos del servidor con TanStack Query.
-- Supabase solo para autenticación; nunca `supabase.from(...)`.
+- El frontend no usa Supabase: la autenticación pasa por el backend (`/auth/*`, HU-F-207).
 - Colores solo con tokens; nada de hex ni `bg-[#…]`.
 - Nada de UI genérica de IA: sin degradados, blobs, glassmorphism, grillas de tarjetas con ícono, emojis.
 - Código nuevo en TypeScript. Sin pruebas unitarias en esta etapa (decisión del equipo).

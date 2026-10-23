@@ -29,7 +29,8 @@
 - Reescribir los `*Api.js` de cada feature sobre `http`.
 - Hooks `useXxx` por feature con claves en `api/keys.js`.
 - Páginas usan los hooks en lugar de `useEffect` para datos.
-- `.env.example` con `VITE_API_URL=http://localhost:5000/api/v1` y las variables de Supabase.
+- `.env.example` con `VITE_API_URL=http://localhost:5000/api/v1` (ya hecho en HU-F-207; sin variables de Supabase).
+- `httpClient` toma el token de `shared/api/sesion` (`obtenerToken`) y envía `credentials: "include"` solo a `/auth/*`.
 - Eliminar `src/shared/api/obtenerToken.js`.
 
 **No incluye**: cambios visuales (los mensajes de carga/error actuales se mantienen).

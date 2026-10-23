@@ -27,8 +27,8 @@ Si la HU contradice el contrato, **gana el contrato** y el agente lo reporta.
 | R5 | **Fase 2 = refactor sin cambio visual ni funcional.** Capturas antes/después en el PR. |
 | R6 | **Nada de UI genérica de IA.** Antes de entregar una pantalla, el agente revisa la lista de anti-patrones de [`05-sistema-de-diseno.md` §6](05-sistema-de-diseno.md#6-anti-patrones-prohibidos-matices-genéricos-de-ia) y declara en el PR que no usó ninguno. |
 | R7 | **Colores solo desde tokens.** Prohibido escribir hex (`#7C3AED`) o clases arbitrarias (`bg-[#...]`) en componentes. |
-| R8 | **El frontend no consulta tablas.** Supabase se usa solo para autenticación; los datos vienen del backend. |
-| R9 | **Secretos.** Solo variables `VITE_*` públicas por diseño (URL y *anon key*). Nunca la *service role key*. Nunca se lee ni se muestra `.env`. |
+| R8 | **El frontend no usa Supabase.** Ni para datos ni para autenticación: todo pasa por el backend (`/auth/*` para la sesión, HU-F-207 / HU-B-322). |
+| R9 | **Secretos.** Solo variables `VITE_*` públicas por diseño (hoy solo `VITE_API_URL`). Ninguna clave de Supabase. Nunca se lee ni se muestra `.env`. |
 | R10 | **Sin pruebas unitarias en esta etapa** (decisión del equipo). El código debe ser testeable: lógica en hooks/funciones puras, componentes presentacionales. |
 | R11 | **Verificación manual obligatoria** en navegador (escritorio 1280 px y móvil 375 px) con captura en el PR. |
 | R12 | **Idioma**: textos de interfaz, comentarios, docs y commits en español. Interfaz con tildes y ñ correctas. |

@@ -30,9 +30,9 @@
    está pendiente. Con `429` queda deshabilitado 60 s.
 9. **Campos extra prohibidos**: el formulario envía solo los campos del esquema
    (el backend responde 400 a cualquier campo de más, p. ej. `rol`).
-10. **Registro**: va directo a Supabase Auth (el backend no crea cuentas, HU-B-321). La
-    validación del formulario es la única antes de Supabase: la base normaliza el nombre y
-    Supabase aplica su política de contraseñas.
+10. **Registro**: va al backend (`POST /auth/registro`, HU-B-322), que valida con los mismos
+    límites y llama a Supabase Auth. La base normaliza el nombre y Supabase aplica su política
+    de contraseñas.
 
 ## 2. Por tipo de dato
 
@@ -65,8 +65,8 @@ siguen la §7.2 del contrato del backend y se aplican en HU-F-310.
 
 | Formulario | Campos | Endpoint | HU |
 |---|---|---|---|
-| Iniciar sesión | correo, contraseña | Supabase Auth (`signInWithPassword`) | HU-F-313 |
-| Registro (estudiantes y docentes preautorizados) | nombre, correo, contraseña, confirmar, términos | Supabase Auth (`signUp` con `options.data.nombre`) | HU-F-313 |
+| Iniciar sesión | correo, contraseña | `POST /auth/sesion` | HU-F-313 |
+| Registro (estudiantes y docentes preautorizados) | nombre, correo, contraseña, confirmar, términos | `POST /auth/registro` (`acepta_terminos` pendiente en el backend, ver HU-B-322) | HU-F-313 |
 | Preautorizar docente (admin) | correo | `POST /admin/docentes/preautorizaciones` | HU-F-313 |
 | Metrónomo / avance de ejercicio | BPM | `PUT /progreso/ejercicios/{id}` (`mejor_bpm`) | HU-F-305 |
 | Curso nuevo / ajustes | nombre, descripción, nivel | `/docente/cursos` | HU-F-307 |
