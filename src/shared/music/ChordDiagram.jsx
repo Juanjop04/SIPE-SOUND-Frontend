@@ -57,7 +57,7 @@ export default function ChordDiagram({ frets, fingers, baseFret = 1, barre }) {
           x2={xCuerda(i)}
           y2={marginTop + gridHeight}
           stroke="currentColor"
-          className="text-border"
+          className="text-linea"
           strokeWidth={1}
         />
       ))}
@@ -71,7 +71,7 @@ export default function ChordDiagram({ frets, fingers, baseFret = 1, barre }) {
           x2={marginSide + gridWidth}
           y2={yTraste(t)}
           stroke="currentColor"
-          className="text-border"
+          className="text-linea"
           strokeWidth={t === 0 && baseFret === 1 ? 3 : 1}
         />
       ))}

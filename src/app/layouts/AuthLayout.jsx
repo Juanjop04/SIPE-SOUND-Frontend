@@ -15,10 +15,6 @@ export default function AuthLayout() {
     <div className="min-h-screen bg-ink text-paper lg:grid lg:grid-cols-2">
       {/* Panel de marca (solo escritorio) */}
       <aside className="relative hidden flex-col justify-between overflow-hidden bg-surface p-12 lg:flex">
-        <div
-          className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#7C3AED] opacity-20 blur-3xl"
-          aria-hidden="true"
-        />
         <div className="relative flex items-center gap-3">
           <img src={logo} alt="" className="h-10 w-10 object-contain" />
           <span className="font-display text-xl font-semibold">Sipe Sound</span>

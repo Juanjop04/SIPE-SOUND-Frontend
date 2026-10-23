@@ -1,0 +1,20 @@
+/*
+ * Tokens del sistema de diseño "Diapasón" (contrato 05 §2). ÚNICO lugar con valores de color.
+ * Canales RGB sin rgb(): Tailwind los usa como rgb(var(--color-x) / <alpha-value>),
+ * así funcionan las opacidades (bg-primary/10). JavaScript los lee con leerColorToken().
+ */
+:root {
+  --color-ink: 27 16 48; /* #1B1030 · fondo de la aplicación */
+  --color-ink-2: 34 22 64; /* #221640 · capa intermedia (barra lateral, filas alternas) */
+  --color-surface: 42 27 77; /* #2A1B4D · superficies elevadas */
+  --color-linea: 74 52 112; /* #4A3470 · trastes y divisores decorativos */
+  --color-linea-fuerte: 122 102 163; /* #7A66A3 · bordes de controles (≥ 3:1) */
+  --color-primary: 124 58 237; /* #7C3AED · fondo de la acción principal; nunca texto */
+  --color-primary-hover: 107 47 209; /* #6B2FD1 */
+  --color-primary-claro: 167 139 250; /* #A78BFA · texto violeta sobre fondo oscuro */
+  --color-accent: 226 157 224; /* #E29DE0 · enlaces, foco, selección actual */
+  --color-success: 245 185 66; /* #F5B942 · solo logro: completado, aprobado, "suena" */
+  --color-danger: 242 84 91; /* #F2545B · errores y acciones destructivas */
+  --color-muted: 201 190 224; /* #C9BEE0 · texto secundario */
+  --color-paper: 243 238 251; /* #F3EEFB · texto principal */
+}

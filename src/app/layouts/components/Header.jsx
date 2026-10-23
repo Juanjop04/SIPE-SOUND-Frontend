@@ -22,26 +22,26 @@ export default function Header() {
         </Link>
       </div>
       <nav className="flex items-center gap-4 text-sm">
-        <Link to={paths.acordes} className="text-muted hover:text-primary">
+        <Link to={paths.acordes} className="text-muted hover:text-accent">
           Acordes
         </Link>
-        <Link to={paths.ejercicios} className="text-muted hover:text-primary">
+        <Link to={paths.ejercicios} className="text-muted hover:text-accent">
           Ejercicios
         </Link>
         {usuario && (
-          <Link to={paths.progreso} className="text-muted hover:text-primary">
+          <Link to={paths.progreso} className="text-muted hover:text-accent">
             Mi progreso
           </Link>
         )}
         {usuario ? (
           <>
             <span className="text-muted">{usuario.email}</span>
-            <button type="button" onClick={handleLogout} className="text-primary hover:underline">
+            <button type="button" onClick={handleLogout} className="text-accent hover:underline">
               Cerrar sesion
             </button>
           </>
         ) : (
-          <Link to={paths.login} className="text-primary hover:underline">
+          <Link to={paths.login} className="text-accent hover:underline">
             Iniciar sesion
           </Link>
         )}

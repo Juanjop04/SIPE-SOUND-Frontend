@@ -25,6 +25,19 @@ export default [
       "no-console": ["error", { allow: ["error"] }],
       "sonarjs/cognitive-complexity": ["error", 15],
       "max-lines-per-function": ["warn", { max: 80, skipComments: true }],
+      // Colores solo desde tokens (contrato 05 §2, HU-F-301): nada de hex en className.
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXAttribute[name.name='className'] Literal[value=/#[0-9a-fA-F]{3,6}/]",
+          message: "Usa un token de color (bg-primary, text-accent…), no un hex.",
+        },
+        {
+          selector:
+            "JSXAttribute[name.name='className'] TemplateElement[value.raw=/#[0-9a-fA-F]{3,6}/]",
+          message: "Usa un token de color (bg-primary, text-accent…), no un hex.",
+        },
+      ],
       "no-restricted-imports": [
         "error",
         {

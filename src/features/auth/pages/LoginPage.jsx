@@ -62,7 +62,7 @@ export default function Login() {
             {/* Crea la ruta /recuperar o cambia este enlace cuando exista */}
             <Link
               to={paths.recuperar}
-              className="text-[#E29DE0] hover:underline focus-visible:underline"
+              className="text-accent hover:underline focus-visible:underline"
             >
               ¿Olvidaste tu contraseña?
             </Link>
@@ -80,7 +80,7 @@ export default function Login() {
             <button
               type="button"
               onClick={() => setVerPassword((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded text-muted hover:text-paper focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7C3AED]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded text-muted hover:text-paper"
               aria-label={verPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               aria-pressed={verPassword}
             >
@@ -92,7 +92,7 @@ export default function Login() {
         {error && (
           <div
             role="alert"
-            className="rounded-lg border border-[#F2545B]/40 bg-[#F2545B]/10 px-4 py-3 text-sm text-[#F2545B]"
+            className="rounded-lg border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger"
           >
             {error}
           </div>
@@ -107,7 +107,7 @@ export default function Login() {
         ¿Aún no tienes cuenta?{" "}
         <Link
           to={paths.registro}
-          className="font-medium text-[#E29DE0] hover:underline focus-visible:underline"
+          className="font-medium text-accent hover:underline focus-visible:underline"
         >
           Crea una gratis
         </Link>

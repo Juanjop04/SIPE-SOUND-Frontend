@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { leerColorToken } from "@/shared/lib/tokens.js";
 
 // Cada cuerda: altura (y), grosor, cuánto se mueve (amp) y cuánto dura
 // una vibración (dur). Las gruesas vibran más lento y se mueven menos.
@@ -38,6 +39,12 @@ export function Fretboard({ tocando }) {
   useEffect(() => {
     const quiereMenosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (quiereMenosMovimiento) return;
+
+    // Colores de la cuerda quieta (paper) y sonando (success), leídos una sola vez de tokens.css.
+    const quieta = leerColorToken("paper");
+    const sonando = leerColorToken("success");
+    const mezclar = (brillo) =>
+      quieta.map((canal, i) => Math.round(canal + (sonando[i] - canal) * brillo)).join(", ");
 
     const inicio = performance.now();
     // Una pulsación por cuerda: cuándo ocurrió y qué tan fuerte fue
@@ -85,10 +92,7 @@ export function Fretboard({ tocando }) {
 
         // Color: de lila claro (quieta) a ámbar (sonando)
         const brillo = Math.min(1, Math.max(intensidad.current, energia));
-        const r = Math.round(243 + 2 * brillo);
-        const g = Math.round(238 - 53 * brillo);
-        const b = Math.round(251 - 185 * brillo);
-        el.style.stroke = `rgb(${r}, ${g}, ${b})`;
+        el.style.stroke = `rgb(${mezclar(brillo)})`;
         el.style.strokeOpacity = String(0.55 + 0.45 * brillo);
       });
 
@@ -113,14 +117,14 @@ export function Fretboard({ tocando }) {
           y1="30"
           x2={x}
           y2="250"
-          stroke="#7C3AED"
+          className="stroke-primary"
           strokeOpacity="0.35"
           strokeWidth="2"
         />
       ))}
 
       {PUNTOS.map((p) => (
-        <circle key={p.x} cx={p.x} cy={p.y} r="9" fill="#E29DE0" fillOpacity="0.28" />
+        <circle key={p.x} cx={p.x} cy={p.y} r="9" className="fill-accent" fillOpacity="0.28" />
       ))}
 
       {CUERDAS.map((c, i) => (
@@ -129,7 +133,7 @@ export function Fretboard({ tocando }) {
           ref={(el) => (cuerdasRef.current[i] = el)}
           d={curva(c.y, 0)}
           fill="none"
-          stroke="#F3EEFB"
+          className="stroke-paper"
           strokeOpacity="0.55"
           strokeWidth={c.grosor}
           strokeLinecap="round"

@@ -18,7 +18,7 @@ export function RequireRole({ roles }) {
       <main className="mx-auto max-w-2xl px-6 py-8">
         <p className="text-sm text-muted">
           No tienes acceso a esta sección.{" "}
-          <Link to={paths.inicio} className="text-primary hover:underline">
+          <Link to={paths.inicio} className="text-accent hover:underline">
             Volver al inicio
           </Link>
         </p>
