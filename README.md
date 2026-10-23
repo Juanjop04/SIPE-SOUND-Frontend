@@ -1,72 +1,79 @@
-# GuitarApp 🎸
+# GuitarApp — Frontend (React + Vite + Tailwind + shadcn/ui)
 
-App web para aprender guitarra de forma progresiva: lecciones, acordes, ejercicios prácticos y partituras.
+## Instalacion
 
-## Stack
-
-- **Frontend:** HTML + CSS + JavaScript vanilla
-- **Backend:** Python (Flask)
-- **Base de datos:** Supabase (Postgres) — incluye autenticación
-
-## Estructura del proyecto
-
-```
-guitarapp/
-├── backend/              → Servidor Flask (API)
-│   ├── app.py
-│   ├── requirements.txt
-│   └── .env.example
-├── database/
-│   └── schema.sql        → Script SQL para crear todas las tablas en Supabase
-├── frontend/
-│   ├── index.html         → Dashboard con lista de lecciones
-│   ├── css/
-│   │   └── style.css
-│   ├── js/
-│   │   ├── supabaseClient.js  → Login/registro (habla directo con Supabase)
-│   │   └── api.js             → Consultas de datos (habla con el backend Flask)
-│   └── pages/
-│       └── login.html
-└── .gitignore
-```
-
-## Cómo levantar el proyecto (primera vez)
-
-### 1. Base de datos (Supabase)
-1. Crea un proyecto en https://supabase.com
-2. Ve a **SQL Editor** y ejecuta el contenido de `database/schema.sql`
-3. Ve a **Settings → API** y copia tu `Project URL` y `anon public key`
-
-### 2. Backend (Flask)
 ```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate          # Windows
-source venv/bin/activate       # Mac/Linux
-
-pip install -r requirements.txt
-cp .env.example .env           # y pega ahí tus credenciales de Supabase
-python app.py
+npm install
+cp .env.example .env
 ```
-El backend queda corriendo en `http://localhost:5000`
 
-### 3. Frontend
-1. Abre `frontend/js/supabaseClient.js` y pega tu `SUPABASE_URL` y `SUPABASE_ANON_KEY`
-2. Abre `frontend/index.html` con la extensión **Live Server** de VS Code (clic derecho → "Open with Live Server")
+Edita `.env` y pega tu `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` reales
+(Supabase → Settings → API).
 
-## Estado actual del proyecto
+## Correr en desarrollo
 
-- [x] Base de datos diseñada y con RLS (seguridad)
-- [x] Backend Flask con rutas GET para lecciones, acordes, ejercicios
-- [x] Frontend base: dashboard + login
-- [ ] Registro de usuario (frontend)
-- [ ] Guardar progreso del usuario (backend + frontend)
-- [ ] Vista de detalle de lección con acordes
-- [ ] Ejercicios interactivos (quiz)
-- [ ] (Opcional / fase 2) Notación musical real, afinador, reconocimiento de audio
+Con el backend Flask corriendo en otra terminal (`python app.py`):
 
-## Notas para la tesis
+```bash
+npm run dev
+```
 
-- La autenticación (registro/login/contraseñas) la maneja Supabase Auth, no código propio — es más seguro y evita reinventar el manejo de contraseñas.
-- Las políticas de Row Level Security (RLS) garantizan que cada usuario solo pueda ver/modificar su propio progreso.
-- Arquitectura de 3 capas: Frontend (HTML/JS) → Backend (Flask/Python) → Base de datos (Supabase/Postgres)
+Abre `http://localhost:5173`
+
+## Que cambio respecto a la version anterior
+
+- Se reemplazo el CSS a mano por Tailwind (clases utilitarias directo en el JSX)
+- Se agregaron componentes reutilizables estilo shadcn/ui en `src/components/ui/`
+  (Button, Input, Card) — se editan igual que cualquier componente propio
+- Se agrego el logo real del proyecto en `src/assets/logo.png`
+- El backend y la logica de Supabase/API no cambiaron en nada
+
+## Estructura
+
+```
+src/
+├── main.jsx
+├── App.jsx                 → rutas (/, /login, /registro)
+├── index.css                → directivas de Tailwind
+├── assets/
+│   └── logo.png              → logo de GuitarApp
+├── components/
+│   ├── Header.jsx
+│   └── ui/
+│       ├── button.jsx
+│       ├── input.jsx
+│       └── card.jsx
+├── pages/
+│   ├── Home.jsx
+│   ├── Login.jsx
+│   └── Registro.jsx
+└── lib/
+    ├── utils.js               → helper cn() para combinar clases
+    ├── supabaseClient.js
+    └── api.js
+```
+
+## Paleta de colores (definida en tailwind.config.js)
+
+Inspirada en el logo (fantasma con audifonos, degradado indigo-violeta-rosa).
+
+| Clase Tailwind | Hex | Uso |
+|---|---|---|
+| `bg-ink` | `#1B1030` | Fondo principal |
+| `bg-surface` | `#2A1B4D` | Tarjetas, header |
+| `border-primary` / `bg-primary` | `#7C3AED` | Acento principal, botones |
+| `text-accent` | `#E29DE0` | Acento secundario (usar con moderacion) |
+| `bg-success` / `text-success` | `#F5B942` | Exito / progreso completado |
+| `text-danger` | `#F2545B` | Errores |
+| `text-muted` | `#C9BEE0` | Texto secundario |
+| `text-paper` | `#F3EEFB` | Texto principal sobre fondo oscuro |
+
+Tipografia: `Baloo 2` (titulos, redondeada y amigable, a tono con el
+fantasma) + `Inter` (texto) + `IBM Plex Mono` (datos/acordes).
+
+## Como agregar mas componentes shadcn/ui
+
+Si necesitan mas adelante un componente que no esta (Select, Dialog, etc.),
+la logica es la misma: crear el archivo en `src/components/ui/`, usar
+Tailwind + el helper `cn()` de `src/lib/utils.js`. No es una libreria que
+se instale con npm, se copian los componentes al proyecto.
