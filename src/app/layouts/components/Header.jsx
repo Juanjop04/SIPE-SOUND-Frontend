@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/shared/lib/supabase.js";
 import { cerrarSesion } from "@/features/auth";
-import logo from "../assets/logo.png";
+import logo from "@/assets/brand/logo.png";
 
 export default function Header() {
   const [usuario, setUsuario] = useState(null);

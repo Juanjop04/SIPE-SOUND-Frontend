@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home.jsx";
-import Login from "./pages/Login.jsx";
-import Registro from "./pages/Registro.jsx";
-import LeccionDetalle from "./pages/LeccionDetalle.jsx";
-import Acordes from "./pages/Acordes.jsx";
-import Ejercicios from "./pages/Ejercicios.jsx";
-import Progreso from "./pages/Progreso.jsx";
-import QuizBloque from "./pages/QuizBloque.jsx";
+import Home from "@/pages/Home.jsx";
+import Login from "@/pages/Login.jsx";
+import Registro from "@/pages/Registro.jsx";
+import LeccionDetalle from "@/pages/LeccionDetalle.jsx";
+import Acordes from "@/pages/Acordes.jsx";
+import Ejercicios from "@/pages/Ejercicios.jsx";
+import Progreso from "@/pages/Progreso.jsx";
+import QuizBloque from "@/pages/QuizBloque.jsx";
 
 export default function App() {
   return (

@@ -1,5 +1,5 @@
 import { Fretboard } from "@/shared/music/Fretboard.jsx";
-import logo from "../assets/logo.png";
+import logo from "@/assets/brand/logo.png";
 
 export default function AuthLayout({ titulo, descripcion, tocando = false, children }) {
   return (

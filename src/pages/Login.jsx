@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { iniciarSesion } from "@/features/auth";
 import { Input } from "@/shared/ui/Input.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
-import AuthLayout from "../components/AuthLayout.jsx";
+import AuthLayout from "@/app/layouts/AuthLayout.jsx";
 
 function IconoOjo({ visible }) {
   return visible ? (

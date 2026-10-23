@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
-import Header from "../components/Header.jsx";
+import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
 import { supabase } from "@/shared/lib/supabase.js";
