@@ -27,4 +27,6 @@ export {
   type EstadoVacioProps,
   type MensajeErrorProps,
 } from "./Estados";
+export { ListaEditable, type ListaEditableProps } from "./ListaEditable";
+export { ConfirmarSalida, type ConfirmarSalidaProps } from "./ConfirmarSalida";
 export { AvisosProvider, useAviso, type DatosAviso, type TipoAviso } from "./Aviso";

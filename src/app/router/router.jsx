@@ -6,6 +6,8 @@ import {
   cargarContenidoPage,
   cargarCursoDetallePage,
   cargarCursosPage,
+  cargarEditorEjercicioPage,
+  cargarEditorLeccionPage,
   cargarEvaluacionesPage,
   cargarResumenPage,
 } from "@/features/docente";
@@ -76,6 +78,8 @@ export const router = createBrowserRouter([
                   { path: paths.docente.cursos, lazy: pagina(cargarCursosPage) },
                   { path: paths.docente.curso(), lazy: pagina(cargarCursoDetallePage) },
                   { path: paths.docente.contenido, lazy: pagina(cargarContenidoPage) },
+                  { path: paths.docente.leccion(), lazy: pagina(cargarEditorLeccionPage) },
+                  { path: paths.docente.ejercicio(), lazy: pagina(cargarEditorEjercicioPage) },
                   { path: paths.docente.evaluaciones, lazy: pagina(cargarEvaluacionesPage) },
                 ],
               },

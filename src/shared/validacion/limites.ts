@@ -6,6 +6,8 @@ export const LIMITES = {
   email: { max: 254 },
   password: { min: 8, max: 72 },
   titulo: { min: 3, max: 120 },
+  // app/schemas/contenido.py (LeccionCrear.numero)
+  numeroLeccion: { min: 1, max: 9999 },
   descripcion: { max: 2000 },
   contenidoLeccion: { max: 20000 },
   mensajeRetroalimentacion: { min: 1, max: 1000 },

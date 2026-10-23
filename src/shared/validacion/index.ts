@@ -10,5 +10,8 @@ export {
   entero,
   lista,
   aceptaTerminos,
+  enteroOpcional,
+  tituloContenido,
+  listaDeTextos,
 } from "./campos";
 export { aplicarErroresServidor, esDemasiadasSolicitudes } from "./erroresServidor";

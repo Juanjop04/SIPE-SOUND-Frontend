@@ -26,6 +26,10 @@ export const paths = Object.freeze({
     /** @param {string | number} [id] */
     curso: (id = ":id") => `/docente/cursos/${id}`,
     contenido: "/docente/contenido",
+    /** @param {string | number} [id] "nueva" para crear */
+    leccion: (id = ":id") => `/docente/contenido/lecciones/${id}`,
+    /** @param {string | number} [id] "nuevo" para crear */
+    ejercicio: (id = ":id") => `/docente/contenido/ejercicios/${id}`,
     evaluaciones: "/docente/evaluaciones",
   }),
   // Administración (solo rol admin, HU-F-313).
