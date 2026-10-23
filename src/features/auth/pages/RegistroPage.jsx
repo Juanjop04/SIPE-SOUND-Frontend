@@ -3,9 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { registrarUsuario } from "../api/authService.js";
 import { IconoOjo } from "../components/IconoOjo.jsx";
 import { traducirErrorRegistro } from "../utils/traducirErrorAuth.js";
-import { Input } from "@/shared/ui/Input.jsx";
-import { Button } from "@/shared/ui/Button.jsx";
 import { paths } from "@/shared/config/paths.js";
+import { Button, Input } from "@/shared/ui";
 
 // 0 = vacía, 1 = débil, 2 = aceptable, 3 = fuerte
 function nivelPassword(p) {

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Circle } from "lucide-react";
-import { Card } from "@/shared/ui/Card.jsx";
 import { useRuta } from "@/features/ruta";
 import { useResumenProgreso } from "../hooks/useResumenProgreso.js";
 import { armarHistorial } from "../utils/armarHistorial.js";
@@ -32,18 +31,18 @@ export default function Progreso() {
       {!cargando && !error && (
         <>
           <div className="mb-6 flex gap-3">
-            <Card className="flex-1 border-l-0 text-center">
+            <div className="flex-1 rounded-caja bg-surface p-5 text-center">
               <p className="font-display text-2xl font-semibold text-success">{totalBloques}</p>
               <p className="mt-1 text-xs text-muted">bloques aprobados</p>
-            </Card>
-            <Card className="flex-1 border-l-0 text-center">
+            </div>
+            <div className="flex-1 rounded-caja bg-surface p-5 text-center">
               <p className="font-display text-2xl font-semibold text-success">{totalLecciones}</p>
               <p className="mt-1 text-xs text-muted">lecciones completadas</p>
-            </Card>
-            <Card className="flex-1 border-l-0 text-center">
+            </div>
+            <div className="flex-1 rounded-caja bg-surface p-5 text-center">
               <p className="font-display text-2xl font-semibold text-success">{totalEjercicios}</p>
               <p className="mt-1 text-xs text-muted">ejercicios completados</p>
-            </Card>
+            </div>
           </div>
 
           <div className="flex flex-col gap-3">

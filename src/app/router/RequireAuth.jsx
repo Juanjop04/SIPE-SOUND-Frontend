@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useSession } from "@/features/auth";
 import { loginConRegreso } from "@/shared/config/paths.js";
+import { Skeleton } from "@/shared/ui";
 
 // Sin sesión: a /login?volver=<ruta actual>; al iniciar sesión se regresa aquí.
 export function RequireAuth() {
@@ -9,8 +10,8 @@ export function RequireAuth() {
 
   if (estaCargando) {
     return (
-      <main className="mx-auto max-w-2xl px-6 py-8">
-        <p className="text-muted">Cargando...</p>
+      <main className="mx-auto max-w-2xl px-4 py-8" aria-busy="true">
+        <Skeleton lineas={3} />
       </main>
     );
   }

@@ -1,13 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-import { perfilApi, perfilKeys } from "../api/perfilApi.js";
 import { useSession } from "./useSession.js";
 
-/** Perfil del usuario actual ({ id, nombre, rol, email… }); sin sesión no se pide. */
+/** { perfil, rol, estaCargando, error } del usuario actual; los carga AuthProvider (GET /me). */
+/** @returns {import("../types").ValorPerfil} */
 export function usePerfil() {
-  const { usuario } = useSession();
-  return useQuery({
-    queryKey: perfilKeys.actual(),
-    queryFn: perfilApi.obtener,
-    enabled: Boolean(usuario),
-  });
+  const { perfil, rol, estaCargandoPerfil, errorPerfil } = useSession();
+  return { perfil, rol, estaCargando: estaCargandoPerfil, error: errorPerfil };
 }

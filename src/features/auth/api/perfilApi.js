@@ -5,6 +5,9 @@ export const perfilApi = {
   obtener: () => http.get("/me"),
 };
 
+// El rol cambia muy pocas veces (lo asigna un admin): 10 min de caché.
+export const TIEMPO_PERFIL_MS = 10 * 60 * 1000;
+
 export const perfilKeys = {
   todo: ["perfil"],
   actual: () => [...perfilKeys.todo, "actual"],

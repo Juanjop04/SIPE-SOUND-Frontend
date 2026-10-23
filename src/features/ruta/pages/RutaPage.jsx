@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Lock, CheckCircle2 } from "lucide-react";
-import { Card } from "@/shared/ui/Card.jsx";
 import { useSession } from "@/features/auth";
 import { useRuta } from "../hooks/useRuta.js";
 import { paths } from "@/shared/config/paths.js";
@@ -26,7 +25,14 @@ export default function Home() {
           const leccionesDelBloque = bloque.lecciones ?? [];
 
           return (
-            <Card key={bloque.id} className={desbloqueado ? "border-l-0" : "border-l-0 opacity-60"}>
+            <div
+              key={bloque.id}
+              className={
+                desbloqueado
+                  ? "rounded-caja bg-surface p-5"
+                  : "rounded-caja bg-surface p-5 opacity-60"
+              }
+            >
               <div className="mb-1 flex items-center gap-2">
                 {!desbloqueado && <Lock size={16} className="text-muted" aria-hidden="true" />}
                 {aprobado && <CheckCircle2 size={16} className="text-success" aria-hidden="true" />}
@@ -67,7 +73,7 @@ export default function Home() {
                   Aprueba el quiz del bloque anterior para desbloquear este.
                 </p>
               )}
-            </Card>
+            </div>
           );
         })}
       </div>
