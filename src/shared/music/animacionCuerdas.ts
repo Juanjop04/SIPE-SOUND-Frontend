@@ -54,15 +54,30 @@ function pulsacion(c: Cuerda, toque: Toque, ahora: number): { d: number; energia
   return { d: Math.sin((s * 2 * Math.PI) / (c.dur * 0.9)) * c.amp * 1.6 * energia, energia };
 }
 
-/** Anima las cuerdas: pulsaciones sueltas siempre; con `tocando`, vibran todas. */
-export function useAnimacionCuerdas(tocando: boolean) {
+export interface OpcionesAnimacion {
+  /** false: sin pulsaciones sueltas al azar (solo suena cuando `tocando`). */
+  sueltas?: boolean;
+  /** Con un valor (ms), `tocando` es un rasgueo único: vibra ese tiempo y se apaga sola. */
+  rasgueoMs?: number;
+}
+
+/** Anima las cuerdas: pulsaciones sueltas (por defecto); con `tocando`, vibran todas. */
+export function useAnimacionCuerdas(
+  tocando: boolean,
+  { sueltas = true, rasgueoMs }: OpcionesAnimacion = {},
+) {
   const cuerdasRef = useRef<(SVGPathElement | null)[]>([]);
   const intensidad = useRef(0); // 0 = quieta, 1 = vibrando a tope
   const objetivo = useRef(0);
 
   useEffect(() => {
     objetivo.current = tocando ? 1 : 0;
-  }, [tocando]);
+    if (!tocando || rasgueoMs === undefined) return undefined;
+    const apagar = window.setTimeout(() => {
+      objetivo.current = 0;
+    }, rasgueoMs);
+    return () => window.clearTimeout(apagar);
+  }, [tocando, rasgueoMs]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
@@ -83,7 +98,7 @@ export function useAnimacionCuerdas(tocando: boolean) {
       const t = (ahora - inicio) / 1000;
       intensidad.current += (objetivo.current - intensidad.current) * 0.08;
 
-      if (ahora >= siguiente) {
+      if (sueltas && ahora >= siguiente) {
         ultima = elegirCuerda(ultima);
         toques[ultima] = { t: ahora, fuerza: 0.7 + azar() * 0.3 };
         siguiente = ahora + PAUSA_MIN + azar() * PAUSA_EXTRA;
@@ -106,7 +121,7 @@ export function useAnimacionCuerdas(tocando: boolean) {
 
     frame = requestAnimationFrame(animar);
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [sueltas]);
 
   return cuerdasRef;
 }
