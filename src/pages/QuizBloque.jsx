@@ -45,38 +45,44 @@ export default function QuizBloque() {
     setRespuestas({});
   }
 
-  const todasRespondidas = preguntas.length > 0 && preguntas.every((p) => respuestas[p.id] !== undefined);
+  const todasRespondidas =
+    preguntas.length > 0 && preguntas.every((p) => respuestas[p.id] !== undefined);
 
   return (
     <div className="min-h-screen bg-ink">
       <Header />
-      <main className="max-w-2xl mx-auto px-6 py-8">
-        <Link to="/" className="flex items-center gap-1 text-muted hover:text-primary text-sm mb-5 w-fit">
+      <main className="mx-auto max-w-2xl px-6 py-8">
+        <Link
+          to="/"
+          className="mb-5 flex w-fit items-center gap-1 text-sm text-muted hover:text-primary"
+        >
           <ArrowLeft size={16} aria-hidden="true" />
           Volver a bloques
         </Link>
 
-        <h2 className="font-display font-semibold text-paper text-xl mb-1">Quiz del bloque</h2>
-        <p className="text-muted text-sm mb-6">
+        <h2 className="mb-1 font-display text-xl font-semibold text-paper">Quiz del bloque</h2>
+        <p className="mb-6 text-sm text-muted">
           Necesitas 80% o mas para desbloquear el siguiente bloque.
         </p>
 
         {cargando && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-danger text-sm mb-4">{error}</p>}
+        {error && <p className="mb-4 text-sm text-danger">{error}</p>}
 
         {/* Resultado final */}
         {resultado && (
-          <Card className="border-l-0 mb-6 text-center">
+          <Card className="mb-6 border-l-0 text-center">
             {resultado.aprobado ? (
-              <CheckCircle2 size={40} className="text-success mx-auto mb-2" aria-hidden="true" />
+              <CheckCircle2 size={40} className="mx-auto mb-2 text-success" aria-hidden="true" />
             ) : (
-              <XCircle size={40} className="text-danger mx-auto mb-2" aria-hidden="true" />
+              <XCircle size={40} className="mx-auto mb-2 text-danger" aria-hidden="true" />
             )}
-            <p className="font-display font-semibold text-paper text-lg">
+            <p className="font-display text-lg font-semibold text-paper">
               {resultado.correctas} de {resultado.total} correctas ({resultado.porcentaje}%)
             </p>
-            <p className={`text-sm mt-1 ${resultado.aprobado ? "text-success" : "text-danger"}`}>
-              {resultado.aprobado ? "Aprobado, siguiente bloque desbloqueado" : "No alcanzaste el minimo, intenta de nuevo"}
+            <p className={`mt-1 text-sm ${resultado.aprobado ? "text-success" : "text-danger"}`}>
+              {resultado.aprobado
+                ? "Aprobado, siguiente bloque desbloqueado"
+                : "No alcanzaste el minimo, intenta de nuevo"}
             </p>
             {!resultado.aprobado && (
               <Button variant="primary" className="mt-4" onClick={reintentar}>
@@ -85,35 +91,39 @@ export default function QuizBloque() {
             )}
             {resultado.aprobado && (
               <Link to="/">
-                <Button variant="success" className="mt-4">Volver a bloques</Button>
+                <Button variant="success" className="mt-4">
+                  Volver a bloques
+                </Button>
               </Link>
             )}
           </Card>
         )}
 
         {/* Preguntas */}
-        {!resultado && !cargando && preguntas.map((p, i) => (
-          <Card key={p.id} className="border-l-0 mb-4">
-            <p className="text-paper text-sm mb-3">
-              {i + 1}. {p.pregunta}
-            </p>
-            <div className="flex flex-col gap-2">
-              {p.opciones.map((opcion, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => elegirRespuesta(p.id, idx)}
-                  className={`text-left text-sm px-3 py-2 rounded-lg border transition-colors ${
-                    respuestas[p.id] === idx
-                      ? "border-primary bg-primary/20 text-paper"
-                      : "border-border text-muted hover:border-primary/50"
-                  }`}
-                >
-                  {opcion}
-                </button>
-              ))}
-            </div>
-          </Card>
-        ))}
+        {!resultado &&
+          !cargando &&
+          preguntas.map((p, i) => (
+            <Card key={p.id} className="mb-4 border-l-0">
+              <p className="mb-3 text-sm text-paper">
+                {i + 1}. {p.pregunta}
+              </p>
+              <div className="flex flex-col gap-2">
+                {p.opciones.map((opcion, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => elegirRespuesta(p.id, idx)}
+                    className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
+                      respuestas[p.id] === idx
+                        ? "border-primary bg-primary/20 text-paper"
+                        : "border-border text-muted hover:border-primary/50"
+                    }`}
+                  >
+                    {opcion}
+                  </button>
+                ))}
+              </div>
+            </Card>
+          ))}
 
         {!resultado && !cargando && preguntas.length > 0 && (
           <Button

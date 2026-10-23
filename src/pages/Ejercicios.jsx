@@ -26,7 +26,12 @@ export default function Ejercicios() {
 
   async function marcarCompletado(ejercicioId) {
     try {
-      await guardarProgreso({ tipo: "ejercicio", contenido_id: ejercicioId, porcentaje: 100, completado: true });
+      await guardarProgreso({
+        tipo: "ejercicio",
+        contenido_id: ejercicioId,
+        porcentaje: 100,
+        completado: true,
+      });
       setGuardados((prev) => ({ ...prev, [ejercicioId]: "ok" }));
     } catch (err) {
       setGuardados((prev) => ({ ...prev, [ejercicioId]: "error" }));
@@ -36,20 +41,22 @@ export default function Ejercicios() {
   return (
     <div className="min-h-screen bg-ink">
       <Header />
-      <main className="max-w-2xl mx-auto px-6 py-8">
-        <h2 className="font-display font-semibold text-paper text-xl mb-1">Ejercicios practicos</h2>
-        <p className="text-muted text-sm mb-6">Rutinas para practicar con metronomo, paso a paso.</p>
+      <main className="mx-auto max-w-2xl px-6 py-8">
+        <h2 className="mb-1 font-display text-xl font-semibold text-paper">Ejercicios practicos</h2>
+        <p className="mb-6 text-sm text-muted">
+          Rutinas para practicar con metronomo, paso a paso.
+        </p>
 
         {cargando && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-danger text-sm">{error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
 
         <div className="flex flex-col gap-4">
           {ejercicios.map((ej) => (
             <Card key={ej.id}>
-              <h3 className="font-medium text-paper text-base mb-1">{ej.nombre}</h3>
-              {ej.descripcion && <p className="text-muted text-sm mb-2">{ej.descripcion}</p>}
+              <h3 className="mb-1 text-base font-medium text-paper">{ej.nombre}</h3>
+              {ej.descripcion && <p className="mb-2 text-sm text-muted">{ej.descripcion}</p>}
 
-              <div className="flex gap-4 font-mono text-xs text-muted/80 mb-3">
+              <div className="mb-3 flex gap-4 font-mono text-xs text-muted/80">
                 <span>{ej.nivel}</span>
                 {ej.bpm_recomendado && <span>{ej.bpm_recomendado} BPM</span>}
                 {ej.compas && <span>compas {ej.compas}</span>}
@@ -57,11 +64,11 @@ export default function Ejercicios() {
               </div>
 
               {ej.acordes && ej.acordes.length > 0 && (
-                <div className="flex gap-2 mb-3">
+                <div className="mb-3 flex gap-2">
                   {ej.acordes.map((nombreAcorde) => (
                     <span
                       key={nombreAcorde}
-                      className="font-mono text-xs bg-ink text-accent px-2 py-1 rounded"
+                      className="rounded bg-ink px-2 py-1 font-mono text-xs text-accent"
                     >
                       {nombreAcorde}
                     </span>
@@ -70,7 +77,7 @@ export default function Ejercicios() {
               )}
 
               {ej.pasos && ej.pasos.length > 0 && (
-                <ol className="list-decimal list-inside text-muted text-sm mb-3 space-y-1">
+                <ol className="mb-3 list-inside list-decimal space-y-1 text-sm text-muted">
                   {ej.pasos.map((paso, i) => (
                     <li key={i}>{paso}</li>
                   ))}
@@ -83,23 +90,23 @@ export default function Ejercicios() {
                     Marcar como completado
                   </Button>
                   {guardados[ej.id] === "ok" && (
-                    <span className="flex items-center gap-1 text-success text-sm">
+                    <span className="flex items-center gap-1 text-sm text-success">
                       <Check size={16} aria-hidden="true" /> guardado
                     </span>
                   )}
                   {guardados[ej.id] === "error" && (
-                    <span className="text-danger text-sm">no se pudo guardar</span>
+                    <span className="text-sm text-danger">no se pudo guardar</span>
                   )}
                 </div>
               ) : (
-                <p className="text-muted text-sm italic">Inicia sesion para guardar tu progreso</p>
+                <p className="text-sm italic text-muted">Inicia sesion para guardar tu progreso</p>
               )}
             </Card>
           ))}
         </div>
 
         {!cargando && ejercicios.length === 0 && !error && (
-          <p className="text-muted text-sm">
+          <p className="text-sm text-muted">
             Todavia no hay ejercicios cargados en la base de datos.
           </p>
         )}

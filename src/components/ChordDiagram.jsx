@@ -26,7 +26,7 @@ export default function ChordDiagram({ frets, fingers, baseFret = 1, barre }) {
   const yTraste = (t) => marginTop + t * rowGap;
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="w-full max-w-[110px] mx-auto">
+    <svg viewBox={`0 0 ${width} ${height}`} className="mx-auto w-full max-w-[110px]">
       {/* Numero de traste base, si no empieza en el 1 */}
       {baseFret > 1 && (
         <text x={2} y={marginTop + rowGap / 2 + 4} className="fill-muted" fontSize="9">

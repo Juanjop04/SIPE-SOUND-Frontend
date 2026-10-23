@@ -31,7 +31,7 @@ export default function LeccionDetalle() {
         // leccionData.acordes es un arreglo de nombres, ej: ["Em", "Am"]
         // Filtramos el catálogo completo para quedarnos solo con esos
         const detalles = catalogoAcordes.filter((acorde) =>
-          (leccionData.acordes ?? []).includes(acorde.nombre)
+          (leccionData.acordes ?? []).includes(acorde.nombre),
         );
         setAcordesLeccion(detalles);
       })
@@ -56,39 +56,44 @@ export default function LeccionDetalle() {
   return (
     <div className="min-h-screen bg-ink">
       <Header />
-      <main className="max-w-2xl mx-auto px-6 py-8">
-        <Link to="/" className="flex items-center gap-1 text-muted hover:text-primary text-sm mb-5 w-fit">
+      <main className="mx-auto max-w-2xl px-6 py-8">
+        <Link
+          to="/"
+          className="mb-5 flex w-fit items-center gap-1 text-sm text-muted hover:text-primary"
+        >
           <ArrowLeft size={16} aria-hidden="true" />
           Volver a lecciones
         </Link>
 
         {cargando && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-danger text-sm">{error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
 
         {leccion && (
           <>
-            <h2 className="font-display font-semibold text-paper text-xl mb-1">
+            <h2 className="mb-1 font-display text-xl font-semibold text-paper">
               Leccion {leccion.numero}: {leccion.titulo}
             </h2>
-            <p className="text-muted text-sm mb-1">{leccion.descripcion}</p>
-            <p className="font-mono text-xs text-muted/70 mb-6">
+            <p className="mb-1 text-sm text-muted">{leccion.descripcion}</p>
+            <p className="mb-6 font-mono text-xs text-muted/70">
               {leccion.nivel} - {leccion.duracion ?? "N/A"}
             </p>
 
-            <h3 className="font-display font-semibold text-paper text-base mb-3">
+            <h3 className="mb-3 font-display text-base font-semibold text-paper">
               Acordes de esta leccion
             </h3>
 
             {acordesLeccion.length === 0 && (
-              <p className="text-muted text-sm mb-6">Esta leccion no tiene acordes asociados todavia.</p>
+              <p className="mb-6 text-sm text-muted">
+                Esta leccion no tiene acordes asociados todavia.
+              </p>
             )}
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+            <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {acordesLeccion.map((acorde) => (
-                <Card key={acorde.id} className="text-center border-l-0">
-                  <p className="font-display font-semibold text-paper text-lg">{acorde.nombre}</p>
-                  <p className="font-mono text-xs text-muted mt-1">{acorde.tipo}</p>
-                  <p className="text-xs text-accent mt-1">{acorde.dificultad}</p>
+                <Card key={acorde.id} className="border-l-0 text-center">
+                  <p className="font-display text-lg font-semibold text-paper">{acorde.nombre}</p>
+                  <p className="mt-1 font-mono text-xs text-muted">{acorde.tipo}</p>
+                  <p className="mt-1 text-xs text-accent">{acorde.dificultad}</p>
                 </Card>
               ))}
             </div>
@@ -99,16 +104,16 @@ export default function LeccionDetalle() {
                   Marcar como completada
                 </Button>
                 {guardado === "ok" && (
-                  <span className="flex items-center gap-1 text-success text-sm">
+                  <span className="flex items-center gap-1 text-sm text-success">
                     <Check size={16} aria-hidden="true" /> guardado
                   </span>
                 )}
                 {guardado === "error" && (
-                  <span className="text-danger text-sm">no se pudo guardar</span>
+                  <span className="text-sm text-danger">no se pudo guardar</span>
                 )}
               </div>
             ) : (
-              <p className="text-muted text-sm italic">Inicia sesion para guardar tu progreso</p>
+              <p className="text-sm italic text-muted">Inicia sesion para guardar tu progreso</p>
             )}
           </>
         )}

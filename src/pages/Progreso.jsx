@@ -64,12 +64,14 @@ export default function Progreso() {
   return (
     <div className="min-h-screen bg-ink">
       <Header />
-      <main className="max-w-2xl mx-auto px-6 py-8">
-        <h2 className="font-display font-semibold text-paper text-xl mb-1">Mi progreso</h2>
-        <p className="text-muted text-sm mb-6">Historial de bloques, lecciones y ejercicios completados.</p>
+      <main className="mx-auto max-w-2xl px-6 py-8">
+        <h2 className="mb-1 font-display text-xl font-semibold text-paper">Mi progreso</h2>
+        <p className="mb-6 text-sm text-muted">
+          Historial de bloques, lecciones y ejercicios completados.
+        </p>
 
         {hayUsuario === false && (
-          <p className="text-muted text-sm">
+          <p className="text-sm text-muted">
             Necesitas{" "}
             <Link to="/login" className="text-primary hover:underline">
               iniciar sesion
@@ -79,22 +81,24 @@ export default function Progreso() {
         )}
 
         {cargando && hayUsuario && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-danger text-sm">{error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
 
         {hayUsuario && !cargando && !error && (
           <>
-            <div className="flex gap-3 mb-6">
-              <Card className="text-center border-l-0 flex-1">
-                <p className="font-display font-semibold text-success text-2xl">{totalBloques}</p>
-                <p className="text-muted text-xs mt-1">bloques aprobados</p>
+            <div className="mb-6 flex gap-3">
+              <Card className="flex-1 border-l-0 text-center">
+                <p className="font-display text-2xl font-semibold text-success">{totalBloques}</p>
+                <p className="mt-1 text-xs text-muted">bloques aprobados</p>
               </Card>
-              <Card className="text-center border-l-0 flex-1">
-                <p className="font-display font-semibold text-success text-2xl">{totalLecciones}</p>
-                <p className="text-muted text-xs mt-1">lecciones completadas</p>
+              <Card className="flex-1 border-l-0 text-center">
+                <p className="font-display text-2xl font-semibold text-success">{totalLecciones}</p>
+                <p className="mt-1 text-xs text-muted">lecciones completadas</p>
               </Card>
-              <Card className="text-center border-l-0 flex-1">
-                <p className="font-display font-semibold text-success text-2xl">{totalEjercicios}</p>
-                <p className="text-muted text-xs mt-1">ejercicios completados</p>
+              <Card className="flex-1 border-l-0 text-center">
+                <p className="font-display text-2xl font-semibold text-success">
+                  {totalEjercicios}
+                </p>
+                <p className="mt-1 text-xs text-muted">ejercicios completados</p>
               </Card>
             </div>
 
@@ -102,15 +106,15 @@ export default function Progreso() {
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 bg-surface rounded-xl px-4 py-3"
+                  className="flex items-center gap-3 rounded-xl bg-surface px-4 py-3"
                 >
                   {item.completado ? (
-                    <CheckCircle2 size={18} className="text-success shrink-0" aria-hidden="true" />
+                    <CheckCircle2 size={18} className="shrink-0 text-success" aria-hidden="true" />
                   ) : (
-                    <Circle size={18} className="text-muted shrink-0" aria-hidden="true" />
+                    <Circle size={18} className="shrink-0 text-muted" aria-hidden="true" />
                   )}
                   <div className="flex-1">
-                    <p className="text-paper text-sm">{item.titulo}</p>
+                    <p className="text-sm text-paper">{item.titulo}</p>
                     <p className="font-mono text-xs text-muted/70">
                       {item.tipo === "bloque" ? "quiz de bloque" : item.tipo} - {item.porcentaje}%
                     </p>
@@ -123,7 +127,7 @@ export default function Progreso() {
             </div>
 
             {items.length === 0 && (
-              <p className="text-muted text-sm">
+              <p className="text-sm text-muted">
                 Aun no has completado nada.{" "}
                 <Link to="/" className="text-primary hover:underline">
                   Empieza aqui

@@ -57,16 +57,16 @@ src/
 
 Inspirada en el logo (fantasma con audifonos, degradado indigo-violeta-rosa).
 
-| Clase Tailwind | Hex | Uso |
-|---|---|---|
-| `bg-ink` | `#1B1030` | Fondo principal |
-| `bg-surface` | `#2A1B4D` | Tarjetas, header |
-| `border-primary` / `bg-primary` | `#7C3AED` | Acento principal, botones |
-| `text-accent` | `#E29DE0` | Acento secundario (usar con moderacion) |
-| `bg-success` / `text-success` | `#F5B942` | Exito / progreso completado |
-| `text-danger` | `#F2545B` | Errores |
-| `text-muted` | `#C9BEE0` | Texto secundario |
-| `text-paper` | `#F3EEFB` | Texto principal sobre fondo oscuro |
+| Clase Tailwind                  | Hex       | Uso                                     |
+| ------------------------------- | --------- | --------------------------------------- |
+| `bg-ink`                        | `#1B1030` | Fondo principal                         |
+| `bg-surface`                    | `#2A1B4D` | Tarjetas, header                        |
+| `border-primary` / `bg-primary` | `#7C3AED` | Acento principal, botones               |
+| `text-accent`                   | `#E29DE0` | Acento secundario (usar con moderacion) |
+| `bg-success` / `text-success`   | `#F5B942` | Exito / progreso completado             |
+| `text-danger`                   | `#F2545B` | Errores                                 |
+| `text-muted`                    | `#C9BEE0` | Texto secundario                        |
+| `text-paper`                    | `#F3EEFB` | Texto principal sobre fondo oscuro      |
 
 Tipografia: `Baloo 2` (titulos, redondeada y amigable, a tono con el
 fantasma) + `Inter` (texto) + `IBM Plex Mono` (datos/acordes).
