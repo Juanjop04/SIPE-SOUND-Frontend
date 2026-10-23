@@ -22,6 +22,7 @@ export function ProgresoPorBloque({ bloques }: { bloques: BloqueRuta[] }) {
               {avance === null ? "—" : `${avance} %`}
             </span>
             <Cuerda
+              grosor={4}
               className="col-span-3"
               valor={avance ?? 0}
               etiqueta={`Avance del bloque ${bloque.numero}`}

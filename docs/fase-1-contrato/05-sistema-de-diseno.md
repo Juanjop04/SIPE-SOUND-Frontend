@@ -117,7 +117,7 @@ Reglas que se mantienen de HU-F-314:
 
 | Componente | Descripción |
 |---|---|
-| `Cuerda` (`shared/music`) | Barra de progreso: pista `ink-2`, relleno `primary`; `completado` → `success`. `role="progressbar"` y `aria-valuenow`. |
+| `Cuerda` (`shared/music`) | Barra de progreso: pista `ink-2`, relleno degradado `primary → primary-claro`; completado → `success/60 → success`. Grosores 1–5 (las tarjetas usan 4 = 6 px). `role="progressbar"` y `aria-valuenow`. |
 | `TrasteDivider` | Separador horizontal de 1 px con un pequeño número de traste en mono a la izquierda (opcional). |
 | `MarcaEstado` | Símbolo `×` / `○` / `●` con texto accesible ("Bloqueado", "Disponible", "Aprobado"). |
 | `ChordDiagram` | Diagrama del acorde; trazos `linea-fuerte`, dedos `primary-claro`. |
@@ -148,8 +148,8 @@ Reglas que se mantienen de HU-F-314:
 
 | ❌ No | ✅ En su lugar |
 |---|---|
-| Degradados en fondos, textos, botones **o rellenos de gráficos** | Colores planos de la paleta. |
-| Manchas difuminadas (`blur-3xl`, "blobs") y brillos decorativos | Bordes `linea` y capas sólidas. |
+| Degradados en fondos, textos, botones o decoración | Colores planos de la paleta. **Excepciones acotadas** *(enmienda HU-F-322)*: (1) relleno de `Cuerda` y arco de `Boca`: `primary → primary-claro`, o `success/60 → success` al completar, con ambos extremos ≥ 3:1 frente a la pista; (2) área bajo la curva de un gráfico: `accent` 35 % → 0 %, decorativa (el dato es la línea, 10.1:1); (3) foto que se funde con su tarjeta mediante máscara, sin texto encima. |
+| Manchas difuminadas (`blur-3xl`, "blobs"), brillos y `backdrop-blur` | Bordes `linea` y capas sólidas. Una foto puede desvanecerse en su tarjeta (excepción 3 de arriba), nunca desenfocarse detrás de un texto. |
 | *Glassmorphism* (`backdrop-blur`, `bg-white/10`) | `surface` sólido. |
 | Grilla de tarjetas con ícono + título + párrafo de marketing | `TarjetaCifra` solo con una cifra real; si no hay dato, la tarjeta no existe. |
 | Tarjetas con borde izquierdo de color como único recurso | Borde completo `linea` y espacio. |

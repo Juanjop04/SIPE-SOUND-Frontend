@@ -1,10 +1,13 @@
+import { useId } from "react";
 import { ESCRITORIO, useMediaQuery } from "@/shared/hooks/useMediaQuery";
 import {
+  areaBajo,
   etiquetaX,
   escalaY,
   fechaLarga,
   puntos,
   resumenEvolucion,
+  trazoSuave,
   yDe,
   type Dia,
 } from "../utils/evolucion";
@@ -19,14 +22,15 @@ function anclaX(i: number, total: number): "start" | "middle" | "end" {
 }
 
 /**
- * Registros de avance por día en una línea SVG propia (HU-F-317): sin librería ni relleno
- * degradado. Es una imagen con resumen; el detalle accesible está en la tabla de al lado.
+ * Registros de avance por día en una curva SVG propia (HU-F-317, HU-F-322): sin librería; el área
+ * bajo la curva se desvanece. Es una imagen con resumen; el detalle accesible está en la tabla de al lado.
  */
 export function GraficoEvolucion({ dias }: { dias: Dia[] }) {
   const marco = useMediaQuery(ESCRITORIO) ? MARCO_ESCRITORIO : MARCO_MOVIL;
   const { tope, marcas } = escalaY(dias);
   const coordenadas = puntos(dias, marco, tope);
   const cada = marco === MARCO_ESCRITORIO ? 7 : 14;
+  const idArea = useId();
 
   return (
     <svg
@@ -56,12 +60,20 @@ export function GraficoEvolucion({ dias }: { dias: Dia[] }) {
           </text>
         </g>
       ))}
-      <polyline
-        points={coordenadas.map((p) => `${p.x},${p.y}`).join(" ")}
+      {/* Área que se desvanece bajo la curva (enmienda HU-F-322): decorativa; el dato es la línea. */}
+      <defs>
+        <linearGradient id={idArea} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" className="[stop-color:rgb(var(--color-accent)/0.35)]" />
+          <stop offset="100%" className="[stop-color:rgb(var(--color-accent)/0)]" />
+        </linearGradient>
+      </defs>
+      <path d={areaBajo(coordenadas, yDe(0, marco, tope))} fill={`url(#${idArea})`} />
+      <path
+        d={trazoSuave(coordenadas)}
         fill="none"
         className="stroke-accent"
-        strokeWidth={2}
-        strokeLinejoin="round"
+        strokeWidth={2.5}
+        strokeLinecap="round"
       />
       {dias.map((dia, i) => {
         const etiqueta = etiquetaX(dia.fecha, i, dias.length, cada);

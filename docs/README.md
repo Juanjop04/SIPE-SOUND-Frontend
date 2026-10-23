@@ -61,6 +61,7 @@ Estado al 2026-10-23: ✅ integrada en `develop` · 🔍 en PR · ⬜ pendiente.
 | 11 | [HU-F-315 Inicio del estudiante](fase-3-rediseno-y-panel-docente/HU-F-315-inicio-del-estudiante.md) | 8 | F-314, F-316, F-320, F-321, F-306, (**B-324**) | ⬜ |
 | 12 | [HU-F-318 Navegación del estudiante y continuidad](fase-3-rediseno-y-panel-docente/HU-F-318-navegacion-del-estudiante.md) | 3 | F-315, F-320 | ⬜ |
 | 13 | [HU-F-317 Gráfico de evolución de la práctica](fase-3-rediseno-y-panel-docente/HU-F-317-grafico-de-practica.md) | 3 | F-315, **B-324** | ⬜ |
+| 13.1 | [HU-F-322 Acabados de progreso, gráfico y encabezado](fase-3-rediseno-y-panel-docente/HU-F-322-acabados-de-progreso-y-graficos.md) | 2 | F-315, F-317 | ⬜ |
 | 14 | [HU-F-309 Docente: estudiantes](fase-3-rediseno-y-panel-docente/HU-F-309-docente-estudiantes.md) | 5 | F-307, F-314, F-320, **B-310** | ⬜ |
 | 15 | [HU-F-310 Docente: evaluaciones y resultados](fase-3-rediseno-y-panel-docente/HU-F-310-docente-evaluaciones.md) | 8 | F-308, F-314, F-320, **B-311** | ⬜ |
 | 16 | [HU-F-311 Estudiante: mis cursos](fase-3-rediseno-y-panel-docente/HU-F-311-estudiante-cursos.md) | 3 | F-304, F-315, F-318, **B-307**, **B-312** | ⬜ |

@@ -26,6 +26,7 @@ export function TarjetaCifra({ icono: Icono, etiqueta, hecho, total }: TarjetaCi
           {hecho} <span className="text-base text-muted">/ {total}</span>
         </p>
         <Cuerda
+          grosor={4}
           valor={avance}
           etiqueta={`${etiqueta}: ${hecho} de ${total}`}
           sonando={avance === 100}

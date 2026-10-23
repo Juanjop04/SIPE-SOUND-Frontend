@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { cn } from "@/shared/lib/cn.js";
 
 export interface BocaProps {
@@ -20,6 +21,7 @@ const TAMANOS = { sm: "w-24", md: "w-36" };
 export function Boca({ valor, etiqueta, tamano = "md", className }: BocaProps) {
   const avance = Math.max(0, Math.min(100, Math.round(valor)));
   const completo = avance === 100;
+  const idDegradado = useId();
 
   return (
     <div
@@ -31,13 +33,34 @@ export function Boca({ valor, etiqueta, tamano = "md", className }: BocaProps) {
       className={cn("relative aspect-square shrink-0", TAMANOS[tamano], className)}
     >
       <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90" aria-hidden="true">
+        {/* Arco con el mismo degradado de Cuerda (enmienda HU-F-322); verde al completar. */}
+        <defs>
+          <linearGradient id={idDegradado} x1="0" y1="0" x2="1" y2="1">
+            <stop
+              offset="0%"
+              className={
+                completo
+                  ? "[stop-color:rgb(var(--color-success)/0.6)]"
+                  : "[stop-color:rgb(var(--color-primary))]"
+              }
+            />
+            <stop
+              offset="100%"
+              className={
+                completo
+                  ? "[stop-color:rgb(var(--color-success))]"
+                  : "[stop-color:rgb(var(--color-primary-claro))]"
+              }
+            />
+          </linearGradient>
+        </defs>
         <circle cx={60} cy={60} r={RADIO} fill="none" className="stroke-ink-2" strokeWidth={10} />
         <circle
           cx={60}
           cy={60}
           r={RADIO}
           fill="none"
-          className={completo ? "stroke-success" : "stroke-primary"}
+          stroke={`url(#${idDegradado})`}
           strokeWidth={10}
           strokeLinecap="round"
           strokeDasharray={CIRCUNFERENCIA}

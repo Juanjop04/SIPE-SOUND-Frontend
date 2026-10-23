@@ -70,3 +70,48 @@ export function resumenEvolucion(dias: Dia[]): string {
   const conAvance = dias.filter((d) => d.registros > 0).length;
   return `${conAvance} de ${dias.length} días con avance`;
 }
+
+type Punto = { x: number; y: number };
+
+/** Pendientes de Fritsch–Carlson: la curva pasa por los puntos sin sobrepasarlos. */
+function pendientes(p: Punto[]): number[] {
+  const d = p.slice(1).map((q, i) => (q.y - p[i].y) / (q.x - p[i].x));
+  const m = p.map((_, i) => {
+    if (i === 0) return d[0];
+    if (i === p.length - 1) return d[i - 1];
+    return d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+  });
+  d.forEach((di, i) => {
+    if (di === 0) {
+      m[i] = 0;
+      m[i + 1] = 0;
+      return;
+    }
+    const a = m[i] / di;
+    const b = m[i + 1] / di;
+    const h = Math.hypot(a, b);
+    if (h > 3) {
+      m[i] = (3 * a * di) / h;
+      m[i + 1] = (3 * b * di) / h;
+    }
+  });
+  return m;
+}
+
+/** Trazo suave y monótono (HU-F-322): nunca baja de 0 ni supera el máximo de los datos. */
+export function trazoSuave(p: Punto[]): string {
+  if (p.length === 0) return "";
+  if (p.length === 1) return `M${p[0].x},${p[0].y}`;
+  const m = pendientes(p);
+  const tramos = p.slice(1).map((q, i) => {
+    const t = (q.x - p[i].x) / 3;
+    return `C${p[i].x + t},${p[i].y + m[i] * t} ${q.x - t},${q.y - m[i + 1] * t} ${q.x},${q.y}`;
+  });
+  return `M${p[0].x},${p[0].y}${tramos.join("")}`;
+}
+
+/** Área bajo la curva, cerrada sobre la línea de base (para el relleno que se desvanece). */
+export function areaBajo(p: Punto[], base: number): string {
+  if (p.length < 2) return "";
+  return `${trazoSuave(p)}L${p[p.length - 1].x},${base}L${p[0].x},${base}Z`;
+}
