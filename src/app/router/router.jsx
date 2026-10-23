@@ -1,6 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
-import { cargarLoginPage, cargarRegistroPage } from "@/features/auth";
+import { cargarLoginPage, cargarRegistroPage, ROLES_ATRIL } from "@/features/auth";
+import {
+  cargarContenidoPage,
+  cargarCursosPage,
+  cargarEvaluacionesPage,
+  cargarResumenPage,
+} from "@/features/docente";
 import { cargarEjerciciosPage } from "@/features/ejercicios";
 import { cargarQuizBloquePage } from "@/features/evaluaciones";
 import { cargarLeccionDetallePage } from "@/features/lecciones";
@@ -9,13 +15,19 @@ import { cargarRutaPage } from "@/features/ruta";
 import { env } from "@/shared/config/env.js";
 import { paths } from "@/shared/config/paths.js";
 import AuthLayout from "@/app/layouts/AuthLayout.jsx";
-import { PublicLayout } from "@/app/layouts/PublicLayout.jsx";
+import { EstudianteLayout } from "@/app/layouts/EstudianteLayout";
 import { ErrorDeRuta } from "./ErrorDeRuta.jsx";
-import { PaginaNoEncontrada } from "./PaginaNoEncontrada.jsx";
+import { NoEncontradoPage } from "./PaginasDeError";
 import { RequireAuth } from "./RequireAuth.jsx";
+import { RequireRole } from "./RequireRole";
 
 // Cada página se descarga al visitarla (un chunk por página, conectividad baja).
 const pagina = (cargar) => async () => ({ Component: (await cargar()).default });
+
+// El atril solo lo descarga quien entra a /docente (los estudiantes nunca lo cargan).
+const cargarDocenteLayout = async () => ({
+  Component: (await import("@/app/layouts/DocenteLayout")).DocenteLayout,
+});
 
 // Catálogo de componentes: solo en `npm run dev`; en producción /_componentes da 404.
 const rutasDeDesarrollo = env.esDesarrollo
@@ -27,7 +39,7 @@ export const router = createBrowserRouter([
     errorElement: <ErrorDeRuta />,
     children: [
       {
-        element: <PublicLayout />,
+        element: <EstudianteLayout />,
         children: [
           { path: paths.inicio, lazy: pagina(cargarRutaPage) },
           { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
@@ -41,7 +53,27 @@ export const router = createBrowserRouter([
             ],
           },
           ...rutasDeDesarrollo,
-          { path: "*", element: <PaginaNoEncontrada /> },
+          { path: "*", element: <NoEncontradoPage /> },
+        ],
+      },
+      {
+        // Atril del docente (HU-F-303): sesión + rol docente o admin (de GET /me).
+        element: <RequireAuth />,
+        children: [
+          {
+            element: <RequireRole roles={ROLES_ATRIL} />,
+            children: [
+              {
+                lazy: cargarDocenteLayout,
+                children: [
+                  { path: paths.docente.inicio, lazy: pagina(cargarResumenPage) },
+                  { path: paths.docente.cursos, lazy: pagina(cargarCursosPage) },
+                  { path: paths.docente.contenido, lazy: pagina(cargarContenidoPage) },
+                  { path: paths.docente.evaluaciones, lazy: pagina(cargarEvaluacionesPage) },
+                ],
+              },
+            ],
+          },
         ],
       },
       {

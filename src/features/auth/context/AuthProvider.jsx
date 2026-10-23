@@ -1,7 +1,8 @@
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { obtenerSesion, suscribirSesion } from "@/shared/api/sesion.js";
 import { cerrarSesion as cerrarSesionApi } from "../api/authService.js";
+import { perfilApi, perfilKeys, TIEMPO_PERFIL_MS } from "../api/perfilApi.js";
 import { sincronizarCache } from "../utils/sincronizarCache.js";
 
 export const AuthContext = createContext(null);
@@ -33,6 +34,17 @@ export function AuthProvider({ children }) {
     };
   }, [queryClient]);
 
+  // Perfil y rol desde GET /me (HU-B-304); sin sesión no se pide.
+  const consultaPerfil = useQuery({
+    queryKey: perfilKeys.actual(),
+    queryFn: perfilApi.obtener,
+    enabled: Boolean(sesion),
+    staleTime: TIEMPO_PERFIL_MS,
+  });
+  const perfil = sesion ? (consultaPerfil.data ?? null) : null;
+  const estaCargandoPerfil = Boolean(sesion) && consultaPerfil.isPending;
+  const errorPerfil = sesion ? consultaPerfil.error : null;
+
   const cerrarSesion = useCallback(async () => {
     // La sesión local se olvida antes de llamar al backend: aunque la petición falle
     // (sin conexión), en este navegador ya no hay sesión.
@@ -40,8 +52,17 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => ({ sesion, usuario: sesion?.usuario ?? null, estaCargando, cerrarSesion }),
-    [sesion, estaCargando, cerrarSesion],
+    () => ({
+      sesion,
+      usuario: sesion?.usuario ?? null,
+      estaCargando,
+      perfil,
+      rol: perfil?.rol ?? null,
+      estaCargandoPerfil,
+      errorPerfil,
+      cerrarSesion,
+    }),
+    [sesion, estaCargando, perfil, estaCargandoPerfil, errorPerfil, cerrarSesion],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

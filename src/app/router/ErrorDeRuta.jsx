@@ -1,6 +1,6 @@
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
-import { PublicLayout } from "@/app/layouts/PublicLayout.jsx";
-import { PaginaNoEncontrada } from "./PaginaNoEncontrada.jsx";
+import { EstudianteLayout } from "@/app/layouts/EstudianteLayout";
+import { NoEncontradoPage } from "./PaginasDeError";
 
 const HTTP_NO_ENCONTRADO = 404;
 const MENSAJE_INESPERADO =
@@ -11,8 +11,8 @@ export function ErrorDeRuta() {
   const error = useRouteError();
   const noEncontrada = isRouteErrorResponse(error) && error.status === HTTP_NO_ENCONTRADO;
   return (
-    <PublicLayout>
-      <PaginaNoEncontrada mensaje={noEncontrada ? undefined : MENSAJE_INESPERADO} />
-    </PublicLayout>
+    <EstudianteLayout>
+      <NoEncontradoPage descripcion={noEncontrada ? undefined : MENSAJE_INESPERADO} />
+    </EstudianteLayout>
   );
 }

@@ -12,6 +12,13 @@ export const paths = Object.freeze({
   leccion: (id = ":id") => `/leccion/${id}`,
   quiz: (bloqueId = ":bloqueId") => `/quiz/${bloqueId}`,
   catalogo: "/_componentes",
+  // Atril del docente (HU-F-303).
+  docente: Object.freeze({
+    inicio: "/docente",
+    cursos: "/docente/cursos",
+    contenido: "/docente/contenido",
+    evaluaciones: "/docente/evaluaciones",
+  }),
 });
 
 /** /login?volver=<ruta actual>, para regresar tras iniciar sesión. */

@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import { iniciarSesion } from "../api/authService.js";
 import { IconoOjo } from "../components/IconoOjo.jsx";
 import { traducirErrorLogin } from "../utils/traducirErrorAuth.js";
 import { destinoSeguro } from "../utils/destinoSeguro.js";
+import { inicioPorRol } from "../utils/roles.js";
+import { perfilApi, perfilKeys, TIEMPO_PERFIL_MS } from "../api/perfilApi.js";
 import { paths } from "@/shared/config/paths.js";
 import { Button, Input } from "@/shared/ui";
 
@@ -15,8 +18,21 @@ export default function Login() {
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
   const [parametros] = useSearchParams();
+  const queryClient = useQueryClient();
   // El mástil del AuthLayout vibra mientras se envía el formulario.
   const { setTocando } = useOutletContext();
+
+  // Docente/admin → atril; estudiante → ruta. El rol sale de GET /me (queda en caché).
+  async function destinoPorDefecto() {
+    const perfil = await queryClient
+      .fetchQuery({
+        queryKey: perfilKeys.actual(),
+        queryFn: perfilApi.obtener,
+        staleTime: TIEMPO_PERFIL_MS,
+      })
+      .catch(() => null);
+    return inicioPorRol(perfil?.rol);
+  }
 
   function marcarCargando(valor) {
     setCargando(valor);
@@ -29,7 +45,9 @@ export default function Login() {
     marcarCargando(true);
     try {
       await iniciarSesion(email, password);
-      navigate(destinoSeguro(parametros.get("volver"), paths.inicio), { replace: true });
+      navigate(destinoSeguro(parametros.get("volver"), await destinoPorDefecto()), {
+        replace: true,
+      });
     } catch (err) {
       setError(traducirErrorLogin(err.message));
     } finally {
