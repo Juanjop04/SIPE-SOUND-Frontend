@@ -90,9 +90,9 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 
 ## 3. Contraste verificado
 
-Referencia: **WCAG 2.2 nivel AA** (4.5:1 texto normal, 3:1 texto grande y componentes). Cálculo
-sobre los colores puros de la paleta de HU-F-320; el detalle por estado está en el
-[informe AUD-2026-01](../auditorias/AUD-2026-01-interfaz-y-contraste.md).
+Referencia: **WCAG 2.2 nivel AA** (4.5:1 texto normal, 3:1 texto grande y componentes). La tabla
+es el cálculo sobre los colores puros; HU-F-314 revalida las combinaciones reales (opacidades,
+estados hover/foco/deshabilitado, `ink-2`) y registra aquí cada ajuste de luminosidad.
 
 | Texto / elemento | `ink` | `ink-2` | `surface` | `surface-2` | Uso permitido |
 |---|---|---|---|---|---|
@@ -123,20 +123,16 @@ Reglas que se mantienen de HU-F-314:
 | `ChordDiagram` | Diagrama del acorde; trazos `linea-fuerte`, dedos `primary-claro`. |
 | `Fretboard` | Animación de cuerdas que suenan en ámbar (`suena`). |
 | `Tablatura` | Fila de datos en mono con separadores verticales tipo compás: `♩ 60 BPM │ 4/4 │ 20 min`. |
-| `Boca` | Anillo de progreso con la forma de la **boca de la guitarra** (HU-F-315): pista `ink-2`, arco `primary` (verde al 100 %), cifra en mono al centro. Uno por pantalla, solo para el avance global. |
-| `TarjetaCifra` *(enmienda)* | Tarjeta de una cifra real: ícono lucide en un recuadro `ink-2` (decorativo, `aria-hidden`), etiqueta, cifra en mono `hecho / total` y `Cuerda`. Máximo 4 por fila; **nunca** una cifra inventada ni un dato que la API no da. |
-| `TeselaAcorde` | Acorde como objeto: `surface` con borde `linea`, sin sombra. |
-| Ilustraciones (`shared/music/ilustraciones/`) | SVG propios: guitarra, mano en acorde, atril, estuche (HU-F-316). |
-| Fotografías (`src/assets/fotos/`) *(enmienda)* | Fotos de guitarra locales con licencia registrada (HU-F-321). |
+| `Boca` | Anillo de progreso con la forma de la **boca de la guitarra** (HU-F-315): cifra en mono al centro, arco ámbar cuando suena el 100 %. Es el **único indicador circular** permitido y se usa una vez por pantalla, solo para el avance global del estudiante. `role="progressbar"`. |
+| Ilustraciones (`shared/music/ilustraciones/`) | SVG propios en trazo de línea con tokens: guitarra acústica, mano en acorde, atril, estuche (HU-F-316). El texto nunca va encima de una ilustración. |
 
 ## 5. Patrones de pantalla
 
-### Estudiante *(enmienda: maqueta aprobada, HU-F-315 y HU-F-318)*
-- **Barra lateral** en `ink-2` (escritorio): Inicio · Ruta · Ejercicios · Acordes · Mi progreso; ítem activo con fondo `primary`. En móvil, barra inferior con los mismos destinos.
-- **Inicio** (`/` con sesión): encabezado con saludo, nivel y foto de guitarra (texto nunca encima de la foto sin un fondo que garantice 4.5:1) junto a la `Boca` del avance global; fila de `TarjetaCifra` (lecciones, bloques, días con avance); "Continuar aprendiendo" con el siguiente paso y su único botón primario; progreso por bloques; evolución por día; bloques de la ruta con su estado; actividad reciente. Solo datos reales; si falta un dato, estado vacío.
-- **Ruta** (`/ruta`; sin sesión también en `/`): mástil vertical con el bloque seleccionado al lado; en móvil, tira horizontal desplazable arriba.
-- **Lección**: lectura editorial (una columna ≤ 68 caracteres), acordes en teselas, `Tablatura` con duración y nivel, acción "Marcar como practicada" al final.
-- **Evaluación**: una pregunta por pantalla en móvil, todas en escritorio; opciones como filas completas seleccionables; resultado con `Fretboard` vibrando si aprueba.
+### Estudiante
+- **Inicio** (`/` con sesión, HU-F-315): saludo con el nombre y una frase concreta, **siguiente paso** con la única acción primaria, `Boca` + franja de cifras del avance, ruta resumida por bloques (filas como trastes, no tarjetas) y lo último que hizo. Solo datos reales; si falta un dato, estado vacío.
+- **Ruta** (`/ruta`; sin sesión también en `/`): columna izquierda con el mástil vertical (bloques como trastes, `MarcaEstado` en cada uno, `Cuerda` de avance a lo largo); columna derecha con el bloque seleccionado: lecciones como lista numerada en mono, ejercicios, y botón único "Presentar evaluación". En móvil el mástil se vuelve una tira horizontal desplazable arriba.
+- **Lección**: lectura editorial (una columna ≤ 68 caracteres), diagramas de acordes en una fila, `Tablatura` con duración y nivel, acción "Marcar como practicada" al final.
+- **Evaluación**: una pregunta por pantalla en móvil, todas en escritorio; opciones como filas completas seleccionables (no radios diminutos); resultado con `Fretboard` vibrando si aprueba.
 
 ### Docente ("Atril")
 - Barra lateral fija con: Resumen · Cursos · Contenido · Evaluaciones.
@@ -151,17 +147,16 @@ Reglas que se mantienen de HU-F-314:
 | Degradados en fondos, textos, botones **o rellenos de gráficos** | Colores planos de la paleta. |
 | Manchas difuminadas (`blur-3xl`, "blobs") y brillos decorativos | Bordes `linea` y capas sólidas. |
 | *Glassmorphism* (`backdrop-blur`, `bg-white/10`) | `surface` sólido. |
-| Grilla de tarjetas con ícono + título + párrafo de marketing | `TarjetaCifra` solo con una cifra real; si no hay dato, la tarjeta no existe. |
-| Tarjetas con borde izquierdo de color como único recurso | Borde completo `linea` y espacio. |
-| Emojis como íconos, ícono de destellos (✨ `Sparkles`), cohetes 🚀 | `MarcaEstado`, símbolos musicales, lucide para acciones y para el ícono de `TarjetaCifra`. |
-| Textos de marketing vacíos y frases motivacionales de relleno ("La práctica constante hace la diferencia", "Desbloquea tu potencial") | Voz de profesor de música, concreta: "Hoy: cambio de Em a Am. 10 minutos." |
-| *Hero* centrado con título gigante + dos botones | Encabezado alineado a la izquierda con nombre, nivel y una frase concreta; la acción va en "Continuar aprendiendo". |
+| Grilla de 3 tarjetas con ícono dentro de un círculo + título + párrafo | Lista o tabla con jerarquía tipográfica. |
+| Tarjetas con borde izquierdo de color como único recurso (hoy `Card` usa `border-l-4`) | `TrasteDivider` y espacio en blanco. |
+| Emojis como íconos, ícono de destellos (✨ `Sparkles`), cohetes 🚀 | `MarcaEstado`, símbolos musicales, lucide solo para acciones (editar, borrar, buscar). |
+| Textos de marketing vacíos: "Desbloquea tu potencial", "Bienvenido de nuevo 👋", "Lleva tu música al siguiente nivel" | Voz de profesor de música, concreta: "Hoy: cambio de Em a Am. 10 minutos." |
+| *Hero* centrado con título gigante + subtítulo + dos botones | Encabezado alineado a la izquierda con el nombre, una frase concreta y **una** acción (el siguiente paso), junto a una ilustración propia. |
 | Sombras grandes en todo, `rounded-2xl/3xl` en todo | Una sombra, dos radios. |
 | Animación de entrada (fade-up) en cada elemento | Movimiento solo con significado (cuerda que suena). |
-| Píldoras "Nuevo" / "Pro" decorativas | Píldoras de estado solo con estado real (Completado, En curso, Pendiente), con texto. |
-| Fotos de *stock* sin licencia, por URL externa o que simulen el contenido de una lección concreta | Fotos locales con licencia registrada (HU-F-321), por tipo de contenido. |
+| Píldoras "Nuevo" / "Pro" decorativas | Sin insignias que no informen algo real. |
+| Ilustraciones 3D, de *stock* o fotografías de bancos de imágenes | Diagramas y elementos de la guitarra dibujados en SVG (HU-F-316). Fotografías: fuera de esta fase (peso y licencias). |
 | Gráficos decorativos o con datos de ejemplo | Un gráfico solo con datos reales, con alternativa en tabla; sin datos, estado vacío (HU-F-317). |
-| Enlaces a funciones que no existen (Logros, Perfil, Notificaciones) | Se agregan cuando exista su HU. |
 | Tablero docente con 4 tarjetas KPI y gráfico de dona | Franja de cifras + lista accionable. |
 
 ## 7. Voz y microcopia
@@ -170,4 +165,4 @@ Reglas que se mantienen de HU-F-314:
 - Errores: qué pasó + qué hacer ("El código no existe o el curso ya cerró. Pídele a tu docente un código nuevo.").
 - Estados vacíos con siguiente paso concreto ("Aún no tienes estudiantes. Comparte el código **K7M2Q9XA** con tu grupo.").
 - Sin signos de exclamación dobles ni mayúsculas sostenidas.
-- Saludo del inicio: "Hola, Ana." + un dato concreto ("Vas en el bloque 2 · Cambio entre Em y Am.").
+- Saludo del inicio: "Hola, Ana." + un dato concreto ("Vas en el bloque 2 · Cambio entre Em y Am."), no "Bienvenido de nuevo 👋".

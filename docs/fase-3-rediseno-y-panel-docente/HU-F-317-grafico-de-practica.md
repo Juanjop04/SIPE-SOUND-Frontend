@@ -1,4 +1,4 @@
-# HU-F-317 · Mostrar la evolución de la práctica en un gráfico
+# HU-F-317 · Mostrar la constancia de práctica en un gráfico
 
 | Campo | Valor |
 |---|---|
@@ -23,36 +23,37 @@ práctica".
 
 ## Alcance
 **Incluye**
-- `src/features/inicio/components/TuEvolucion.tsx` en la columna izquierda del inicio, junto a
-  "Actividad reciente" (maqueta aprobada: "Tu evolución").
-- **Gráfico de línea SVG propio** (sin librería de gráficas, como `MiniLineaEvolucion` de HU-F-306):
-  registros de avance por día; eje X con los días (`Lun … Dom`), eje Y con escala entera, línea
-  `accent` de 2 px y puntos en cada día. **Sin relleno degradado** bajo la línea (sistema de diseño §6).
-- Selector de rango "Últimos 7 días" / "Últimos 28 días" (`?dias=` de HU-B-324), en la URL.
+- `src/features/inicio/components/ConstanciaPractica.tsx` en la columna derecha del inicio, debajo de
+  "Lo último que hiciste".
+- Gráfico **SVG propio** (sin librería de gráficas, como `MiniLineaEvolucion` de HU-F-306): 4 filas
+  (semanas) × 7 columnas (lunes a domingo), como **trastes de un diapasón**: cada día es una casilla
+  sobre la cuerda; con avance se marca con un punto `success` (como `MarcaEstado` aprobado) cuyo tamaño
+  crece en 3 escalones (1, 2–3, 4 o más registros). Sin avance: casilla vacía con borde `linea-fuerte`.
 - Encima, en mono: `9 de 28 días con avance`.
-- **Alternativa textual**: tabla visualmente oculta (`sr-only`) con fecha y registros por día, y
-  "Ver como tabla" (botón que alterna la vista, útil también con zoom).
-- La información no depende solo del color: valor visible al enfocar o pasar sobre un punto y en la tabla.
+- **Alternativa textual**: tabla visualmente oculta (`sr-only`) con fecha y registros por día, y la
+  misma información disponible con "Ver como tabla" (botón que alterna la vista, útil también con zoom).
+- Escala y leyenda visibles: "1 · 2–3 · 4+ registros"; la información no depende solo del color
+  (tamaño del punto + número en la tabla).
 
-**No incluye**: metas, rachas o notificaciones; tiempo de práctica (la API no lo registra).
+**No incluye**: elegir el rango (fijo en 28 días), metas, rachas o notificaciones.
 
 ## Diseño
-- Tarjeta `surface` con borde `linea`; rejilla horizontal en `linea`; etiquetas de ejes en `muted` 13 px.
-- Escritorio: 7 columnas del inicio; alto 200 px. Móvil: ancho completo, alto 160 px; con 28 días las
-  etiquetas del eje X se muestran cada 7.
-- Puntos ≥ 24 px de área de toque (WCAG 2.5.8); el gráfico lleva `role="img"` y un `aria-label` con
-  el resumen; los puntos no son paradas de tabulación (la tabla sí).
+- Escritorio: ocupa el ancho de la columna (5/12); casillas ≥ 24 px (WCAG 2.5.8).
+- Móvil: mismas 4 × 7 casillas a ancho completo; la leyenda pasa debajo.
+- Etiquetas de días (`L M M J V S D`) y de semanas ("hace 3 sem.", …, "esta semana") en `muted` 13 px.
+- Cada casilla con avance es enfocable solo dentro del modo tabla (no 28 paradas de tabulación en el
+  gráfico); el gráfico lleva `role="img"` y un `aria-label` con el resumen.
 
-**Estados**: carga (`Skeleton` del área del gráfico), sin avance en el rango ("En los últimos 7 días
-no hay avance registrado. Una lección corta hoy ya cuenta."), error con reintentar, HU-B-324 no
-desplegada (404) → la sección no se muestra.
+**Estados**: carga (`Skeleton` de 4 × 7), sin avance en el rango ("En las últimas 4 semanas no hay
+avance registrado. Una lección corta hoy ya cuenta."), error con reintentar, HU-B-324 no desplegada
+(404) → la sección no se muestra.
 
 ## Prompt de ejecución
 ```text
 Ejecuta HU-F-317 en SIPE-SOUND-FULLSTACK. Describe el gráfico en viñetas y
 espera confirmación. El SVG es un componente de ≤ 80 líneas que recibe
-por_dia ya ordenado; escalas y etiquetas (zona America/Bogota) son
-funciones puras en features/inicio/utils. Sin
+por_dia ya ordenado; la agrupación por semana (lunes a domingo, zona
+America/Bogota) es una función pura en features/inicio/utils. Sin
 dependencias nuevas. Textos: "días con avance", nunca "práctica de N horas".
 ```
 
