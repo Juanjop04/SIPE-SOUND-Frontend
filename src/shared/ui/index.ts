@@ -1,4 +1,4 @@
-export { Button, type ButtonProps, type VarianteBoton, type TamanoBoton } from "./Button";
+export { Button, claseBoton, type ButtonProps, type VarianteBoton, type TamanoBoton } from "./Button";
 export { Input, type InputProps } from "./Input";
 export { Textarea, type TextareaProps } from "./Textarea";
 export { Select, type SelectProps } from "./Select";

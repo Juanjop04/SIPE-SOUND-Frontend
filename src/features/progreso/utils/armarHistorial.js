@@ -3,13 +3,14 @@
 // salen los bloques con quiz presentado y las lecciones completadas, en el orden de la ruta.
 export function armarHistorial(bloques = []) {
   return bloques.flatMap((bloque) => {
-    const quiz = bloque.tienePuntaje
+    const tienePuntaje = bloque.mejor_puntaje !== null && bloque.mejor_puntaje !== undefined;
+    const quiz = tienePuntaje
       ? [
           {
             id: `bloque-${bloque.id}`,
             tipo: "bloque",
             titulo: bloque.titulo,
-            completado: bloque.aprobado,
+            completado: bloque.estado === "aprobado",
             porcentaje: bloque.mejor_puntaje,
           },
         ]

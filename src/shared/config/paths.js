@@ -9,7 +9,9 @@ export const paths = Object.freeze({
   acordes: "/acordes",
   ejercicios: "/ejercicios",
   progreso: "/progreso",
+  /** @param {string | number} [id] */
   leccion: (id = ":id") => `/leccion/${id}`,
+  /** @param {string | number} [bloqueId] */
   quiz: (bloqueId = ":bloqueId") => `/quiz/${bloqueId}`,
   catalogo: "/_componentes",
   // Atril del docente (HU-F-303).
