@@ -1,22 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Check } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
 import { obtenerSesion } from "@/shared/api/sesion.js";
-import { guardarProgreso } from "@/features/progreso";
-import { obtenerLeccion } from "../api/leccionesApi.js";
-import { obtenerAcordes } from "@/features/acordes";
+import { useCompletarLeccion } from "@/features/progreso";
+import { useAcordes } from "@/features/acordes";
+import { useLeccion } from "../hooks/useLeccion.js";
 
 export default function LeccionDetalle() {
   // useParams() lee el ":id" de la URL. Si visitas /leccion/2, aquí id === "2"
   const { id } = useParams();
 
-  const [leccion, setLeccion] = useState(null);
-  const [acordesLeccion, setAcordesLeccion] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const consultaLeccion = useLeccion(id);
+  const consultaAcordes = useAcordes();
+  const completarLeccion = useCompletarLeccion();
+  const leccion = consultaLeccion.data;
+  const cargando = consultaLeccion.isPending || consultaAcordes.isPending;
+  const error = consultaLeccion.error ?? consultaAcordes.error;
   const [hayUsuario, setHayUsuario] = useState(false);
   const [guardado, setGuardado] = useState(null);
 
@@ -24,33 +26,20 @@ export default function LeccionDetalle() {
     obtenerSesion().then((sesion) => {
       setHayUsuario(!!sesion);
     });
+  }, []);
 
-    // Traemos la lección Y el catálogo completo de acordes al mismo tiempo
-    Promise.all([obtenerLeccion(id), obtenerAcordes()])
-      .then(([leccionData, catalogoAcordes]) => {
-        setLeccion(leccionData);
-
-        // leccionData.acordes es un arreglo de nombres, ej: ["Em", "Am"]
-        // Filtramos el catálogo completo para quedarnos solo con esos
-        const detalles = catalogoAcordes.filter((acorde) =>
-          (leccionData.acordes ?? []).includes(acorde.nombre),
-        );
-        setAcordesLeccion(detalles);
-      })
-      .catch(() => setError("No se pudo cargar la lección."))
-      .finally(() => setCargando(false));
-  }, [id]); // si "id" cambia (el usuario navega a otra lección), se vuelve a cargar
+  // leccion.acordes es un arreglo de nombres, ej: ["Em", "Am"]
+  // Filtramos el catálogo completo (en caché) para quedarnos solo con esos
+  const acordesLeccion = useMemo(
+    () => (consultaAcordes.data ?? []).filter((a) => (leccion?.acordes ?? []).includes(a.nombre)),
+    [consultaAcordes.data, leccion],
+  );
 
   async function marcarCompletada() {
     try {
-      await guardarProgreso({
-        tipo: "leccion",
-        contenido_id: parseInt(id),
-        porcentaje: 100,
-        completado: true,
-      });
+      await completarLeccion.mutateAsync(id);
       setGuardado("ok");
-    } catch (err) {
+    } catch {
       setGuardado("error");
     }
   }
@@ -68,7 +57,7 @@ export default function LeccionDetalle() {
         </Link>
 
         {cargando && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-sm text-danger">{error}</p>}
+        {error && <p className="text-sm text-danger">{error.message}</p>}
 
         {leccion && (
           <>
@@ -77,7 +66,7 @@ export default function LeccionDetalle() {
             </h2>
             <p className="mb-1 text-sm text-muted">{leccion.descripcion}</p>
             <p className="mb-6 font-mono text-xs text-muted/70">
-              {leccion.nivel} - {leccion.duracion ?? "N/A"}
+              {leccion.nivel} - {leccion.duracion_min ? `${leccion.duracion_min} min` : "N/A"}
             </p>
 
             <h3 className="mb-3 font-display text-base font-semibold text-paper">

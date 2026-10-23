@@ -1,7 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { http } from "@/shared/api/httpClient.js";
 
-export async function obtenerEjercicios() {
-  const res = await fetch(`${API_URL}/ejercicios`);
-  if (!res.ok) throw new Error("Error al obtener ejercicios");
-  return res.json();
-}
+export const ejerciciosApi = {
+  listar: () => http.get("/ejercicios"),
+};

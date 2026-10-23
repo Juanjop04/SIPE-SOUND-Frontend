@@ -4,55 +4,17 @@ import { Lock, CheckCircle2 } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { obtenerSesion } from "@/shared/api/sesion.js";
-import { obtenerBloques } from "../api/rutaApi.js";
-import { obtenerProgreso } from "@/features/progreso";
-import { obtenerLecciones } from "@/features/lecciones";
+import { useRuta } from "../hooks/useRuta.js";
 
 export default function Home() {
-  const [bloques, setBloques] = useState([]);
-  const [lecciones, setLecciones] = useState([]);
-  const [progresoBloques, setProgresoBloques] = useState({}); // { [bloque_id]: {completado, porcentaje} }
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: bloques = [], isPending: cargando, error } = useRuta();
   const [hayUsuario, setHayUsuario] = useState(false);
 
   useEffect(() => {
-    obtenerSesion().then(async (sesion) => {
-      const sesionActiva = !!sesion;
-      setHayUsuario(sesionActiva);
-
-      try {
-        const [bloquesData, leccionesData, progresoData] = await Promise.all([
-          obtenerBloques(),
-          obtenerLecciones(),
-          sesionActiva ? obtenerProgreso() : Promise.resolve([]),
-        ]);
-
-        setBloques(bloquesData);
-        setLecciones(leccionesData);
-
-        const mapaBloques = {};
-        progresoData
-          .filter((p) => p.tipo === "bloque")
-          .forEach((p) => {
-            mapaBloques[p.contenido_id] = p;
-          });
-        setProgresoBloques(mapaBloques);
-      } catch (err) {
-        setError("No se pudo conectar con el backend. Esta corriendo?");
-      } finally {
-        setCargando(false);
-      }
+    obtenerSesion().then((sesion) => {
+      setHayUsuario(!!sesion);
     });
   }, []);
-
-  // Un bloque esta desbloqueado si es el primero, o si el bloque
-  // anterior (por orden_index) ya fue aprobado.
-  function bloqueDesbloqueado(bloque, index) {
-    if (index === 0) return true;
-    const anterior = bloques[index - 1];
-    return !!progresoBloques[anterior.id]?.completado;
-  }
 
   return (
     <div className="min-h-screen bg-ink">
@@ -66,13 +28,12 @@ export default function Home() {
         </p>
 
         {cargando && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-sm text-danger">{error}</p>}
+        {error && <p className="text-sm text-danger">{error.message}</p>}
 
         <div className="flex flex-col gap-5">
-          {bloques.map((bloque, index) => {
-            const desbloqueado = bloqueDesbloqueado(bloque, index);
-            const progresoDeEste = progresoBloques[bloque.id];
-            const leccionesDelBloque = lecciones.filter((l) => l.bloque_id === bloque.id);
+          {bloques.map((bloque) => {
+            const { desbloqueado, aprobado, tienePuntaje } = bloque;
+            const leccionesDelBloque = bloque.lecciones ?? [];
 
             return (
               <Card
@@ -81,7 +42,7 @@ export default function Home() {
               >
                 <div className="mb-1 flex items-center gap-2">
                   {!desbloqueado && <Lock size={16} className="text-muted" aria-hidden="true" />}
-                  {progresoDeEste?.completado && (
+                  {aprobado && (
                     <CheckCircle2 size={16} className="text-success" aria-hidden="true" />
                   )}
                   <h3 className="font-display text-base font-semibold text-paper">
@@ -107,8 +68,8 @@ export default function Home() {
                     {hayUsuario ? (
                       <Link to={`/quiz/${bloque.id}`}>
                         <button className="rounded-lg border border-primary px-3 py-2 text-sm text-primary transition-colors hover:bg-primary/10">
-                          {progresoDeEste
-                            ? `Repetir quiz (mejor resultado: ${progresoDeEste.porcentaje}%)`
+                          {tienePuntaje
+                            ? `Repetir quiz (mejor resultado: ${bloque.mejor_puntaje}%)`
                             : "Hacer el quiz del bloque"}
                         </button>
                       </Link>
