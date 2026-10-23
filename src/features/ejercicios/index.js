@@ -1,1 +1,1 @@
-export { default as EjerciciosPage } from "./pages/EjerciciosPage.jsx";
+export const cargarEjerciciosPage = () => import("./pages/EjerciciosPage.jsx");

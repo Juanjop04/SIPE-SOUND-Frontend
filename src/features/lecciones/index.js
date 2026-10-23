@@ -1,1 +1,1 @@
-export { default as LeccionDetallePage } from "./pages/LeccionDetallePage.jsx";
+export const cargarLeccionDetallePage = () => import("./pages/LeccionDetallePage.jsx");

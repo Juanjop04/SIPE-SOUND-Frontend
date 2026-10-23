@@ -5,7 +5,7 @@ import { IconoOjo } from "../components/IconoOjo.jsx";
 import { traducirErrorRegistro } from "../utils/traducirErrorAuth.js";
 import { Input } from "@/shared/ui/Input.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
-import AuthLayout from "@/app/layouts/AuthLayout.jsx";
+import { paths } from "@/shared/config/paths.js";
 
 // 0 = vacía, 1 = débil, 2 = aceptable, 3 = fuerte
 function nivelPassword(p) {
@@ -39,7 +39,7 @@ export default function Registro() {
     try {
       await registrarUsuario(email, password, nombre);
       setExito(true);
-      setTimeout(() => navigate("/login"), 1500);
+      setTimeout(() => navigate(paths.login), 1500);
     } catch (err) {
       setError(traducirErrorRegistro(err.message));
       setCargando(false);
@@ -47,11 +47,7 @@ export default function Registro() {
   }
 
   return (
-    <AuthLayout
-      titulo="Tocar guitarra esta al alcance de tu mano"
-      descripcion="Crea tu cuenta gratis y preparate para los retos de cada leccion que te haran un 
-      mejor aprendiz."
-    >
+    <>
       <h1 className="font-display text-3xl font-semibold">Crea tu cuenta</h1>
       <p className="mt-2 text-muted">
         Solo te toma un segundo. Después podrás empezar con tu primera lección.
@@ -152,12 +148,12 @@ export default function Registro() {
       <p className="mt-8 text-center text-sm text-muted">
         ¿Ya tienes cuenta?{" "}
         <Link
-          to="/login"
+          to={paths.login}
           className="font-medium text-[#E29DE0] hover:underline focus-visible:underline"
         >
           Inicia sesión
         </Link>
       </p>
-    </AuthLayout>
+    </>
   );
 }

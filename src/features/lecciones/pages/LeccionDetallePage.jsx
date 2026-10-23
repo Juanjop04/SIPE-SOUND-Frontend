@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Check } from "lucide-react";
-import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
 import { useSession } from "@/features/auth";
 import { useCompletarLeccion } from "@/features/progreso";
 import { useAcordes } from "@/features/acordes";
 import { useLeccion } from "../hooks/useLeccion.js";
+import { paths } from "@/shared/config/paths.js";
 
 export default function LeccionDetalle() {
   // useParams() lee el ":id" de la URL. Si visitas /leccion/2, aquí id === "2"
@@ -40,70 +40,67 @@ export default function LeccionDetalle() {
   }
 
   return (
-    <div className="min-h-screen bg-ink">
-      <Header />
-      <main className="mx-auto max-w-2xl px-6 py-8">
-        <Link
-          to="/"
-          className="mb-5 flex w-fit items-center gap-1 text-sm text-muted hover:text-primary"
-        >
-          <ArrowLeft size={16} aria-hidden="true" />
-          Volver a lecciones
-        </Link>
+    <main className="mx-auto max-w-2xl px-6 py-8">
+      <Link
+        to={paths.inicio}
+        className="mb-5 flex w-fit items-center gap-1 text-sm text-muted hover:text-primary"
+      >
+        <ArrowLeft size={16} aria-hidden="true" />
+        Volver a lecciones
+      </Link>
 
-        {cargando && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-sm text-danger">{error.message}</p>}
+      {cargando && <p className="text-muted">Cargando...</p>}
+      {error && <p className="text-sm text-danger">{error.message}</p>}
 
-        {leccion && (
-          <>
-            <h2 className="mb-1 font-display text-xl font-semibold text-paper">
-              Leccion {leccion.numero}: {leccion.titulo}
-            </h2>
-            <p className="mb-1 text-sm text-muted">{leccion.descripcion}</p>
-            <p className="mb-6 font-mono text-xs text-muted/70">
-              {leccion.nivel} - {leccion.duracion_min ? `${leccion.duracion_min} min` : "N/A"}
+      {leccion && (
+        <>
+          <h2 className="mb-1 font-display text-xl font-semibold text-paper">
+            Leccion {leccion.numero}: {leccion.titulo}
+          </h2>
+          <p className="mb-1 text-sm text-muted">{leccion.descripcion}</p>
+          <p className="mb-6 font-mono text-xs text-muted/70">
+            {leccion.nivel} - {leccion.duracion_min ? `${leccion.duracion_min} min` : "N/A"}
+          </p>
+
+          <h3 className="mb-3 font-display text-base font-semibold text-paper">
+            Acordes de esta leccion
+          </h3>
+
+          {acordesLeccion.length === 0 && (
+            <p className="mb-6 text-sm text-muted">
+              Esta leccion no tiene acordes asociados todavia.
             </p>
+          )}
 
-            <h3 className="mb-3 font-display text-base font-semibold text-paper">
-              Acordes de esta leccion
-            </h3>
+          <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {acordesLeccion.map((acorde) => (
+              <Card key={acorde.id} className="border-l-0 text-center">
+                <p className="font-display text-lg font-semibold text-paper">{acorde.nombre}</p>
+                <p className="mt-1 font-mono text-xs text-muted">{acorde.tipo}</p>
+                <p className="mt-1 text-xs text-accent">{acorde.dificultad}</p>
+              </Card>
+            ))}
+          </div>
 
-            {acordesLeccion.length === 0 && (
-              <p className="mb-6 text-sm text-muted">
-                Esta leccion no tiene acordes asociados todavia.
-              </p>
-            )}
-
-            <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {acordesLeccion.map((acorde) => (
-                <Card key={acorde.id} className="border-l-0 text-center">
-                  <p className="font-display text-lg font-semibold text-paper">{acorde.nombre}</p>
-                  <p className="mt-1 font-mono text-xs text-muted">{acorde.tipo}</p>
-                  <p className="mt-1 text-xs text-accent">{acorde.dificultad}</p>
-                </Card>
-              ))}
+          {hayUsuario ? (
+            <div className="flex items-center gap-3">
+              <Button variant="success" onClick={marcarCompletada}>
+                Marcar como completada
+              </Button>
+              {guardado === "ok" && (
+                <span className="flex items-center gap-1 text-sm text-success">
+                  <Check size={16} aria-hidden="true" /> guardado
+                </span>
+              )}
+              {guardado === "error" && (
+                <span className="text-sm text-danger">no se pudo guardar</span>
+              )}
             </div>
-
-            {hayUsuario ? (
-              <div className="flex items-center gap-3">
-                <Button variant="success" onClick={marcarCompletada}>
-                  Marcar como completada
-                </Button>
-                {guardado === "ok" && (
-                  <span className="flex items-center gap-1 text-sm text-success">
-                    <Check size={16} aria-hidden="true" /> guardado
-                  </span>
-                )}
-                {guardado === "error" && (
-                  <span className="text-sm text-danger">no se pudo guardar</span>
-                )}
-              </div>
-            ) : (
-              <p className="text-sm italic text-muted">Inicia sesion para guardar tu progreso</p>
-            )}
-          </>
-        )}
-      </main>
-    </div>
+          ) : (
+            <p className="text-sm italic text-muted">Inicia sesion para guardar tu progreso</p>
+          )}
+        </>
+      )}
+    </main>
   );
 }

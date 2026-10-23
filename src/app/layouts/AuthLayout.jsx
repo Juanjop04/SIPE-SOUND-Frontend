@@ -1,7 +1,16 @@
+import { useMemo, useState } from "react";
+import { Outlet, useMatches } from "react-router-dom";
 import { Fretboard } from "@/shared/music/Fretboard.jsx";
 import logo from "@/assets/brand/logo.png";
 
-export default function AuthLayout({ titulo, descripcion, tocando = false, children }) {
+// Layout de /login y /registro. El título y la descripción del panel vienen del `handle`
+// de cada ruta (router.jsx); la página activa la vibración del mástil con
+// useOutletContext().setTocando mientras envía el formulario.
+export default function AuthLayout() {
+  const [tocando, setTocando] = useState(false);
+  const { titulo, descripcion } = useMatches().findLast((m) => m.handle?.titulo)?.handle ?? {};
+  const contexto = useMemo(() => ({ setTocando }), []);
+
   return (
     <div className="min-h-screen bg-ink text-paper lg:grid lg:grid-cols-2">
       {/* Panel de marca (solo escritorio) */}
@@ -33,7 +42,7 @@ export default function AuthLayout({ titulo, descripcion, tocando = false, child
             <img src={logo} alt="" className="h-10 w-10 object-contain" />
             <span className="font-display text-xl font-semibold">Sipe Sound</span>
           </div>
-          {children}
+          <Outlet context={contexto} />
         </div>
       </main>
     </div>

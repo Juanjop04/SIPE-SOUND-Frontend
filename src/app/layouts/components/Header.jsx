@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useSession } from "@/features/auth";
+import { paths } from "@/shared/config/paths.js";
 import logo from "@/assets/brand/logo.png";
 
 export default function Header() {
@@ -9,26 +10,26 @@ export default function Header() {
   // AuthProvider limpia la caché al cerrar sesión; no hace falta recargar la página.
   async function handleLogout() {
     await cerrarSesion();
-    navigate("/");
+    navigate(paths.inicio);
   }
 
   return (
     <header className="flex items-center justify-between bg-surface px-6 py-4">
       <div className="flex items-center gap-2">
         <img src={logo} alt="Sipe Sound" className="h-9 w-9 object-contain" />
-        <Link to="/" className="font-display text-lg font-semibold text-paper">
+        <Link to={paths.inicio} className="font-display text-lg font-semibold text-paper">
           Sipe Sound
         </Link>
       </div>
       <nav className="flex items-center gap-4 text-sm">
-        <Link to="/acordes" className="text-muted hover:text-primary">
+        <Link to={paths.acordes} className="text-muted hover:text-primary">
           Acordes
         </Link>
-        <Link to="/ejercicios" className="text-muted hover:text-primary">
+        <Link to={paths.ejercicios} className="text-muted hover:text-primary">
           Ejercicios
         </Link>
         {usuario && (
-          <Link to="/progreso" className="text-muted hover:text-primary">
+          <Link to={paths.progreso} className="text-muted hover:text-primary">
             Mi progreso
           </Link>
         )}
@@ -40,7 +41,7 @@ export default function Header() {
             </button>
           </>
         ) : (
-          <Link to="/login" className="text-primary hover:underline">
+          <Link to={paths.login} className="text-primary hover:underline">
             Iniciar sesion
           </Link>
         )}

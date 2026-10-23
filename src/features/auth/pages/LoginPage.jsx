@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import { iniciarSesion } from "../api/authService.js";
 import { IconoOjo } from "../components/IconoOjo.jsx";
 import { traducirErrorLogin } from "../utils/traducirErrorAuth.js";
+import { destinoSeguro } from "../utils/destinoSeguro.js";
 import { Input } from "@/shared/ui/Input.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
-import AuthLayout from "@/app/layouts/AuthLayout.jsx";
+import { paths } from "@/shared/config/paths.js";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,27 +15,31 @@ export default function Login() {
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
+  const [parametros] = useSearchParams();
+  // El mástil del AuthLayout vibra mientras se envía el formulario.
+  const { setTocando } = useOutletContext();
+
+  function marcarCargando(valor) {
+    setCargando(valor);
+    setTocando(valor);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-    setCargando(true);
+    marcarCargando(true);
     try {
       await iniciarSesion(email, password);
-      navigate("/");
+      navigate(destinoSeguro(parametros.get("volver"), paths.inicio), { replace: true });
     } catch (err) {
       setError(traducirErrorLogin(err.message));
     } finally {
-      setCargando(false);
+      marcarCargando(false);
     }
   }
 
   return (
-    <AuthLayout
-      titulo="Aprende guitarra a tu ritmo"
-      descripcion="Practica acordes, completa ejercicios y SUPERATE para desbloquear el siguiente nivel."
-      tocando={cargando}
-    >
+    <>
       <h1 className="font-display text-3xl font-semibold">Bienvenido de nuevo</h1>
       <p className="mt-2 text-muted">Inicia sesión para continuar</p>
 
@@ -56,7 +61,7 @@ export default function Login() {
             <span className="font-medium">Contraseña</span>
             {/* Crea la ruta /recuperar o cambia este enlace cuando exista */}
             <Link
-              to="/recuperar"
+              to={paths.recuperar}
               className="text-[#E29DE0] hover:underline focus-visible:underline"
             >
               ¿Olvidaste tu contraseña?
@@ -101,12 +106,12 @@ export default function Login() {
       <p className="mt-8 text-center text-sm text-muted">
         ¿Aún no tienes cuenta?{" "}
         <Link
-          to="/registro"
+          to={paths.registro}
           className="font-medium text-[#E29DE0] hover:underline focus-visible:underline"
         >
           Crea una gratis
         </Link>
       </p>
-    </AuthLayout>
+    </>
   );
 }

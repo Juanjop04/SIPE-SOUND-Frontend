@@ -1,13 +1,13 @@
 // Único lugar con fetch (contrato 04 §3). Lee SIEMPRE la respuesta estándar:
 // success → devuelve data; si no → lanza ApiError con el message del backend.
 import { env } from "@/shared/config/env.js";
+import { loginConRegreso, paths } from "@/shared/config/paths.js";
 import { ApiError, MENSAJE_SIN_CONEXION, SIN_CONEXION } from "./ApiError.js";
 import { obtenerSesion, olvidarSesion, renovarSesion } from "./sesion.js";
 
 // Conectividad baja: no esperar indefinidamente.
 const TIMEOUT_MS = 15_000;
 const HTTP_NO_AUTENTICADO = 401;
-const RUTA_LOGIN = "/login";
 
 function construirUrl(ruta, params) {
   const url = new URL(env.apiUrl + ruta);
@@ -66,8 +66,8 @@ function esNoAutenticado(error) {
 function irAlLogin() {
   olvidarSesion();
   const { pathname, search } = window.location;
-  if (pathname === RUTA_LOGIN) return;
-  window.location.assign(`${RUTA_LOGIN}?volver=${encodeURIComponent(pathname + search)}`);
+  if (pathname === paths.login) return;
+  window.location.assign(loginConRegreso(pathname + search));
 }
 
 function redirigirSiNoAutenticado(error) {

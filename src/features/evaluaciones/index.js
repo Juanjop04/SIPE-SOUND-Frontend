@@ -1,1 +1,1 @@
-export { default as QuizBloquePage } from "./pages/QuizBloquePage.jsx";
+export const cargarQuizBloquePage = () => import("./pages/QuizBloquePage.jsx");
