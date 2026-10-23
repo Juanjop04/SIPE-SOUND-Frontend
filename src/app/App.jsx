@@ -5,7 +5,7 @@ import Registro from "@/pages/Registro.jsx";
 import { LeccionDetallePage as LeccionDetalle } from "@/features/lecciones";
 import { AcordesPage as Acordes } from "@/features/acordes";
 import { EjerciciosPage as Ejercicios } from "@/features/ejercicios";
-import Progreso from "@/pages/Progreso.jsx";
+import { ProgresoPage as Progreso } from "@/features/progreso";
 import QuizBloque from "@/pages/QuizBloque.jsx";
 
 export default function App() {

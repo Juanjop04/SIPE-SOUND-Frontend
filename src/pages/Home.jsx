@@ -4,7 +4,8 @@ import { Lock, CheckCircle2 } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { supabase } from "@/shared/lib/supabase.js";
-import { obtenerBloques, obtenerProgreso } from "@/lib/api.js";
+import { obtenerBloques } from "@/lib/api.js";
+import { obtenerProgreso } from "@/features/progreso";
 import { obtenerLecciones } from "@/features/lecciones";
 
 export default function Home() {
