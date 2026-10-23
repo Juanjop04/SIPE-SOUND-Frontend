@@ -1,7 +1,9 @@
 import { BookOpen, ClipboardCheck, Timer } from "lucide-react";
-import type { EventoActividad } from "@/features/progreso";
+import { useActividad, type EventoActividad } from "@/features/progreso";
+import { paths } from "@/shared/config/paths.js";
 import { EstadoVacio } from "@/shared/ui";
 import { fechaRelativa } from "../utils/fechaRelativa";
+import { PanelInicio } from "./PanelInicio";
 
 const ICONOS = { leccion: BookOpen, ejercicio: Timer, evaluacion: ClipboardCheck };
 const MAXIMO = 5;
@@ -52,5 +54,27 @@ export function UltimaActividad({ eventos }: { eventos: EventoActividad[] }) {
         );
       })}
     </ul>
+  );
+}
+
+/** Sección "Actividad reciente" del inicio; sin HU-B-324 (404) muestra un aviso, no un error. */
+export function PanelActividad({ className }: { className?: string }) {
+  const actividad = useActividad();
+  return (
+    <PanelInicio
+      titulo="Actividad reciente"
+      enlace={{ a: paths.progreso, texto: "Ver mi progreso" }}
+      className={className}
+      cargando={actividad.isPending}
+      error={actividad.noDisponible ? null : actividad.error}
+      onReintentar={() => actividad.refetch()}
+    >
+      {actividad.data && <UltimaActividad eventos={actividad.data.recientes} />}
+      {actividad.noDisponible && (
+        <p className="text-sm text-muted">
+          Tu actividad aparecerá aquí cuando el servidor se actualice.
+        </p>
+      )}
+    </PanelInicio>
   );
 }

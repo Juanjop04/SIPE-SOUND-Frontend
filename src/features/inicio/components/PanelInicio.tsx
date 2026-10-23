@@ -7,6 +7,8 @@ export interface PanelInicioProps {
   titulo: string;
   /** Enlace secundario de la esquina ("Ver todo"). */
   enlace?: { a: string; texto: string };
+  /** Control propio de la esquina (p. ej. el selector de rango); reemplaza al enlace. */
+  accion?: ReactNode;
   /** Estado de los datos de la sección: cada sección carga y falla por separado. */
   cargando?: boolean;
   error?: Error | null;
@@ -17,7 +19,7 @@ export interface PanelInicioProps {
 
 /** Tarjeta de sección del inicio: surface con borde (contrato 05 §2.1), título y contenido. */
 export function PanelInicio(props: PanelInicioProps) {
-  const { titulo, enlace, cargando, error, onReintentar, className, children } = props;
+  const { titulo, enlace, accion, cargando, error, onReintentar, className, children } = props;
   const id = useId();
   let contenido = children;
   if (cargando) contenido = <Skeleton lineas={3} className="h-10 w-full" />;
@@ -31,11 +33,12 @@ export function PanelInicio(props: PanelInicioProps) {
         className,
       )}
     >
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id={id} className="font-display text-xl font-semibold text-paper">
           {titulo}
         </h2>
-        {enlace && (
+        {accion}
+        {!accion && enlace && (
           <Link to={enlace.a} className="text-sm text-accent hover:underline">
             {enlace.texto}
           </Link>
