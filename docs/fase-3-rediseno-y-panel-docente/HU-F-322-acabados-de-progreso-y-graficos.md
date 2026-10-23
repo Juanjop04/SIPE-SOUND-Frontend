@@ -27,7 +27,8 @@ desvanece y la foto fundida con la tarjeta. Esto exige una **enmienda acotada** 
   y en "Tu progreso por bloques"; 5 en la franja de *Mi progreso*.
 - `Boca`: el arco con el mismo degradado.
 - "Tu evolución": curva suave **monótona** (Fritsch–Carlson; nunca baja de 0 ni supera el máximo) y
-  área `accent` 35 % → 0 % bajo la curva. La línea sigue siendo el dato (10.1:1).
+  área violeta `primary` 55 % → 0 % bajo la curva, como en la maqueta. La línea `primary-claro` sigue
+  siendo el dato (6.3:1 sobre la tarjeta).
 - Encabezado del inicio: la foto ocupa el fondo derecho y se desvanece hacia la izquierda con
   `mask-image`; el texto queda sobre `surface` sólido y la `Boca` en su propia tarjeta `surface-2`.
 - Enmienda de `05-sistema-de-diseno.md` §4 y §6.

@@ -148,7 +148,7 @@ Reglas que se mantienen de HU-F-314:
 
 | ❌ No | ✅ En su lugar |
 |---|---|
-| Degradados en fondos, textos, botones o decoración | Colores planos de la paleta. **Excepciones acotadas** *(enmienda HU-F-322)*: (1) relleno de `Cuerda` y arco de `Boca`: `primary → primary-claro`, o `success/60 → success` al completar, con ambos extremos ≥ 3:1 frente a la pista; (2) área bajo la curva de un gráfico: `accent` 35 % → 0 %, decorativa (el dato es la línea, 10.1:1); (3) foto que se funde con su tarjeta mediante máscara, sin texto encima. |
+| Degradados en fondos, textos, botones o decoración | Colores planos de la paleta. **Excepciones acotadas** *(enmienda HU-F-322)*: (1) relleno de `Cuerda` y arco de `Boca`: `primary → primary-claro`, o `success/60 → success` al completar, con ambos extremos ≥ 3:1 frente a la pista; (2) área bajo la curva de un gráfico: `primary` 55 % → 0 %, decorativa (el dato es la línea `primary-claro`, 6.3:1); (3) foto que se funde con su tarjeta mediante máscara, sin texto encima. |
 | Manchas difuminadas (`blur-3xl`, "blobs"), brillos y `backdrop-blur` | Bordes `linea` y capas sólidas. Una foto puede desvanecerse en su tarjeta (excepción 3 de arriba), nunca desenfocarse detrás de un texto. |
 | *Glassmorphism* (`backdrop-blur`, `bg-white/10`) | `surface` sólido. |
 | Grilla de tarjetas con ícono + título + párrafo de marketing | `TarjetaCifra` solo con una cifra real; si no hay dato, la tarjeta no existe. |

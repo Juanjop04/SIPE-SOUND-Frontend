@@ -63,15 +63,15 @@ export function GraficoEvolucion({ dias }: { dias: Dia[] }) {
       {/* Área que se desvanece bajo la curva (enmienda HU-F-322): decorativa; el dato es la línea. */}
       <defs>
         <linearGradient id={idArea} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" className="[stop-color:rgb(var(--color-accent)/0.35)]" />
-          <stop offset="100%" className="[stop-color:rgb(var(--color-accent)/0)]" />
+          <stop offset="0%" className="[stop-color:rgb(var(--color-primary)/0.55)]" />
+          <stop offset="100%" className="[stop-color:rgb(var(--color-primary)/0)]" />
         </linearGradient>
       </defs>
       <path d={areaBajo(coordenadas, yDe(0, marco, tope))} fill={`url(#${idArea})`} />
       <path
         d={trazoSuave(coordenadas)}
         fill="none"
-        className="stroke-accent"
+        className="stroke-primary-claro"
         strokeWidth={2.5}
         strokeLinecap="round"
       />
@@ -82,7 +82,12 @@ export function GraficoEvolucion({ dias }: { dias: Dia[] }) {
             <circle cx={coordenadas[i].x} cy={coordenadas[i].y} r={12} className="fill-transparent">
               <title>{`${fechaLarga(dia.fecha)}: ${registros(dia.registros)}`}</title>
             </circle>
-            <circle cx={coordenadas[i].x} cy={coordenadas[i].y} r={3.5} className="fill-accent" />
+            <circle
+              cx={coordenadas[i].x}
+              cy={coordenadas[i].y}
+              r={3.5}
+              className="fill-primary-claro"
+            />
             {etiqueta && (
               <text
                 x={coordenadas[i].x}
