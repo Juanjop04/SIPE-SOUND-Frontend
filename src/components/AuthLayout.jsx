@@ -4,7 +4,7 @@ import logo from "../assets/logo.png";
 // Cada cuerda: altura (y), grosor, cuánto se mueve (amp) y cuánto dura
 // una vibración (dur). Las gruesas vibran más lento y se mueven menos.
 const CUERDAS = [
-  { y: 40, grosor: 2.5, amp: 14, dur: 0.40 },
+  { y: 40, grosor: 2.5, amp: 14, dur: 0.4 },
   { y: 80, grosor: 2.5, amp: 13, dur: 0.4 },
   { y: 120, grosor: 2, amp: 12, dur: 0.46 },
   { y: 160, grosor: 3, amp: 10, dur: 0.54 },
@@ -37,9 +37,7 @@ function Fretboard({ tocando }) {
   }, [tocando]);
 
   useEffect(() => {
-    const quiereMenosMovimiento = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const quiereMenosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (quiereMenosMovimiento) return;
 
     const inicio = performance.now();
@@ -110,7 +108,16 @@ function Fretboard({ tocando }) {
       aria-label="Mástil de guitarra con seis cuerdas"
     >
       {TRASTES.map((x) => (
-        <line key={x} x1={x} y1="30" x2={x} y2="250" stroke="#7C3AED" strokeOpacity="0.35" strokeWidth="2" />
+        <line
+          key={x}
+          x1={x}
+          y1="30"
+          x2={x}
+          y2="250"
+          stroke="#7C3AED"
+          strokeOpacity="0.35"
+          strokeWidth="2"
+        />
       ))}
 
       {PUNTOS.map((p) => (
@@ -155,9 +162,7 @@ export default function AuthLayout({ titulo, descripcion, tocando = false, child
           <p className="mt-4 max-w-md text-muted">{descripcion}</p>
         </div>
 
-        <p className="relative text-sm text-muted">
-          &copy; {new Date().getFullYear()} Sipe Sound
-        </p>
+        <p className="relative text-sm text-muted">&copy; {new Date().getFullYear()} Sipe Sound</p>
       </aside>
 
       {/* Contenido (formulario) */}

@@ -10,9 +10,9 @@ export function Button({ variant = "primary", className, children, ...props }) {
   return (
     <button
       className={cn(
-        "px-4 py-2 rounded-lg font-medium text-sm transition-colors disabled:opacity-50",
+        "rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50",
         variants[variant],
-        className
+        className,
       )}
       {...props}
     >

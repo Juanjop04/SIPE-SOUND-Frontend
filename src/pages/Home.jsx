@@ -55,14 +55,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-ink">
       <Header />
-      <main className="max-w-2xl mx-auto px-6 py-8">
-        <h2 className="font-display font-semibold text-paper text-xl mb-1">Bloques de aprendizaje</h2>
-        <p className="text-muted text-sm mb-6">
+      <main className="mx-auto max-w-2xl px-6 py-8">
+        <h2 className="mb-1 font-display text-xl font-semibold text-paper">
+          Bloques de aprendizaje
+        </h2>
+        <p className="mb-6 text-sm text-muted">
           Completa el quiz de cada bloque (80% o mas) para desbloquear el siguiente.
         </p>
 
         {cargando && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-danger text-sm">{error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
 
         <div className="flex flex-col gap-5">
           {bloques.map((bloque, index) => {
@@ -71,26 +73,29 @@ export default function Home() {
             const leccionesDelBloque = lecciones.filter((l) => l.bloque_id === bloque.id);
 
             return (
-              <Card key={bloque.id} className={desbloqueado ? "border-l-0" : "border-l-0 opacity-60"}>
-                <div className="flex items-center gap-2 mb-1">
+              <Card
+                key={bloque.id}
+                className={desbloqueado ? "border-l-0" : "border-l-0 opacity-60"}
+              >
+                <div className="mb-1 flex items-center gap-2">
                   {!desbloqueado && <Lock size={16} className="text-muted" aria-hidden="true" />}
                   {progresoDeEste?.completado && (
                     <CheckCircle2 size={16} className="text-success" aria-hidden="true" />
                   )}
-                  <h3 className="font-display font-semibold text-paper text-base">
+                  <h3 className="font-display text-base font-semibold text-paper">
                     Bloque {bloque.numero}: {bloque.titulo}
                   </h3>
                 </div>
-                <p className="text-muted text-sm mb-3">{bloque.descripcion}</p>
+                <p className="mb-3 text-sm text-muted">{bloque.descripcion}</p>
 
                 {desbloqueado ? (
                   <>
-                    <div className="flex flex-col gap-1 mb-3">
+                    <div className="mb-3 flex flex-col gap-1">
                       {leccionesDelBloque.map((leccion) => (
                         <Link
                           key={leccion.id}
                           to={`/leccion/${leccion.id}`}
-                          className="text-paper text-sm hover:text-accent transition-colors"
+                          className="text-sm text-paper transition-colors hover:text-accent"
                         >
                           • Leccion {leccion.numero}: {leccion.titulo}
                         </Link>
@@ -99,18 +104,18 @@ export default function Home() {
 
                     {hayUsuario ? (
                       <Link to={`/quiz/${bloque.id}`}>
-                        <button className="text-sm px-3 py-2 rounded-lg border border-primary text-primary hover:bg-primary/10 transition-colors">
+                        <button className="rounded-lg border border-primary px-3 py-2 text-sm text-primary transition-colors hover:bg-primary/10">
                           {progresoDeEste
                             ? `Repetir quiz (mejor resultado: ${progresoDeEste.porcentaje}%)`
                             : "Hacer el quiz del bloque"}
                         </button>
                       </Link>
                     ) : (
-                      <p className="text-muted text-xs italic">Inicia sesion para hacer el quiz</p>
+                      <p className="text-xs italic text-muted">Inicia sesion para hacer el quiz</p>
                     )}
                   </>
                 ) : (
-                  <p className="text-muted text-xs italic">
+                  <p className="text-xs italic text-muted">
                     Aprueba el quiz del bloque anterior para desbloquear este.
                   </p>
                 )}
