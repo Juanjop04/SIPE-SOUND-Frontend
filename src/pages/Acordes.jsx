@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header.jsx";
-import { Card } from "../components/ui/card.jsx";
+import { Card } from "@/shared/ui/Card.jsx";
 import ChordDiagram from "../components/ChordDiagram.jsx";
 import { obtenerAcordes } from "../lib/api.js";
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Circle } from "lucide-react";
 import Header from "../components/Header.jsx";
-import { Card } from "../components/ui/card.jsx";
+import { Card } from "@/shared/ui/Card.jsx";
 import { supabase } from "@/shared/lib/supabase.js";
 import {
   obtenerProgreso,

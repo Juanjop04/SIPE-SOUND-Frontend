@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Check } from "lucide-react";
 import Header from "../components/Header.jsx";
-import { Card } from "../components/ui/card.jsx";
-import { Button } from "../components/ui/button.jsx";
+import { Card } from "@/shared/ui/Card.jsx";
+import { Button } from "@/shared/ui/Button.jsx";
 import { supabase } from "@/shared/lib/supabase.js";
 import { obtenerLeccion, obtenerAcordes, guardarProgreso } from "../lib/api.js";
 
