@@ -1,2 +1,3 @@
 export { default as ProgresoPage } from "./pages/ProgresoPage.jsx";
-export { obtenerProgreso, guardarProgreso } from "./api/progresoApi.js";
+export { useCompletarLeccion, useCompletarEjercicio } from "./hooks/useRegistrarAvance.js";
+export { progresoKeys } from "./api/keys.js";

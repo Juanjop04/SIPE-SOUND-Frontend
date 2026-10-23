@@ -1,63 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Circle } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { obtenerSesion } from "@/shared/api/sesion.js";
-import { obtenerBloques } from "@/features/ruta";
-import { obtenerProgreso } from "../api/progresoApi.js";
-import { obtenerEjercicios } from "@/features/ejercicios";
-import { obtenerLecciones } from "@/features/lecciones";
+import { useRuta } from "@/features/ruta";
+import { useResumenProgreso } from "../hooks/useResumenProgreso.js";
+import { armarHistorial } from "../utils/armarHistorial.js";
 
 export default function Progreso() {
   const [hayUsuario, setHayUsuario] = useState(null);
-  const [items, setItems] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const conSesion = hayUsuario === true;
+  const resumen = useResumenProgreso({ enabled: conSesion });
+  const ruta = useRuta();
+  const cargando = conSesion && (resumen.isPending || ruta.isPending);
+  const error = resumen.error ?? ruta.error;
+  const items = useMemo(() => armarHistorial(ruta.data), [ruta.data]);
 
   useEffect(() => {
-    obtenerSesion().then(async (sesion) => {
-      const sesionActiva = !!sesion;
-      setHayUsuario(sesionActiva);
-
-      if (!sesionActiva) {
-        setCargando(false);
-        return;
-      }
-
-      try {
-        const [progreso, lecciones, ejercicios, bloques] = await Promise.all([
-          obtenerProgreso(),
-          obtenerLecciones(),
-          obtenerEjercicios(),
-          obtenerBloques(),
-        ]);
-
-        // Segun el "tipo" del registro, buscamos su titulo en el catalogo correcto
-        const catalogos = { leccion: lecciones, ejercicio: ejercicios, bloque: bloques };
-
-        const combinados = progreso.map((registro) => {
-          const catalogo = catalogos[registro.tipo] ?? [];
-          const encontrado = catalogo.find((item) => item.id === registro.contenido_id);
-          return {
-            ...registro,
-            titulo: encontrado?.titulo ?? encontrado?.nombre ?? `#${registro.contenido_id}`,
-          };
-        });
-
-        combinados.sort((a, b) => new Date(b.actualizado_en) - new Date(a.actualizado_en));
-        setItems(combinados);
-      } catch (err) {
-        setError("No se pudo cargar tu progreso.");
-      } finally {
-        setCargando(false);
-      }
+    obtenerSesion().then((sesion) => {
+      setHayUsuario(!!sesion);
     });
   }, []);
 
-  const totalLecciones = items.filter((i) => i.tipo === "leccion" && i.completado).length;
-  const totalEjercicios = items.filter((i) => i.tipo === "ejercicio" && i.completado).length;
-  const totalBloques = items.filter((i) => i.tipo === "bloque" && i.completado).length;
+  const totalLecciones = resumen.data?.lecciones.completadas ?? 0;
+  const totalEjercicios = resumen.data?.ejercicios.completados ?? 0;
+  const totalBloques = resumen.data?.bloques_aprobados ?? 0;
 
   return (
     <div className="min-h-screen bg-ink">
@@ -79,7 +47,7 @@ export default function Progreso() {
         )}
 
         {cargando && hayUsuario && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-sm text-danger">{error}</p>}
+        {error && <p className="text-sm text-danger">{error.message}</p>}
 
         {hayUsuario && !cargando && !error && (
           <>
@@ -117,9 +85,6 @@ export default function Progreso() {
                       {item.tipo === "bloque" ? "quiz de bloque" : item.tipo} - {item.porcentaje}%
                     </p>
                   </div>
-                  <span className="font-mono text-xs text-muted/60">
-                    {new Date(item.actualizado_en).toLocaleDateString()}
-                  </span>
                 </div>
               ))}
             </div>

@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import ChordDiagram from "@/shared/music/ChordDiagram.jsx";
-import { obtenerAcordes } from "../api/acordesApi.js";
+import { useAcordes } from "../hooks/useAcordes.js";
 
 const DIFICULTAD_COLOR = {
   facil: "text-success",
@@ -11,16 +10,7 @@ const DIFICULTAD_COLOR = {
 };
 
 export default function Acordes() {
-  const [acordes, setAcordes] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    obtenerAcordes()
-      .then(setAcordes)
-      .catch(() => setError("No se pudo cargar el catalogo de acordes."))
-      .finally(() => setCargando(false));
-  }, []);
+  const { data: acordes = [], isPending: cargando, error } = useAcordes();
 
   return (
     <div className="min-h-screen bg-ink">
@@ -30,7 +20,7 @@ export default function Acordes() {
         <p className="mb-6 text-sm text-muted">Todos los acordes disponibles en el curso.</p>
 
         {cargando && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-sm text-danger">{error}</p>}
+        {error && <p className="text-sm text-danger">{error.message}</p>}
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {acordes.map((acorde) => (

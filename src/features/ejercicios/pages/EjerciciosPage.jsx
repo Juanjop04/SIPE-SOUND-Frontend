@@ -4,13 +4,12 @@ import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
 import { obtenerSesion } from "@/shared/api/sesion.js";
-import { guardarProgreso } from "@/features/progreso";
-import { obtenerEjercicios } from "../api/ejerciciosApi.js";
+import { useCompletarEjercicio } from "@/features/progreso";
+import { useEjercicios } from "../hooks/useEjercicios.js";
 
 export default function Ejercicios() {
-  const [ejercicios, setEjercicios] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: ejercicios = [], isPending: cargando, error } = useEjercicios();
+  const completarEjercicio = useCompletarEjercicio();
   const [hayUsuario, setHayUsuario] = useState(false);
   const [guardados, setGuardados] = useState({});
 
@@ -18,23 +17,13 @@ export default function Ejercicios() {
     obtenerSesion().then((sesion) => {
       setHayUsuario(!!sesion);
     });
-
-    obtenerEjercicios()
-      .then(setEjercicios)
-      .catch(() => setError("No se pudo conectar con el backend. Esta corriendo?"))
-      .finally(() => setCargando(false));
   }, []);
 
   async function marcarCompletado(ejercicioId) {
     try {
-      await guardarProgreso({
-        tipo: "ejercicio",
-        contenido_id: ejercicioId,
-        porcentaje: 100,
-        completado: true,
-      });
+      await completarEjercicio.mutateAsync(ejercicioId);
       setGuardados((prev) => ({ ...prev, [ejercicioId]: "ok" }));
-    } catch (err) {
+    } catch {
       setGuardados((prev) => ({ ...prev, [ejercicioId]: "error" }));
     }
   }
@@ -49,7 +38,7 @@ export default function Ejercicios() {
         </p>
 
         {cargando && <p className="text-muted">Cargando...</p>}
-        {error && <p className="text-sm text-danger">{error}</p>}
+        {error && <p className="text-sm text-danger">{error.message}</p>}
 
         <div className="flex flex-col gap-4">
           {ejercicios.map((ej) => (
@@ -61,7 +50,7 @@ export default function Ejercicios() {
                 <span>{ej.nivel}</span>
                 {ej.bpm_recomendado && <span>{ej.bpm_recomendado} BPM</span>}
                 {ej.compas && <span>compas {ej.compas}</span>}
-                {ej.duracion && <span>{ej.duracion}</span>}
+                {ej.duracion_min && <span>{ej.duracion_min} min</span>}
               </div>
 
               {ej.acordes && ej.acordes.length > 0 && (

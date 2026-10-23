@@ -1,43 +1,34 @@
 // Sesión contra el backend (HU-F-207 / HU-B-322). El frontend no usa Supabase:
-// - access token: solo en memoria (se pierde al recargar y se recupera con renovar()).
+// - access token: solo en memoria (se pierde al recargar y se recupera con la cookie).
 // - refresh token: cookie httpOnly "sipe_refresh" que pone el backend; JavaScript no la ve.
-// Toda petición a /auth/* va con credentials: "include" para que viaje la cookie.
+import { ApiError } from "./ApiError.js";
+import { enviar } from "./httpClient.js";
 
-const API_URL = import.meta.env.VITE_API_URL;
 // Se renueva un poco antes de que venza para no enviar un token caducado.
 const MARGEN_RENOVACION_MS = 30_000;
-const SIN_SESION = "No has iniciado sesion";
 
 let sesionActual = null;
 let renovacionEnCurso = null;
+// Tras un 401 al renovar ya sabemos que no hay cookie: no se vuelve a preguntar
+// en cada petición de un visitante hasta que inicie sesión.
+let sinSesionConfirmado = false;
 
-function mensajeDeError(cuerpo) {
-  // Errores de validación: "campo: mensaje" → solo el mensaje, en una línea.
-  if (cuerpo?.status === "VALIDACION" && cuerpo.errors?.length) {
-    return cuerpo.errors.map((texto) => texto.slice(texto.indexOf(": ") + 2)).join(" ");
-  }
-  return cuerpo?.message || "Ocurrió un error inesperado. Inténtalo de nuevo.";
+function auth(metodo, ruta, opciones = {}) {
+  return enviar(metodo, `/auth${ruta}`, { body: {}, ...opciones, conCredenciales: true }).then(
+    (cuerpo) => cuerpo.data,
+  );
 }
 
-async function solicitarAuth(ruta, { method = "POST", body = {}, token } = {}) {
-  const headers = { "Content-Type": "application/json" };
-  if (token) headers.Authorization = `Bearer ${token}`;
-  const res = await fetch(`${API_URL}/auth${ruta}`, {
-    method,
-    headers,
-    credentials: "include",
-    body: JSON.stringify(body),
-  });
-  const cuerpo = await res.json().catch(() => null);
-  if (!cuerpo?.success) {
-    const error = new Error(mensajeDeError(cuerpo));
-    error.status = cuerpo?.status;
-    throw error;
+// Errores de validación: "campo: mensaje" → solo los mensajes, en una línea.
+function conDetalle(error) {
+  if (error instanceof ApiError && error.status === "VALIDACION" && error.errors.length) {
+    error.message = Object.values(error.porCampo).join(" ");
   }
-  return cuerpo.data;
+  throw error;
 }
 
 function guardar(datos) {
+  sinSesionConfirmado = false;
   sesionActual = {
     accessToken: datos.access_token,
     expiraEn: (datos.expira_en ?? 0) * 1000,
@@ -50,42 +41,45 @@ function estaVigente(sesion) {
   return sesion && sesion.expiraEn - MARGEN_RENOVACION_MS > Date.now();
 }
 
-async function renovar() {
-  // Varias páginas pueden pedir la sesión a la vez: una sola renovación.
-  renovacionEnCurso ??= solicitarAuth("/sesion/renovar")
+function descartarTrasFallo(error) {
+  sesionActual = null;
+  if (error instanceof ApiError && error.statusCode === 401) sinSesionConfirmado = true;
+  return null;
+}
+
+/** Nuevo access token con la cookie. Varias llamadas a la vez comparten una sola petición. */
+export function renovarSesion() {
+  renovacionEnCurso ??= auth("POST", "/sesion/renovar")
     .then(guardar)
-    .catch(() => {
-      sesionActual = null;
-      return null;
-    })
+    .catch(descartarTrasFallo)
     .finally(() => {
       renovacionEnCurso = null;
     });
   return renovacionEnCurso;
 }
 
+export function olvidarSesion() {
+  sesionActual = null;
+  sinSesionConfirmado = true;
+}
+
 export async function registrarCuenta({ nombre, email, password }) {
-  return solicitarAuth("/registro", { body: { nombre, email, password } });
+  return auth("POST", "/registro", { body: { nombre, email, password } }).catch(conDetalle);
 }
 
 export async function iniciarSesion(email, password) {
-  return guardar(await solicitarAuth("/sesion", { body: { email, password } }));
+  return guardar(await auth("POST", "/sesion", { body: { email, password } }).catch(conDetalle));
 }
 
 export async function cerrarSesion() {
   const token = sesionActual?.accessToken;
-  sesionActual = null;
-  await solicitarAuth("/sesion", { method: "DELETE", token });
+  olvidarSesion();
+  await auth("DELETE", "/sesion", { token });
 }
 
-// Sesión vigente o null. Nunca lanza: sin conexión o sin cookie equivale a no tener sesión.
+/** Sesión vigente o null. Nunca lanza: sin conexión o sin cookie equivale a no tener sesión. */
 export async function obtenerSesion() {
   if (estaVigente(sesionActual)) return sesionActual;
-  return renovar();
-}
-
-export async function obtenerToken() {
-  const sesion = await obtenerSesion();
-  if (!sesion) throw new Error(SIN_SESION);
-  return sesion.accessToken;
+  if (sinSesionConfirmado) return null;
+  return renovarSesion();
 }

@@ -1,7 +1,6 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { http } from "@/shared/api/httpClient.js";
 
-export async function obtenerBloques() {
-  const res = await fetch(`${API_URL}/bloques`);
-  if (!res.ok) throw new Error("Error al obtener bloques");
-  return res.json();
-}
+export const rutaApi = {
+  // Con sesión trae el estado de cada bloque y el mejor puntaje; sin sesión, todos disponibles.
+  obtener: (filtros) => http.get("/ruta", filtros),
+};
