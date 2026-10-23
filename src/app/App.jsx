@@ -6,7 +6,7 @@ import { LeccionDetallePage as LeccionDetalle } from "@/features/lecciones";
 import { AcordesPage as Acordes } from "@/features/acordes";
 import { EjerciciosPage as Ejercicios } from "@/features/ejercicios";
 import { ProgresoPage as Progreso } from "@/features/progreso";
-import QuizBloque from "@/pages/QuizBloque.jsx";
+import { QuizBloquePage as QuizBloque } from "@/features/evaluaciones";
 
 export default function App() {
   return (

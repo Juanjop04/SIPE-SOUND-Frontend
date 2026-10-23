@@ -4,7 +4,7 @@ import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
-import { obtenerQuiz, verificarQuiz } from "@/lib/api.js";
+import { obtenerQuiz, verificarQuiz } from "../api/evaluacionesApi.js";
 
 export default function QuizBloque() {
   const { bloqueId } = useParams();
