@@ -21,8 +21,10 @@ tiene un "siguiente" claro: debe volver a la ruta y elegir.
 
 ## Alcance
 **Incluye**
-- Destinos (en este orden): **Inicio** (`/`, exacto) · **Ruta** (`/ruta`) · **Ejercicios** ·
-  **Acordes** · **Mi progreso**. Sin sesión: Ruta · Ejercicios · Acordes (Inicio y Mi progreso
+- **Barra lateral** en escritorio (≥ 1024 px, maqueta aprobada): marca arriba y destinos (en este
+  orden) **Inicio** (`/`, exacto) · **Ruta** (`/ruta`) · **Ejercicios** · **Acordes** · **Mi progreso**,
+  cada uno con ícono lucide y etiqueta; menú de cuenta en la barra superior.
+  Logros, Perfil y Notificaciones de la maqueta **no se agregan** (no existen). Sin sesión: Ruta · Ejercicios · Acordes (Inicio y Mi progreso
   requieren cuenta y no se muestran).
 - Barra inferior móvil con los 5 destinos: ícono **y** etiqueta (nunca solo ícono), objetivo ≥ 44 px,
   respeta `env(safe-area-inset-bottom)`; el contenido no queda tapado por la barra (padding inferior).
@@ -41,8 +43,9 @@ tiene un "siguiente" claro: debe volver a la ruta y elegir.
 **No incluye**: "Mis cursos" en el menú de cuenta (HU-F-311), cambios al atril docente.
 
 ## Diseño
-- Escritorio: los cinco destinos como texto en la barra superior; activo con subrayado `accent` de
-  2 px **y** `aria-current="page"` (no solo color).
+- Escritorio: barra lateral fija de 240 px en `ink-2` con borde derecho `linea`; ítem activo con fondo
+  `primary` y texto `paper` (4.64) **y** `aria-current="page"`; hover `surface-2`.
+- Tableta (640–1023 px): barra superior con los cinco destinos como texto.
 - Móvil: barra inferior fija en `ink-2` (HU-F-320) con borde superior `linea`; activo con ícono y etiqueta en
   `accent` más un punto bajo el ícono.
 - Las acciones de continuidad siguen la regla de un solo primario por vista (sistema de diseño §2.2).

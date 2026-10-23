@@ -56,23 +56,25 @@ Estado al 2026-10-23: ✅ integrada en `develop` · 🔍 en PR · ⬜ pendiente.
 | 8 | [HU-F-308 Docente: lecciones y ejercicios](fase-3-rediseno-y-panel-docente/HU-F-308-docente-contenido.md) | 8 | F-307, **B-309** | 🔍 |
 | 9 | [HU-F-314 Auditoría de interfaz y contraste (WCAG 2.2)](fase-3-rediseno-y-panel-docente/HU-F-314-auditoria-de-interfaz-y-contraste.md) | 5 | F-306, F-307, F-308 | ⬜ |
 | 10 | [HU-F-316 Ilustraciones del instrumento](fase-3-rediseno-y-panel-docente/HU-F-316-ilustraciones-del-instrumento.md) | 3 | F-314 | ⬜ |
-| 10.1 | [HU-F-320 Capas y calidez de la paleta](fase-3-rediseno-y-panel-docente/HU-F-320-capas-y-calidez-de-la-paleta.md) | 5 | F-314 | ⬜ |
-| 11 | [HU-F-315 Inicio del estudiante](fase-3-rediseno-y-panel-docente/HU-F-315-inicio-del-estudiante.md) | 8 | F-314, F-316, F-320, F-306, (**B-324**) | ⬜ |
+| 10.1 | [HU-F-320 Paleta del rediseño con capas](fase-3-rediseno-y-panel-docente/HU-F-320-capas-y-calidez-de-la-paleta.md) | 5 | F-314 | ⬜ |
+| 10.2 | [HU-F-321 Fotografías de guitarra con licencia](fase-3-rediseno-y-panel-docente/HU-F-321-fotografias-de-guitarra.md) | 3 | F-320 | ⬜ |
+| 11 | [HU-F-315 Inicio del estudiante](fase-3-rediseno-y-panel-docente/HU-F-315-inicio-del-estudiante.md) | 8 | F-314, F-316, F-320, F-321, F-306, (**B-324**) | ⬜ |
 | 12 | [HU-F-318 Navegación del estudiante y continuidad](fase-3-rediseno-y-panel-docente/HU-F-318-navegacion-del-estudiante.md) | 3 | F-315, F-320 | ⬜ |
-| 13 | [HU-F-317 Gráfico de constancia de práctica](fase-3-rediseno-y-panel-docente/HU-F-317-grafico-de-practica.md) | 3 | F-315, **B-324** | ⬜ |
+| 13 | [HU-F-317 Gráfico de evolución de la práctica](fase-3-rediseno-y-panel-docente/HU-F-317-grafico-de-practica.md) | 3 | F-315, **B-324** | ⬜ |
 | 14 | [HU-F-309 Docente: estudiantes](fase-3-rediseno-y-panel-docente/HU-F-309-docente-estudiantes.md) | 5 | F-307, F-314, F-320, **B-310** | ⬜ |
 | 15 | [HU-F-310 Docente: evaluaciones y resultados](fase-3-rediseno-y-panel-docente/HU-F-310-docente-evaluaciones.md) | 8 | F-308, F-314, F-320, **B-311** | ⬜ |
 | 16 | [HU-F-311 Estudiante: mis cursos](fase-3-rediseno-y-panel-docente/HU-F-311-estudiante-cursos.md) | 3 | F-304, F-315, F-318, **B-307**, **B-312** | ⬜ |
 | 17 | [HU-F-312 Accesibilidad, rendimiento y conectividad](fase-3-rediseno-y-panel-docente/HU-F-312-accesibilidad-rendimiento-conectividad.md) | 5 | F-304 … F-318 | ⬜ |
 
-> **Rediseño del estudiante (HU-F-314…F-320)**: auditoría primero, luego ilustraciones, paleta con
-> capas y madera (HU-F-320), inicio, navegación y gráfico. HU-F-315 funciona sin HU-B-324 (con un respaldo); HU-F-317 la necesita.
+> **Rediseño del estudiante (HU-F-314…F-321)**: sigue la maqueta de inicio aprobada el 2026-10-23
+> (paleta azul profunda, tarjetas de cifras, fotos de guitarra) con datos reales: auditoría,
+> ilustraciones, paleta (F-320), fotos (F-321), inicio, navegación y gráfico. HU-F-315 funciona sin HU-B-324 (con un respaldo); HU-F-317 la necesita.
 
 ## Línea de tiempo sugerida entre repositorios
 
 ```
 Backend : B201 B206 B202 B203 B204 B205 │ B301 … B307 B317 B319 B320 B321 │ B308 B309 B310 B311 B312 B324
-Frontend:            F201 F202 ─────────────────────────── F203 F204 F205 F206 │ F301 F302 F303 F313 ─ F304 F305 F306 F307 F308 ─ F314 F316 F320 F315 F318 F317 ─ F309 F310 F311 F312
+Frontend:            F201 F202 ─────────────────────────── F203 F204 F205 F206 │ F301 F302 F303 F313 ─ F304 F305 F306 F307 F308 ─ F314 F316 F320 F321 F315 F318 F317 ─ F309 F310 F311 F312
 ```
 
 > Siguiente HU del frontend: **HU-F-320** (después de HU-F-314 y HU-F-316).
