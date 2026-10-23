@@ -27,6 +27,8 @@ Guía de reestructuración y rediseño del frontend en tres fases. Cada HU es un
 
 ## Fase 2 · Reestructuración (sin cambios visuales ni funcionales)
 
+Estado al 2026-10-23: todas integradas en `develop` ✅.
+
 | Orden | HU | Pts | Depende de |
 |---|---|---|---|
 | 1 | [HU-F-201 Tooling y calidad](fase-2-reestructuracion/HU-F-201-tooling-y-calidad.md) | 3 | — |
@@ -39,27 +41,37 @@ Guía de reestructuración y rediseño del frontend en tres fases. Cada HU es un
 
 ## Fase 3 · Rediseño y panel docente
 
-| Orden | HU | Pts | Depende de |
-|---|---|---|---|
-| 1 | [HU-F-301 Tokens de diseño](fase-3-rediseno-y-panel-docente/HU-F-301-tokens-de-diseno.md) | 3 | F-206 |
-| 2 | [HU-F-302 Componentes base y musicales](fase-3-rediseno-y-panel-docente/HU-F-302-componentes-base.md) | 8 | F-301 |
-| 3 | [HU-F-303 Navegación por rol](fase-3-rediseno-y-panel-docente/HU-F-303-navegacion-por-rol.md) | 5 | F-302, **B-304** |
-| 3.1 | [HU-F-313 Formularios de acceso y preautorización de docentes](fase-3-rediseno-y-panel-docente/HU-F-313-formularios-de-acceso.md) | 5 | F-303, **B-320**, **B-321** |
-| 4 | [HU-F-304 Ruta de aprendizaje (mástil)](fase-3-rediseno-y-panel-docente/HU-F-304-ruta-de-aprendizaje.md) | 8 | F-303, **B-308** |
-| 5 | [HU-F-305 Lección, ejercicios (metrónomo) y acordes](fase-3-rediseno-y-panel-docente/HU-F-305-leccion-ejercicios-acordes.md) | 8 | F-304, **B-305**, **B-306** |
-| 6 | [HU-F-306 Evaluación y progreso](fase-3-rediseno-y-panel-docente/HU-F-306-evaluacion-y-progreso.md) | 8 | F-304, **B-305**, **B-308** |
-| 7 | [HU-F-307 Docente: resumen y cursos](fase-3-rediseno-y-panel-docente/HU-F-307-docente-resumen-y-cursos.md) | 8 | F-303, **B-310** |
-| 8 | [HU-F-308 Docente: lecciones y ejercicios](fase-3-rediseno-y-panel-docente/HU-F-308-docente-contenido.md) | 8 | F-307, **B-309** |
-| 9 | [HU-F-309 Docente: estudiantes](fase-3-rediseno-y-panel-docente/HU-F-309-docente-estudiantes.md) | 5 | F-307, **B-310** |
-| 10 | [HU-F-310 Docente: evaluaciones y resultados](fase-3-rediseno-y-panel-docente/HU-F-310-docente-evaluaciones.md) | 8 | F-308, **B-311** |
-| 11 | [HU-F-311 Estudiante: mis cursos](fase-3-rediseno-y-panel-docente/HU-F-311-estudiante-cursos.md) | 3 | F-304, **B-307**, **B-312** |
-| 12 | [HU-F-312 Accesibilidad, rendimiento y conectividad](fase-3-rediseno-y-panel-docente/HU-F-312-accesibilidad-rendimiento-conectividad.md) | 5 | F-304 … F-311 |
+Estado al 2026-10-23: ✅ integrada en `develop` · 🔍 en PR · ⬜ pendiente.
+
+| Orden | HU | Pts | Depende de | Estado |
+|---|---|---|---|---|
+| 1 | [HU-F-301 Tokens de diseño](fase-3-rediseno-y-panel-docente/HU-F-301-tokens-de-diseno.md) | 3 | F-206 | ✅ |
+| 2 | [HU-F-302 Componentes base y musicales](fase-3-rediseno-y-panel-docente/HU-F-302-componentes-base.md) | 8 | F-301 | ✅ |
+| 3 | [HU-F-303 Navegación por rol](fase-3-rediseno-y-panel-docente/HU-F-303-navegacion-por-rol.md) | 5 | F-302, **B-304** | ✅ |
+| 3.1 | [HU-F-313 Formularios de acceso y preautorización de docentes](fase-3-rediseno-y-panel-docente/HU-F-313-formularios-de-acceso.md) | 5 | F-303, **B-320**, **B-321** | ✅ |
+| 4 | [HU-F-304 Ruta de aprendizaje (mástil)](fase-3-rediseno-y-panel-docente/HU-F-304-ruta-de-aprendizaje.md) | 8 | F-303, **B-308** | ✅ |
+| 5 | [HU-F-305 Lección, ejercicios (metrónomo) y acordes](fase-3-rediseno-y-panel-docente/HU-F-305-leccion-ejercicios-acordes.md) | 8 | F-304, **B-305**, **B-306** | ✅ |
+| 6 | [HU-F-306 Evaluación y progreso](fase-3-rediseno-y-panel-docente/HU-F-306-evaluacion-y-progreso.md) | 8 | F-304, **B-305**, **B-308** | 🔍 |
+| 7 | [HU-F-307 Docente: resumen y cursos](fase-3-rediseno-y-panel-docente/HU-F-307-docente-resumen-y-cursos.md) | 8 | F-303, **B-310** | 🔍 |
+| 8 | [HU-F-308 Docente: lecciones y ejercicios](fase-3-rediseno-y-panel-docente/HU-F-308-docente-contenido.md) | 8 | F-307, **B-309** | 🔍 |
+| 9 | [HU-F-314 Auditoría de interfaz y contraste (WCAG 2.2)](fase-3-rediseno-y-panel-docente/HU-F-314-auditoria-de-interfaz-y-contraste.md) | 5 | F-306, F-307, F-308 | ⬜ |
+| 10 | [HU-F-316 Ilustraciones del instrumento](fase-3-rediseno-y-panel-docente/HU-F-316-ilustraciones-del-instrumento.md) | 3 | F-314 | ⬜ |
+| 11 | [HU-F-315 Inicio del estudiante](fase-3-rediseno-y-panel-docente/HU-F-315-inicio-del-estudiante.md) | 8 | F-314, F-316, F-306, (**B-324**) | ⬜ |
+| 12 | [HU-F-318 Navegación del estudiante y continuidad](fase-3-rediseno-y-panel-docente/HU-F-318-navegacion-del-estudiante.md) | 3 | F-315 | ⬜ |
+| 13 | [HU-F-317 Gráfico de constancia de práctica](fase-3-rediseno-y-panel-docente/HU-F-317-grafico-de-practica.md) | 3 | F-315, **B-324** | ⬜ |
+| 14 | [HU-F-309 Docente: estudiantes](fase-3-rediseno-y-panel-docente/HU-F-309-docente-estudiantes.md) | 5 | F-307, F-314, **B-310** | ⬜ |
+| 15 | [HU-F-310 Docente: evaluaciones y resultados](fase-3-rediseno-y-panel-docente/HU-F-310-docente-evaluaciones.md) | 8 | F-308, F-314, **B-311** | ⬜ |
+| 16 | [HU-F-311 Estudiante: mis cursos](fase-3-rediseno-y-panel-docente/HU-F-311-estudiante-cursos.md) | 3 | F-304, F-315, F-318, **B-307**, **B-312** | ⬜ |
+| 17 | [HU-F-312 Accesibilidad, rendimiento y conectividad](fase-3-rediseno-y-panel-docente/HU-F-312-accesibilidad-rendimiento-conectividad.md) | 5 | F-304 … F-318 | ⬜ |
+
+> **Rediseño del estudiante (HU-F-314…F-318)**: auditoría primero, luego ilustraciones, inicio,
+> navegación y gráfico. HU-F-315 funciona sin HU-B-324 (con un respaldo); HU-F-317 la necesita.
 
 ## Línea de tiempo sugerida entre repositorios
 
 ```
-Backend : B201 B206 B202 B203 B204 B205 │ B301 … B307 B317 B319 B320 B321 │ B308 B309 B310 B311 B312
-Frontend:            F201 F202 ─────────────────────────── F203 F204 F205 F206 │ F301 F302 F303 F313 ─ F304 F305 F306 F307 F308 F309 F310 ─ F311 F312
+Backend : B201 B206 B202 B203 B204 B205 │ B301 … B307 B317 B319 B320 B321 │ B308 B309 B310 B311 B312 B324
+Frontend:            F201 F202 ─────────────────────────── F203 F204 F205 F206 │ F301 F302 F303 F313 ─ F304 F305 F306 F307 F308 ─ F314 F316 F315 F318 F317 ─ F309 F310 F311 F312
 ```
 
-> HU-B-319 ya retiró `/api` sin versión: **HU-F-203 es la siguiente HU del frontend**.
+> Siguiente HU del frontend: **HU-F-314** (cuando HU-F-306…F-308 estén en `develop`).

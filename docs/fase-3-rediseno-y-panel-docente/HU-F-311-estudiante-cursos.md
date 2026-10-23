@@ -5,7 +5,7 @@
 | Fase | 3 · Rediseño |
 | Prioridad | Must |
 | Estimación | 3 puntos |
-| Depende de | HU-F-304, **HU-B-307**, **HU-B-312** (retroalimentaciones) |
+| Depende de | HU-F-304, HU-F-315, HU-F-318, **HU-B-307**, **HU-B-312** (retroalimentaciones) |
 | Rama | `hu/HU-F-311-mis-cursos` |
 
 ## Historia
@@ -17,13 +17,18 @@
 - Menú de cuenta → "Mis cursos" (`/cursos`).
 - Campo de código grande en mono, 8 casillas visuales (un solo `input` accesible por debajo), acepta pegar, convierte a mayúsculas. Botón "Unirme".
 - Lista de cursos: nombre, docente, ruta del curso como mini-mástil horizontal (estados), comentarios sin leer (número en mono).
-- Selector de ruta en `/` (HU-F-304): "Ruta general" / "Guitarra 7°A" — cambia `?curso_id`.
+- Selector de ruta en `/ruta` (HU-F-304) y en el inicio (HU-F-315): "Ruta general" / "Guitarra 7°A" — cambia `?curso_id`.
+  El siguiente paso y "Tu ruta" del inicio usan la ruta del curso elegido; la elección se recuerda en `localStorage` por estudiante.
+- **Inicio (rediseño)**: entre "Tu avance" y "Tu ruta", la sección "Tu docente te escribió" con los 2 comentarios sin leer
+  más recientes y el enlace "Ver todos" a `/cursos`. Sin comentarios nuevos, la sección no aparece.
 - Comentarios: lista cronológica tipo nota de cuaderno (fecha en mono, texto), los nuevos marcados con un punto `accent`.
 - Registro: si la URL trae `?codigo=XXXX` (enlace compartido por el docente), tras registrarse o iniciar sesión se une automáticamente y lo confirma.
 
 ## Alcance
 **Incluye**: `features/cursos` (api, hooks, `MisCursosPage`, `CampoCodigo`), selector de ruta, flujo `?codigo=`.
 **No incluye**: salir de un curso por cuenta propia (decisión pendiente con docentes).
+
+> El enlace "Mis cursos" va en el menú de cuenta (la barra principal de HU-F-318 se queda en cinco destinos).
 
 ## Validación de campos
 Constructores de `shared/validacion` ([contrato 08](../fase-1-contrato/08-validacion-de-formularios.md)); los mismos límites aplican la API y la base (contrato del backend §7).
