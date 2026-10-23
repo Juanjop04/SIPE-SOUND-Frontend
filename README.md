@@ -1,81 +1,72 @@
-# GuitarApp — Frontend (React + Vite + Tailwind + shadcn/ui)
+# SIPE-SOUND · Frontend
 
-## Instalacion
+Plataforma web para que personas principiantes aprendan guitarra a su ritmo: lecciones
+guiadas por niveles, ejercicios con metrónomo, catálogo de acordes, evaluaciones por bloque y
+seguimiento del progreso, con panel para docentes. Más contexto en
+[docs/00-vision/proyecto.md](docs/00-vision/proyecto.md).
+
+Este repositorio es solo la interfaz (React + Vite + Tailwind). La API, la base de datos y la
+autenticación viven en **[SIPE-SOUND-BACKEND](https://github.com/isaac18-maker/SIPE-SOUND-BACKEND)**.
+
+## Requisitos
+
+- Node.js 18 o superior (el equipo usa 24) y npm.
+- El backend corriendo en local: sigue su README (`uv run python run.py`, puerto 5000).
+
+## Instalación
 
 ```bash
 npm install
 cp .env.example .env
 ```
 
-`.env` solo necesita `VITE_API_URL` (por defecto `http://localhost:5000/api/v1`).
-El frontend no usa Supabase: el registro y el inicio de sesión pasan por el backend
-(HU-F-207). Abre el frontend y el backend con el mismo host (`localhost` en ambos)
-para que viaje la cookie de sesión.
+## Variables de entorno
+
+| Variable       | Valor en local                 | Para qué                                                                                                                |
+| -------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `VITE_API_URL` | `http://localhost:5000/api/v1` | URL base de la API. Debe terminar en `/api/v1`; si falta o no termina así, la app no arranca y la consola dice por qué. |
+
+El frontend **no usa Supabase** ni guarda claves: el registro y el inicio de sesión pasan por
+el backend (`/auth/*`). Abre el frontend y el backend con el mismo host (`localhost` en ambos;
+no mezcles con `127.0.0.1`) para que viaje la cookie de sesión.
 
 ## Correr en desarrollo
 
-Con el backend Flask corriendo en otra terminal (`python app.py`):
-
 ```bash
-npm run dev
+npm run dev        # http://localhost:5173
 ```
 
-Abre `http://localhost:5173`
+Si ves "No pudimos conectar. Revisa tu conexión…", el backend no está corriendo en el puerto 5000.
 
-## Que cambio respecto a la version anterior
+## Scripts
 
-- Se reemplazo el CSS a mano por Tailwind (clases utilitarias directo en el JSX)
-- Se agregaron componentes reutilizables estilo shadcn/ui en `src/components/ui/`
-  (Button, Input, Card) — se editan igual que cualquier componente propio
-- Se agrego el logo real del proyecto en `src/assets/logo.png`
-- El backend y la logica de Supabase/API no cambiaron en nada
+| Comando                             | Qué hace                                                    |
+| ----------------------------------- | ----------------------------------------------------------- |
+| `npm run dev`                       | Servidor de desarrollo con recarga en caliente.             |
+| `npm run build`                     | Compila para producción en `dist/` (un archivo por página). |
+| `npm run preview`                   | Sirve `dist/` para revisarlo localmente.                    |
+| `npm run lint` · `npm run lint:fix` | ESLint (React, accesibilidad, SonarJS).                     |
+| `npm run format`                    | Prettier (incluye el orden de clases de Tailwind).          |
+| `npm run typecheck`                 | Verificación de TypeScript (`tsc --noEmit`).                |
 
 ## Estructura
 
 ```
 src/
-├── main.jsx
-├── App.jsx                 → rutas (/, /login, /registro)
-├── index.css                → directivas de Tailwind
+├── app/        # ensamblado: router, layouts, guardas, proveedores
+├── features/   # una carpeta por capacidad: ruta, lecciones, ejercicios, acordes,
+│               #   evaluaciones, progreso, auth (api/ · hooks/ · pages/ · index.js)
+├── shared/     # reutilizable: api (httpClient, sesión), config, ui, music
 ├── assets/
-│   └── logo.png              → logo de GuitarApp
-├── components/
-│   ├── Header.jsx
-│   └── ui/
-│       ├── button.jsx
-│       ├── input.jsx
-│       └── card.jsx
-├── pages/
-│   ├── Home.jsx
-│   ├── Login.jsx
-│   └── Registro.jsx
-└── lib/
-    ├── utils.js               → helper cn() para combinar clases
-    ├── supabaseClient.js
-    └── api.js
+└── styles/
 ```
 
-## Paleta de colores (definida en tailwind.config.js)
+Reglas: `app → features → shared`; entre features solo vía su `index.js`; `fetch` solo en
+`shared/api/httpClient`. Detalle en
+[docs/fase-1-contrato/02-arquitectura-frontend.md](docs/fase-1-contrato/02-arquitectura-frontend.md).
 
-Inspirada en el logo (fantasma con audifonos, degradado indigo-violeta-rosa).
+## Cómo se trabaja
 
-| Clase Tailwind                  | Hex       | Uso                                     |
-| ------------------------------- | --------- | --------------------------------------- |
-| `bg-ink`                        | `#1B1030` | Fondo principal                         |
-| `bg-surface`                    | `#2A1B4D` | Tarjetas, header                        |
-| `border-primary` / `bg-primary` | `#7C3AED` | Acento principal, botones               |
-| `text-accent`                   | `#E29DE0` | Acento secundario (usar con moderacion) |
-| `bg-success` / `text-success`   | `#F5B942` | Exito / progreso completado             |
-| `text-danger`                   | `#F2545B` | Errores                                 |
-| `text-muted`                    | `#C9BEE0` | Texto secundario                        |
-| `text-paper`                    | `#F3EEFB` | Texto principal sobre fondo oscuro      |
-
-Tipografia: `Baloo 2` (titulos, redondeada y amigable, a tono con el
-fantasma) + `Inter` (texto) + `IBM Plex Mono` (datos/acordes).
-
-## Como agregar mas componentes shadcn/ui
-
-Si necesitan mas adelante un componente que no esta (Select, Dialog, etc.),
-la logica es la misma: crear el archivo en `src/components/ui/`, usar
-Tailwind + el helper `cn()` de `src/lib/utils.js`. No es una libreria que
-se instale con npm, se copian los componentes al proyecto.
+El trabajo se organiza en historias de usuario (HU) en [docs/](docs/README.md): una HU por rama
+(`hu/HU-F-XXX-…`) y por PR. Antes de escribir código lee [AGENTS.md](AGENTS.md) y el contrato en
+[docs/fase-1-contrato/](docs/fase-1-contrato/). Textos, comentarios y commits en español.

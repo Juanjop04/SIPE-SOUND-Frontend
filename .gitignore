@@ -1,3 +1,12 @@
 node_modules/
 dist/
+.scannerwork/
+
+# Variables de entorno: solo la plantilla va al repositorio.
 .env
+.env.*
+!.env.example
+
+# Editor: solo las extensiones recomendadas se comparten.
+.vscode/*
+!.vscode/extensions.json
