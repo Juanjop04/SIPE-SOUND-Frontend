@@ -8,6 +8,8 @@ export const paths = Object.freeze({
   terminos: "/terminos",
   acordes: "/acordes",
   ejercicios: "/ejercicios",
+  /** @param {string | number} [id] */
+  ejercicio: (id = ":id") => `/ejercicios/${id}`,
   progreso: "/progreso",
   /** @param {string | number} [id] */
   leccion: (id = ":id") => `/leccion/${id}`,

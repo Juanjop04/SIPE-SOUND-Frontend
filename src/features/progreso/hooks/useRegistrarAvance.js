@@ -8,7 +8,7 @@ const COMPLETADO = { porcentaje: 100, completado: true };
 function useRegistrar(registrar) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id) => registrar(id, COMPLETADO),
+    mutationFn: registrar,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: progresoKeys.todo });
       queryClient.invalidateQueries({ queryKey: rutaKeys.todas });
@@ -16,10 +16,23 @@ function useRegistrar(registrar) {
   });
 }
 
+/**
+ * mutate(id): PUT /progreso/lecciones/{id} con completado.
+ * @returns {import("@tanstack/react-query").UseMutationResult<unknown, Error, number>}
+ */
 export function useCompletarLeccion() {
-  return useRegistrar(progresoApi.registrarLeccion);
+  return useRegistrar((id) => progresoApi.registrarLeccion(id, COMPLETADO));
 }
 
+/**
+ * mutate({ id, mejorBpm? }): PUT /progreso/ejercicios/{id}; mejor_bpm 20–300 (HU-B-305).
+ * @returns {import("@tanstack/react-query").UseMutationResult<unknown, Error, { id: number, mejorBpm?: number }>}
+ */
 export function useCompletarEjercicio() {
-  return useRegistrar(progresoApi.registrarEjercicio);
+  return useRegistrar(({ id, mejorBpm }) =>
+    progresoApi.registrarEjercicio(id, {
+      ...COMPLETADO,
+      ...(mejorBpm === undefined ? {} : { mejor_bpm: mejorBpm }),
+    }),
+  );
 }
