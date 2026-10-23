@@ -25,6 +25,21 @@ const TAMANOS: Record<TamanoBoton, string> = {
   md: "h-10 px-4 text-sm",
 };
 
+const BASE =
+  "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors duration-rapida disabled:cursor-not-allowed disabled:opacity-50";
+
+/**
+ * Clases de botón para un <Link>/<a> que debe verse como botón (navega, no ejecuta una acción):
+ * así no se anida un <button> dentro de un enlace.
+ */
+export function claseBoton({
+  variante = "primario",
+  tamano = "md",
+  className,
+}: { variante?: VarianteBoton; tamano?: TamanoBoton; className?: string } = {}): string {
+  return cn(BASE, VARIANTES[variante], TAMANOS[tamano], className);
+}
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     variante = "primario",
@@ -44,12 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       type={type}
       disabled={disabled || cargando}
       aria-busy={cargando || undefined}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors duration-rapida disabled:cursor-not-allowed disabled:opacity-50",
-        VARIANTES[variante],
-        TAMANOS[tamano],
-        className,
-      )}
+      className={claseBoton({ variante, tamano, className })}
       {...props}
     >
       {children}
