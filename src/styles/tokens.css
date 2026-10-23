@@ -14,7 +14,7 @@
   --color-primary-claro: 167 139 250; /* #A78BFA · texto violeta sobre fondo oscuro */
   --color-accent: 226 157 224; /* #E29DE0 · enlaces, foco, selección actual */
   --color-success: 245 185 66; /* #F5B942 · solo logro: completado, aprobado, "suena" */
-  --color-danger: 242 84 91; /* #F2545B · errores y acciones destructivas */
+  --color-danger: 245 108 114; /* #F56C72 · errores y acciones destructivas (HU-F-314: +5 % luz, ≥ 4.5 en paneles) */
   --color-muted: 201 190 224; /* #C9BEE0 · texto secundario */
   --color-paper: 243 238 251; /* #F3EEFB · texto principal */
 }

@@ -52,7 +52,7 @@ function Rejilla({ cuerdas, conCejuela }: { cuerdas: number; conCejuela: boolean
           y1={MARGEN_SUPERIOR}
           x2={x}
           y2={MARGEN_SUPERIOR + ALTO_REJILLA}
-          className="stroke-linea"
+          className="stroke-linea-fuerte"
           strokeWidth={1}
         />
       ))}
@@ -63,7 +63,7 @@ function Rejilla({ cuerdas, conCejuela }: { cuerdas: number; conCejuela: boolean
           y1={yTraste(t)}
           x2={MARGEN_LATERAL + ANCHO_REJILLA}
           y2={yTraste(t)}
-          className="stroke-linea"
+          className="stroke-linea-fuerte"
           strokeWidth={t === 0 && conCejuela ? 3 : 1}
         />
       ))}
@@ -115,21 +115,21 @@ export function ChordDiagram({ frets, fingers, baseFret = 1, barre }: ChordDiagr
           width={xCuerda(barre.to) - xCuerda(barre.from) + 8}
           height={10}
           rx={5}
-          className="fill-primary"
+          className="fill-primary-claro"
         />
       )}
 
       {frets.map((f, i) =>
         sePisa(f) ? (
           <g key={`punto-${xCuerda(i)}`}>
-            <circle cx={xCuerda(i)} cy={centroTraste(f)} r={7} className="fill-primary" />
+            <circle cx={xCuerda(i)} cy={centroTraste(f)} r={7} className="fill-primary-claro" />
             {fingers?.[i] ? (
               <text
                 x={xCuerda(i)}
                 y={centroTraste(f) + 3}
                 textAnchor="middle"
                 fontSize="8"
-                className="fill-paper font-bold"
+                className="fill-ink font-bold"
               >
                 {fingers[i]}
               </text>

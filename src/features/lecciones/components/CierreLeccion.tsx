@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useCompletarLeccion } from "@/features/progreso";
 import type { LeccionRuta } from "@/features/ruta";
 import { paths } from "@/shared/config/paths.js";
-import { Button, MensajeError } from "@/shared/ui";
+import { Button, ENLACE_EN_TEXTO, MensajeError } from "@/shared/ui";
 
 interface CierreLeccionProps {
   leccionId: number;
@@ -56,7 +56,7 @@ export function CierreLeccion({
       )}
       {!conSesion && (
         <p className="text-sm text-muted">
-          <Link to={paths.login} className="text-accent hover:underline">
+          <Link to={paths.login} className={ENLACE_EN_TEXTO}>
             Inicia sesión
           </Link>{" "}
           para guardar tu avance.

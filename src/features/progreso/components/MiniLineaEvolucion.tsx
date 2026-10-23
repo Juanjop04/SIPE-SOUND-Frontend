@@ -32,7 +32,7 @@ export function MiniLineaEvolucion({ puntajes, aprobacion, aprobado }: MiniLinea
         x2={ANCHO}
         y1={y(aprobacion)}
         y2={y(aprobacion)}
-        className="stroke-linea"
+        className="stroke-linea-fuerte"
         strokeDasharray="2 3"
       />
       <polyline

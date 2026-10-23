@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useSession } from "@/features/auth";
 import { paths } from "@/shared/config/paths.js";
 import { TrasteDivider } from "@/shared/music";
-import { MensajeError, Skeleton } from "@/shared/ui";
+import { ENLACE_EN_TEXTO, MensajeError, Skeleton } from "@/shared/ui";
 import { EncabezadoEjercicio } from "../components/EncabezadoEjercicio";
 import { FormularioMejorBpm } from "../components/FormularioMejorBpm";
 import { Metronomo } from "../components/Metronomo";
@@ -44,7 +44,7 @@ function Practica({ ejercicio }: { ejercicio: Ejercicio }) {
             <FormularioMejorBpm ejercicioId={ejercicio.id} bpmActual={bpm} />
           ) : (
             <p className="text-sm text-muted">
-              <Link to={paths.login} className="text-accent hover:underline">
+              <Link to={paths.login} className={ENLACE_EN_TEXTO}>
                 Inicia sesión
               </Link>{" "}
               para guardar el tempo que lograste.

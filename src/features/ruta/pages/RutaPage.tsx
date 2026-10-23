@@ -33,6 +33,7 @@ function Ruta({ bloques }: { bloques: BloqueRuta[] }) {
       {/* Móvil: la tira del mástil queda fija bajo la barra superior. */}
       <nav
         aria-label="Mástil de la ruta"
+        data-fijo="arriba"
         className="sticky top-0 z-20 -mx-4 border-b border-linea bg-ink px-4 pt-3 lg:static lg:col-span-4 lg:mx-0 lg:border-0 lg:p-0"
       >
         <Mastil

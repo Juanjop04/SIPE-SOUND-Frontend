@@ -39,7 +39,7 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 | `--color-primary-claro` *(derivado)* | `primary-claro` | `#A78BFA` | Texto violeta sobre fondo oscuro cuando hace falta. |
 | `--color-accent` | `accent` | `#E29DE0` | Enlaces, foco (`anillo`), selección actual. |
 | `--color-success` | `success` | `#F5B942` | **Solo logro**: completado, aprobado, "suena". |
-| `--color-danger` | `danger` | `#F2545B` | Errores y acciones destructivas. |
+| `--color-danger` | `danger` | `#F56C72` | Errores y acciones destructivas (HU-F-314: +5 % de luz sobre `#F2545B`). |
 | `--color-muted` | `muted` | `#C9BEE0` | Texto secundario. |
 | `--color-paper` | `paper` | `#F3EEFB` | Texto principal. |
 
@@ -91,13 +91,19 @@ estados hover/foco/deshabilitado, `ink-2`) y registra aquí cada ajuste de lumin
 | `muted` | 10.3 | 8.8 | Todo texto |
 | `accent` | 8.7 | 7.4 | Enlaces, foco, texto |
 | `success` | 10.2 | 8.7 | Texto y marcas de logro |
-| `danger` | 5.3 | 4.6 | Texto de error (AA) |
+| `danger` | 6.3 | 5.3 | Texto de error (AA), también sobre `danger/10` (4.6) |
 | `primary-claro` | 6.6 | 5.7 | Texto violeta |
 | `primary` | **3.2** | **2.7** | ❌ **Nunca como color de texto ni de foco.** Solo fondo de botón (texto `paper` encima: 5.0). |
 | `linea-fuerte` | 3.7 | 3.1 | Bordes de controles (WCAG 1.4.11) |
-| `linea` | 1.7 | 1.5 | Solo decorativo (trastes) |
+| `linea` | 1.7 | 1.5 | Solo decorativo (trastes, divisores). Nunca en gráficos que hay que leer (`ChordDiagram`, umbrales): ahí `linea-fuerte`. |
 
-Consecuencias directas sobre el código actual:
+Ajustes de HU-F-314 ([informe AUD-2026-01](../auditorias/AUD-2026-01-interfaz-y-contraste.md)):
+- Puntos de dedos del `ChordDiagram` en `primary-claro` con número en `ink` (`primary` sobre `surface` daba 2.7).
+- *Placeholder* en `muted/70`; controles deshabilitados sin opacidad (`bg-ink-2 text-muted`, borde intacto).
+- Enlaces dentro de una frase siempre subrayados (1.4.1): el color solo no basta frente a `muted`.
+- Barras fijas marcadas con `data-fijo="arriba|abajo"` para que el foco no quede tapado (2.4.11).
+
+Consecuencias directas sobre el código anterior (ya aplicadas en HU-F-301/F-302):
 - `hover:text-primary` en enlaces de `Header.jsx` → cambiar a `hover:text-accent`.
 - `focus:border-primary` en `input.jsx` → anillo `accent`.
 - `border-border` en inputs → `border-linea-fuerte`.

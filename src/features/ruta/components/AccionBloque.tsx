@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
-import { claseBoton } from "@/shared/ui";
+import { claseBoton, ENLACE_EN_TEXTO } from "@/shared/ui";
 import type { BloqueRuta } from "../types";
 import { PORCENTAJE_APROBACION } from "../utils/presentacion";
 
@@ -16,7 +16,7 @@ export function AccionBloque({ bloque, anterior, conSesion }: AccionBloqueProps)
   if (!conSesion) {
     return (
       <p className="text-sm text-muted">
-        <Link to={paths.login} className="text-accent hover:underline">
+        <Link to={paths.login} className={ENLACE_EN_TEXTO}>
           Inicia sesión
         </Link>{" "}
         para guardar tu avance y presentar evaluaciones.
