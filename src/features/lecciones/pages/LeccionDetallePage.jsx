@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Check } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
-import { obtenerSesion } from "@/shared/api/sesion.js";
+import { useSession } from "@/features/auth";
 import { useCompletarLeccion } from "@/features/progreso";
 import { useAcordes } from "@/features/acordes";
 import { useLeccion } from "../hooks/useLeccion.js";
@@ -19,14 +19,9 @@ export default function LeccionDetalle() {
   const leccion = consultaLeccion.data;
   const cargando = consultaLeccion.isPending || consultaAcordes.isPending;
   const error = consultaLeccion.error ?? consultaAcordes.error;
-  const [hayUsuario, setHayUsuario] = useState(false);
+  const { usuario } = useSession();
+  const hayUsuario = Boolean(usuario);
   const [guardado, setGuardado] = useState(null);
-
-  useEffect(() => {
-    obtenerSesion().then((sesion) => {
-      setHayUsuario(!!sesion);
-    });
-  }, []);
 
   // leccion.acordes es un arreglo de nombres, ej: ["Em", "Am"]
   // Filtramos el catálogo completo (en caché) para quedarnos solo con esos

@@ -1,27 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Circle } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
-import { obtenerSesion } from "@/shared/api/sesion.js";
+import { useSession } from "@/features/auth";
 import { useRuta } from "@/features/ruta";
 import { useResumenProgreso } from "../hooks/useResumenProgreso.js";
 import { armarHistorial } from "../utils/armarHistorial.js";
 
 export default function Progreso() {
-  const [hayUsuario, setHayUsuario] = useState(null);
+  const { usuario, estaCargando } = useSession();
+  // null mientras se averigua si hay sesión (no se muestra "Necesitas iniciar sesión").
+  const hayUsuario = estaCargando ? null : Boolean(usuario);
   const conSesion = hayUsuario === true;
   const resumen = useResumenProgreso({ enabled: conSesion });
   const ruta = useRuta();
   const cargando = conSesion && (resumen.isPending || ruta.isPending);
   const error = resumen.error ?? ruta.error;
   const items = useMemo(() => armarHistorial(ruta.data), [ruta.data]);
-
-  useEffect(() => {
-    obtenerSesion().then((sesion) => {
-      setHayUsuario(!!sesion);
-    });
-  }, []);
 
   const totalLecciones = resumen.data?.lecciones.completadas ?? 0;
   const totalEjercicios = resumen.data?.ejercicios.completados ?? 0;

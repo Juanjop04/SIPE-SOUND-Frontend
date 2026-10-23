@@ -1,23 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Check } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
-import { obtenerSesion } from "@/shared/api/sesion.js";
+import { useSession } from "@/features/auth";
 import { useCompletarEjercicio } from "@/features/progreso";
 import { useEjercicios } from "../hooks/useEjercicios.js";
 
 export default function Ejercicios() {
   const { data: ejercicios = [], isPending: cargando, error } = useEjercicios();
   const completarEjercicio = useCompletarEjercicio();
-  const [hayUsuario, setHayUsuario] = useState(false);
+  const { usuario } = useSession();
+  const hayUsuario = Boolean(usuario);
   const [guardados, setGuardados] = useState({});
-
-  useEffect(() => {
-    obtenerSesion().then((sesion) => {
-      setHayUsuario(!!sesion);
-    });
-  }, []);
 
   async function marcarCompletado(ejercicioId) {
     try {
