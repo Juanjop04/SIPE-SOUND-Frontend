@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useSession } from "@/features/auth";
 import { paths } from "@/shared/config/paths.js";
 import { TrasteDivider } from "@/shared/music";
-import { ENLACE_EN_TEXTO, MensajeError, Skeleton } from "@/shared/ui";
+import { ENLACE_EN_TEXTO, MensajeError, Migas, Skeleton } from "@/shared/ui";
 import { EncabezadoEjercicio } from "../components/EncabezadoEjercicio";
 import { FormularioMejorBpm } from "../components/FormularioMejorBpm";
 import { Metronomo } from "../components/Metronomo";
@@ -24,9 +24,19 @@ function Practica({ ejercicio }: { ejercicio: Ejercicio }) {
 
   return (
     <article>
-      <Link to={paths.ejercicios} className="font-mono text-sm text-muted hover:text-accent">
-        Ejercicios ›
-      </Link>
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <Migas
+          pasos={[{ etiqueta: "Ejercicios", a: paths.ejercicios }, { etiqueta: ejercicio.nombre }]}
+        />
+        {ejercicio.leccion_id !== null && (
+          <Link
+            to={paths.leccion(ejercicio.leccion_id)}
+            className="text-sm text-accent hover:underline"
+          >
+            Volver a la lección
+          </Link>
+        )}
+      </div>
       <EncabezadoEjercicio ejercicio={ejercicio} />
       <TrasteDivider className="my-8" />
       <div className="flex flex-col gap-10 lg:grid lg:grid-cols-12 lg:gap-12">

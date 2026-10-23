@@ -34,3 +34,4 @@ export {
 export { ListaEditable, type ListaEditableProps } from "./ListaEditable";
 export { ConfirmarSalida, type ConfirmarSalidaProps } from "./ConfirmarSalida";
 export { AvisosProvider, useAviso, type DatosAviso, type TipoAviso } from "./Aviso";
+export { Migas, type MigasProps, type PasoMiga } from "./Migas";

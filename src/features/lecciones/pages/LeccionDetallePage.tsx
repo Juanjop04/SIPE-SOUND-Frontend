@@ -1,8 +1,8 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSession } from "@/features/auth";
 import { useRuta } from "@/features/ruta";
 import { paths } from "@/shared/config/paths.js";
-import { MensajeError, Skeleton } from "@/shared/ui";
+import { MensajeError, Migas, Skeleton } from "@/shared/ui";
 import { ContenidoLeccion } from "../components/ContenidoLeccion";
 import { CierreLeccion } from "../components/CierreLeccion";
 import { EjerciciosLeccion } from "../components/EjerciciosLeccion";
@@ -19,14 +19,20 @@ function Lectura({ leccion }: { leccion: Leccion }) {
 
   return (
     <article className="mx-auto max-w-[68ch]">
-      <p className="font-mono text-sm text-muted">
-        {bloque && (
-          <Link to={`${paths.ruta}?bloque=${bloque.id}`} className="hover:text-accent">
-            Bloque {bloque.numero}
-          </Link>
-        )}
-        {bloque && " › "}Lección {dos(leccion.numero)}
-      </p>
+      <Migas
+        pasos={[
+          { etiqueta: "Ruta", a: paths.ruta },
+          ...(bloque
+            ? [
+                {
+                  etiqueta: `Bloque ${bloque.numero} · ${bloque.titulo}`,
+                  a: `${paths.ruta}?bloque=${bloque.id}`,
+                },
+              ]
+            : []),
+          { etiqueta: `${dos(leccion.numero)} · ${leccion.titulo}` },
+        ]}
+      />
       <ContenidoLeccion leccion={leccion} />
       <EjerciciosLeccion leccionId={leccion.id} />
       <CierreLeccion
@@ -35,6 +41,7 @@ function Lectura({ leccion }: { leccion: Leccion }) {
         yaPracticada={enRuta?.completado ?? false}
         anterior={anterior}
         siguiente={siguiente}
+        bloque={bloque}
       />
     </article>
   );

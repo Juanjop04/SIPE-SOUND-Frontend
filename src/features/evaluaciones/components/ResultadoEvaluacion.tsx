@@ -76,6 +76,9 @@ export function ResultadoEvaluacion(props: ResultadoEvaluacionProps) {
         >
           Volver a la ruta
         </Link>
+        <Link to={paths.inicio} className={claseBoton({ variante: "secundario" })}>
+          Ir al inicio
+        </Link>
       </div>
 
       {intento.detalle && (

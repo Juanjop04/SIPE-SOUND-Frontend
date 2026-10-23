@@ -2,7 +2,8 @@ import { useReducer, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRuta } from "@/features/ruta";
 import { Tablatura, type DatoTablatura } from "@/shared/music";
-import { EstadoVacio, MensajeError, Skeleton } from "@/shared/ui";
+import { paths } from "@/shared/config/paths.js";
+import { EstadoVacio, MensajeError, Migas, Skeleton } from "@/shared/ui";
 import { DialogoSalida } from "../components/DialogoSalida";
 import { FormularioEvaluacion } from "../components/FormularioEvaluacion";
 import { ResultadoEvaluacion } from "../components/ResultadoEvaluacion";
@@ -30,6 +31,7 @@ function Presentar({ evaluacion }: { evaluacion: Evaluacion }) {
   const hayRespuestas = Object.keys(respuestas).length > 0;
   const indiceBloque = bloques?.findIndex((b) => b.id === evaluacion.bloque_id) ?? -1;
   const sinIntentos = evaluacion.intentos_restantes === 0 && !intento;
+  const bloque = indiceBloque >= 0 ? bloques?.[indiceBloque] : undefined;
 
   async function enviar() {
     setIntento(await presentar.mutateAsync(respuestas));
@@ -43,6 +45,21 @@ function Presentar({ evaluacion }: { evaluacion: Evaluacion }) {
 
   return (
     <>
+      <Migas
+        className="mb-3"
+        pasos={[
+          { etiqueta: "Ruta", a: paths.ruta },
+          ...(bloque
+            ? [
+                {
+                  etiqueta: `Bloque ${bloque.numero} · ${bloque.titulo}`,
+                  a: `${paths.ruta}?bloque=${bloque.id}`,
+                },
+              ]
+            : []),
+          { etiqueta: "Evaluación" },
+        ]}
+      />
       <h1 className="font-display text-[2rem] font-semibold leading-tight text-paper">
         {evaluacion.titulo}
       </h1>
