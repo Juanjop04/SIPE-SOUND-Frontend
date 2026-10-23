@@ -4,7 +4,8 @@ import { CheckCircle2, Circle } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { supabase } from "@/shared/lib/supabase.js";
-import { obtenerProgreso, obtenerLecciones, obtenerEjercicios, obtenerBloques } from "@/lib/api.js";
+import { obtenerProgreso, obtenerEjercicios, obtenerBloques } from "@/lib/api.js";
+import { obtenerLecciones } from "@/features/lecciones";
 
 export default function Progreso() {
   const [hayUsuario, setHayUsuario] = useState(null);
