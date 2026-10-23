@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { RutaPage as Home } from "@/features/ruta";
-import Login from "@/pages/Login.jsx";
-import Registro from "@/pages/Registro.jsx";
+import { LoginPage as Login, RegistroPage as Registro } from "@/features/auth";
 import { LeccionDetallePage as LeccionDetalle } from "@/features/lecciones";
 import { AcordesPage as Acordes } from "@/features/acordes";
 import { EjerciciosPage as Ejercicios } from "@/features/ejercicios";
