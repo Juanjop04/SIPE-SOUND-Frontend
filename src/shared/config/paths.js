@@ -13,6 +13,9 @@ export const paths = Object.freeze({
   progreso: "/progreso",
   /** @param {string | number} [id] */
   leccion: (id = ":id") => `/leccion/${id}`,
+  /** @param {string | number} [id] */
+  evaluacion: (id = ":id") => `/evaluacion/${id}`,
+  /** URL anterior: redirige a evaluacion() con el evaluacion_id del bloque. */
   /** @param {string | number} [bloqueId] */
   quiz: (bloqueId = ":bloqueId") => `/quiz/${bloqueId}`,
   catalogo: "/_componentes",
@@ -20,7 +23,13 @@ export const paths = Object.freeze({
   docente: Object.freeze({
     inicio: "/docente",
     cursos: "/docente/cursos",
+    /** @param {string | number} [id] */
+    curso: (id = ":id") => `/docente/cursos/${id}`,
     contenido: "/docente/contenido",
+    /** @param {string | number} [id] "nueva" para crear */
+    leccion: (id = ":id") => `/docente/contenido/lecciones/${id}`,
+    /** @param {string | number} [id] "nuevo" para crear */
+    ejercicio: (id = ":id") => `/docente/contenido/ejercicios/${id}`,
     evaluaciones: "/docente/evaluaciones",
   }),
   // Administración (solo rol admin, HU-F-313).

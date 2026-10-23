@@ -110,3 +110,21 @@ export const aceptaTerminos = () =>
   z
     .boolean()
     .refine((marcada) => marcada, { message: "Debes aceptar los términos y condiciones." });
+
+/** Entero opcional: el input vacío ("") se envía como null. */
+export const enteroOpcional = (min: number, max: number) =>
+  z.union([z.literal(""), entero(min, max)]).transform((valor) => (valor === "" ? null : valor));
+
+/** Título o nombre de contenido (3–120) sin < ni >, igual que la API (HU-B-309). */
+export const tituloContenido = () =>
+  texto(LIMITES.titulo.min, LIMITES.titulo.max).refine(
+    (valor) => !valor.includes("<") && !valor.includes(">"),
+    "No se permiten los caracteres < ni >.",
+  );
+
+/** Lista de textos de 1–`largo` caracteres, máximo `maximo`, sin repetidos (sin importar mayúsculas). */
+export const listaDeTextos = (largo: number, maximo: number) =>
+  lista(texto(1, largo), maximo).refine(
+    (valores) => new Set(valores.map((v) => v.toLowerCase())).size === valores.length,
+    "Hay elementos repetidos.",
+  );

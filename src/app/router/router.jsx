@@ -4,12 +4,15 @@ import { cargarDocentesPage } from "@/features/admin";
 import { cargarLoginPage, cargarRegistroPage, ROLES_ADMIN, ROLES_ATRIL } from "@/features/auth";
 import {
   cargarContenidoPage,
+  cargarCursoDetallePage,
   cargarCursosPage,
+  cargarEditorEjercicioPage,
+  cargarEditorLeccionPage,
   cargarEvaluacionesPage,
   cargarResumenPage,
 } from "@/features/docente";
 import { cargarEjercicioDetallePage, cargarEjerciciosPage } from "@/features/ejercicios";
-import { cargarQuizBloquePage } from "@/features/evaluaciones";
+import { cargarEvaluacionPage, cargarRedireccionQuizPage } from "@/features/evaluaciones";
 import { cargarLeccionDetallePage } from "@/features/lecciones";
 import { cargarTerminosPage } from "@/features/legal";
 import { cargarProgresoPage } from "@/features/progreso";
@@ -53,7 +56,8 @@ export const router = createBrowserRouter([
             element: <RequireAuth />,
             children: [
               { path: paths.progreso, lazy: pagina(cargarProgresoPage) },
-              { path: paths.quiz(), lazy: pagina(cargarQuizBloquePage) },
+              { path: paths.evaluacion(), lazy: pagina(cargarEvaluacionPage) },
+              { path: paths.quiz(), lazy: pagina(cargarRedireccionQuizPage) },
             ],
           },
           ...rutasDeDesarrollo,
@@ -72,7 +76,10 @@ export const router = createBrowserRouter([
                 children: [
                   { path: paths.docente.inicio, lazy: pagina(cargarResumenPage) },
                   { path: paths.docente.cursos, lazy: pagina(cargarCursosPage) },
+                  { path: paths.docente.curso(), lazy: pagina(cargarCursoDetallePage) },
                   { path: paths.docente.contenido, lazy: pagina(cargarContenidoPage) },
+                  { path: paths.docente.leccion(), lazy: pagina(cargarEditorLeccionPage) },
+                  { path: paths.docente.ejercicio(), lazy: pagina(cargarEditorEjercicioPage) },
                   { path: paths.docente.evaluaciones, lazy: pagina(cargarEvaluacionesPage) },
                 ],
               },
