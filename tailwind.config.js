@@ -18,7 +18,7 @@ export default {
         },
         accent: token("accent"),
         success: token("success"),
-        madera: token("madera"),
+        suena: token("suena"),
         danger: token("danger"),
         muted: token("muted"),
         paper: token("paper"),

@@ -110,33 +110,36 @@ calculan como color compuesto (`a·frente + (1 − a)·fondo`).
 ## 6. Después de HU-F-320
 
 Revisión del 2026-10-23 sobre capturas reales de `/acordes`, `/ejercicios` y `/ejercicios/1`: el
-contraste de texto cumplía, pero **las capas no se distinguían** (encabezado, contenido y paneles en el
-mismo tono). [HU-F-320](../fase-3-rediseno-y-panel-docente/HU-F-320-capas-y-calidez-de-la-paleta.md)
-añade una escala de cuatro capas y el tono `madera`.
+texto cumplía, pero **las capas no se distinguían**. El equipo aprobó después una maqueta de inicio con
+su paleta; [HU-F-320](../fase-3-rediseno-y-panel-docente/HU-F-320-capas-y-calidez-de-la-paleta.md) la
+adopta con ajustes AA (enlaces en lavanda y no en violeta, borde en toda tarjeta, hover más oscuro,
+pista de progreso en `ink-2`).
 
-| Separación entre capas | Antes | Después |
+Matriz recalculada con el mismo script (66 combinaciones): **64 cumplen**; las 2 restantes son las
+excepciones ya documentadas (B-3 exenta, M-8 decorativa: la cuerda del mástil sin sonar, 2.08).
+
+| Separación | Antes | Después |
 |---|---|---|
-| `ink-2` (encabezado) / `ink` | 1.08 | 1.11 + borde `linea` |
-| `surface` (contenedores) / `ink` | 1.17 | 1.31 + borde `linea` |
-| `surface-2` (lo que flota) / `ink` | — | 1.46 |
-| `linea` / `ink` | 1.73 | 2.41 |
+| Tarjeta (`surface`) / fondo | 1.17, sin borde | 1.14 **+ borde `linea` 2.08** |
+| Lo que flota (`surface-2`) / fondo | — | 1.29 + sombra de diálogo |
+| Divisores (`linea`) / fondo | 1.73 | 2.08 |
 
-| Combinación | Después |
+| Combinación | Relación |
 |---|---|
-| `paper` sobre `ink` · `surface` · `surface-2` | 16.89 · 12.94 · 10.57 |
-| `muted` sobre `ink-2` · `surface` · `surface-2` | 9.87 · 8.37 · 7.50 |
-| `madera` sobre `ink` · `surface` · `surface-2` | 9.20 · 7.05 · 6.32 |
-| `danger` sobre `ink-2` (`MensajeError`) · `surface` · `surface-2` | 6.02 · 5.10 · 4.57 |
-| `primary-claro` (puntos del acorde) sobre `surface` · `surface-2` | 5.42 · 4.85 |
-| `ink` sobre `primary-claro` (número de dedo) | 7.07 |
-| `linea-fuerte` sobre `ink` · `ink-2` · `surface` · `surface-2` | 5.22 · 4.71 · 3.99 · 3.58 |
-| `Cuerda` sin sonar frente a su pista · sonando frente a su pista | 3.35 · 4.53 |
-| *Placeholder* `muted/70` sobre `surface` | 4.86 |
-| `paper` sobre `primary` (botón) | 5.00 |
+| `paper` sobre `ink` · `ink-2` · `surface` · `surface-2` | 17.59 · 16.65 · 15.48 · 13.62 |
+| `muted` sobre `ink` · `surface` · `surface-2` | 9.45 · 8.32 · 7.32 |
+| `accent` (enlaces, foco) sobre `ink` · `surface` · `surface-2` | 11.51 · 10.13 · 8.92 |
+| `success` (logro, verde) sobre `ink` · `surface` | 9.85 · 8.67 |
+| `danger` sobre `ink-2` (`MensajeError`) · `surface` · `surface-2` | 6.45 · 5.99 · 5.28 |
+| `primary-claro` (dedos del acorde, etiquetas) sobre `ink` · `surface` | 7.20 · 6.34 |
+| `paper` sobre `primary` · `primary-hover` (botón) | 4.64 · 5.68 |
+| `ink` sobre `danger` (botón peligro) | 6.81 |
+| `linea-fuerte` sobre `ink` · `ink-2` · `surface` · `surface-2` | 4.40 · 4.16 · 3.87 · 3.41 |
+| Relleno `primary` de `Cuerda` frente a su pista `ink-2` · completado `success` | 3.59 · 9.32 |
+| Cuerda que suena (`suena`, ámbar) sobre `ink` | 10.73 |
+| *Placeholder* `muted/70` sobre `ink` | 5.14 |
 
-`MensajeError` pasa de `danger/10` (4.44 sobre `surface` con la paleta nueva) a fondo `ink-2` sólido
-con borde `danger` (6.02). La pista de `Cuerda` frente al fondo sube de 1.73 a 2.41: sigue mitigada
-(M-8).
+`primary` (`#6257F5`) no se usa como texto en ninguna parte: sobre el fondo daría 3.79.
 
-Comprobado en Chrome sin interfaz con el CSS de producción (teselas de acordes, botones y
-`MensajeError`); las pantallas con datos del backend quedan para la verificación manual del PR.
+Comprobado en Chrome sin interfaz con el CSS de producción; las pantallas con datos del backend
+quedan para la verificación manual del PR.

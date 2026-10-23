@@ -53,7 +53,7 @@ export function Metronomo({ bpm, onCambiarBpm, tiempos, compas }: MetronomoProps
             className={cn(
               "h-8 flex-1 rounded-md border border-linea-fuerte bg-ink-2 transition-colors duration-rapida",
               pulso === tiempo &&
-                (tiempo === 0 ? "border-success bg-success" : "border-accent bg-accent"),
+                (tiempo === 0 ? "border-suena bg-suena" : "border-accent bg-accent"),
             )}
           />
         ))}

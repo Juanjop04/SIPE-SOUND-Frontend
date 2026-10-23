@@ -20,7 +20,10 @@ function Reticula({ acordes, onElegir }: { acordes: Acorde[]; onElegir: (a: Acor
       {agruparPorTipo(acordes).map((grupo, indice) => (
         <section key={grupo.tipo} aria-labelledby={`grupo-${grupo.tipo}`}>
           <TrasteDivider numero={indice + 1} />
-          <h2 id={`grupo-${grupo.tipo}`} className="mt-3 font-mono text-sm uppercase text-madera">
+          <h2
+            id={`grupo-${grupo.tipo}`}
+            className="mt-3 font-mono text-sm uppercase text-primary-claro"
+          >
             {grupo.titulo}
           </h2>
           <ul className="mt-4 grid grid-cols-3 gap-4 sm:grid-cols-4 lg:grid-cols-6">
@@ -31,7 +34,7 @@ function Reticula({ acordes, onElegir }: { acordes: Acorde[]; onElegir: (a: Acor
                   onClick={() => onElegir(acorde)}
                   className={cn(
                     CLASE_TESELA,
-                    "transition-colors duration-rapida hover:border-accent focus-visible:border-accent",
+                    "transition-colors duration-rapida hover:border-accent hover:bg-surface-2 focus-visible:border-accent",
                   )}
                 >
                   <TeselaAcorde nombre={acorde.nombre} diagram={acorde.diagram} />

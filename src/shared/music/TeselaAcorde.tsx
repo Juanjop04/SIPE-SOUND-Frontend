@@ -12,7 +12,7 @@ export interface TeselaAcordeProps {
   diagram?: ChordDiagramProps | null;
 }
 
-/** Diagrama y nombre del acorde; el nombre en `madera`, el color de lo que se explora. */
+/** Diagrama y nombre del acorde. */
 export function TeselaAcorde({ nombre, diagram }: TeselaAcordeProps) {
   return (
     <>
@@ -21,7 +21,7 @@ export function TeselaAcorde({ nombre, diagram }: TeselaAcordeProps) {
       ) : (
         <span className="py-8 text-xs text-muted">Sin diagrama</span>
       )}
-      <span className="font-mono text-sm text-madera">{nombre}</span>
+      <span className="font-mono text-sm text-paper">{nombre}</span>
     </>
   );
 }
