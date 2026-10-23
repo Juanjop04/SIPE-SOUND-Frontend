@@ -38,7 +38,7 @@ export function AccionBloque({ bloque, anterior, conSesion }: AccionBloqueProps)
   return (
     <div className="flex flex-wrap items-center gap-4">
       <Link
-        to={paths.quiz(bloque.id)}
+        to={paths.evaluacion(bloque.evaluacion_id)}
         className={claseBoton({ variante: aprobado ? "secundario" : "primario" })}
       >
         {aprobado ? "Repetir evaluación" : "Presentar evaluación"}

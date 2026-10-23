@@ -13,6 +13,9 @@ export const paths = Object.freeze({
   progreso: "/progreso",
   /** @param {string | number} [id] */
   leccion: (id = ":id") => `/leccion/${id}`,
+  /** @param {string | number} [id] */
+  evaluacion: (id = ":id") => `/evaluacion/${id}`,
+  /** URL anterior: redirige a evaluacion() con el evaluacion_id del bloque. */
   /** @param {string | number} [bloqueId] */
   quiz: (bloqueId = ":bloqueId") => `/quiz/${bloqueId}`,
   catalogo: "/_componentes",

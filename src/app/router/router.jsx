@@ -9,7 +9,7 @@ import {
   cargarResumenPage,
 } from "@/features/docente";
 import { cargarEjercicioDetallePage, cargarEjerciciosPage } from "@/features/ejercicios";
-import { cargarQuizBloquePage } from "@/features/evaluaciones";
+import { cargarEvaluacionPage, cargarRedireccionQuizPage } from "@/features/evaluaciones";
 import { cargarLeccionDetallePage } from "@/features/lecciones";
 import { cargarTerminosPage } from "@/features/legal";
 import { cargarProgresoPage } from "@/features/progreso";
@@ -53,7 +53,8 @@ export const router = createBrowserRouter([
             element: <RequireAuth />,
             children: [
               { path: paths.progreso, lazy: pagina(cargarProgresoPage) },
-              { path: paths.quiz(), lazy: pagina(cargarQuizBloquePage) },
+              { path: paths.evaluacion(), lazy: pagina(cargarEvaluacionPage) },
+              { path: paths.quiz(), lazy: pagina(cargarRedireccionQuizPage) },
             ],
           },
           ...rutasDeDesarrollo,
