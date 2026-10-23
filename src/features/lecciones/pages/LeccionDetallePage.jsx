@@ -4,7 +4,7 @@ import { ArrowLeft, Check } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
 import { Button } from "@/shared/ui/Button.jsx";
-import { supabase } from "@/shared/lib/supabase.js";
+import { obtenerSesion } from "@/shared/api/sesion.js";
 import { guardarProgreso } from "@/features/progreso";
 import { obtenerLeccion } from "../api/leccionesApi.js";
 import { obtenerAcordes } from "@/features/acordes";
@@ -21,8 +21,8 @@ export default function LeccionDetalle() {
   const [guardado, setGuardado] = useState(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setHayUsuario(!!data.session);
+    obtenerSesion().then((sesion) => {
+      setHayUsuario(!!sesion);
     });
 
     // Traemos la lección Y el catálogo completo de acordes al mismo tiempo

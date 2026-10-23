@@ -11,7 +11,7 @@
 | Estado de servidor | TanStack Query 5 | Nuevo en HU-F-203 |
 | Formularios | React Hook Form + Zod | Nuevo en HU-F-313 (límites en `shared/validacion`) |
 | Íconos | lucide-react | Actual (uso restringido, ver sistema de diseño) |
-| Autenticación | `@supabase/supabase-js` (solo Auth) | Actual |
+| Autenticación | Backend (`/auth/*`): access token en memoria, refresh token en cookie httpOnly | Desde HU-F-207 (sin `@supabase/supabase-js`) |
 | Lenguaje | JavaScript → **TypeScript gradual** | `allowJs` desde HU-F-201; todo archivo **nuevo** de la Fase 3 en `.ts/.tsx` |
 
 > **Por qué TypeScript gradual:** SonarQube exige validar las props de los
@@ -72,12 +72,12 @@ SIPE-SOUND-FULLSTACK/
     ├── shared/                       # reutilizable, sin conocimiento del negocio
     │   ├── api/
     │   │   ├── httpClient.ts         # fetch + token + respuesta estándar + errores
+    │   │   ├── sesion.ts             # /auth/*: token en memoria, renovación con cookie
     │   │   ├── ApiError.ts
     │   │   └── queryClient.ts
     │   ├── config/env.ts             # lectura y validación de import.meta.env
     │   ├── lib/
     │   │   ├── cn.ts
-    │   │   ├── supabase.ts           # createClient (solo auth)
     │   │   └── formato.ts            # fechas, porcentajes
     │   ├── hooks/
     │   ├── ui/                       # primitivas: Button, Input, Field, Table, Dialog…
@@ -125,7 +125,7 @@ app  →  features  →  shared
 | **O** | Variantes por configuración, no por `if` dentro del componente. | `Button` con mapa `variants`; un nuevo estilo es una entrada, no un `if`. |
 | **L** | Componentes que envuelven elementos nativos aceptan y reenvían sus props. | `<Input {...props} />` funciona donde funciona `<input>`; `forwardRef` en primitivas. |
 | **I** | Props mínimas y específicas. | `<TarjetaLeccion leccion={...} />` en vez de pasar el objeto de página completo. |
-| **D** | Componentes dependen de hooks/abstracciones, no de `supabase` ni `fetch`. | `Header` usa `useSession()`, no `supabase.auth.getSession()`. |
+| **D** | Componentes dependen de hooks/abstracciones, no de `fetch`. | `Header` usa `useSession()`, no `fetch("/auth/...")`. |
 
 ## 5. Estado
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "@/shared/lib/supabase.js";
+import { obtenerSesion } from "@/shared/api/sesion.js";
 import { cerrarSesion } from "@/features/auth";
 import logo from "@/assets/brand/logo.png";
 
@@ -9,8 +9,8 @@ export default function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUsuario(data.session?.user ?? null);
+    obtenerSesion().then((sesion) => {
+      setUsuario(sesion?.usuario ?? null);
     });
   }, []);
 

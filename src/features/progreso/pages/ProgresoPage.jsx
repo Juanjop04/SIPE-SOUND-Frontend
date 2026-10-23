@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { CheckCircle2, Circle } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
-import { supabase } from "@/shared/lib/supabase.js";
+import { obtenerSesion } from "@/shared/api/sesion.js";
 import { obtenerBloques } from "@/features/ruta";
 import { obtenerProgreso } from "../api/progresoApi.js";
 import { obtenerEjercicios } from "@/features/ejercicios";
@@ -16,8 +16,8 @@ export default function Progreso() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data }) => {
-      const sesionActiva = !!data.session;
+    obtenerSesion().then(async (sesion) => {
+      const sesionActiva = !!sesion;
       setHayUsuario(sesionActiva);
 
       if (!sesionActiva) {

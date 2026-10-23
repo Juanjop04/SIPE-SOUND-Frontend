@@ -35,6 +35,7 @@ Guía de reestructuración y rediseño del frontend en tres fases. Cada HU es un
 | 4 | [HU-F-204 Sesión centralizada](fase-2-reestructuracion/HU-F-204-sesion-centralizada.md) | 3 | F-203 |
 | 5 | [HU-F-205 Router, layouts y guardas](fase-2-reestructuracion/HU-F-205-router-layouts-y-guardas.md) | 3 | F-204 |
 | 6 | [HU-F-206 Limpieza del repositorio](fase-2-reestructuracion/HU-F-206-limpieza-repositorio.md) | 2 | F-205, **B-206** |
+| 2.1 | [HU-F-207 Autenticación a través del backend](fase-2-reestructuracion/HU-F-207-autenticacion-por-backend.md) | 3 | F-202, **B-322** |
 
 ## Fase 3 · Rediseño y panel docente
 

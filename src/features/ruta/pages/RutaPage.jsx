@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Lock, CheckCircle2 } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
-import { supabase } from "@/shared/lib/supabase.js";
+import { obtenerSesion } from "@/shared/api/sesion.js";
 import { obtenerBloques } from "../api/rutaApi.js";
 import { obtenerProgreso } from "@/features/progreso";
 import { obtenerLecciones } from "@/features/lecciones";
@@ -17,8 +17,8 @@ export default function Home() {
   const [hayUsuario, setHayUsuario] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data }) => {
-      const sesionActiva = !!data.session;
+    obtenerSesion().then(async (sesion) => {
+      const sesionActiva = !!sesion;
       setHayUsuario(sesionActiva);
 
       try {

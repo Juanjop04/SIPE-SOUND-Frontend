@@ -112,8 +112,9 @@ cobertura** hasta habilitar pruebas.
 
 ## 7. Lo que NO se hace
 
-- Llamar a `supabase.from(...)`.
-- Guardar tokens en `localStorage` manualmente (Supabase ya gestiona la sesión).
+- Importar `@supabase/supabase-js` o llamar a Supabase (la sesión es del backend, HU-F-207).
+- Guardar tokens en `localStorage`/`sessionStorage`: el access token vive en memoria y el
+  refresh token en una cookie httpOnly que JavaScript no puede leer.
 - `console.log` en código entregado.
 - Librerías de componentes completas o de animación pesadas.
 - Pruebas unitarias (decisión temporal, contrato de IA R10).

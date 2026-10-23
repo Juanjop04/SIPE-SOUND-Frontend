@@ -7,8 +7,10 @@ npm install
 cp .env.example .env
 ```
 
-Edita `.env` y pega tu `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` reales
-(Supabase → Settings → API).
+`.env` solo necesita `VITE_API_URL` (por defecto `http://localhost:5000/api/v1`).
+El frontend no usa Supabase: el registro y el inicio de sesión pasan por el backend
+(HU-F-207). Abre el frontend y el backend con el mismo host (`localhost` en ambos)
+para que viaje la cookie de sesión.
 
 ## Correr en desarrollo
 

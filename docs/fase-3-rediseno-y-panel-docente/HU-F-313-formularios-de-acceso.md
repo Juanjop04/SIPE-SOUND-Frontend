@@ -18,8 +18,8 @@
 **para** que entre con su rol sin pasos manuales.
 
 ## Contexto
-- `RegistroPage` llama a `supabase.auth.signUp` y valida a mano. Se **mantiene** Supabase Auth
-  (el backend no crea cuentas ni guarda claves, HU-B-321), con validación completa del formulario.
+- `RegistroPage` llama a `POST /auth/registro` (HU-F-207 / HU-B-322) y valida a mano. Esta HU
+  agrega la validación completa del formulario; el backend aplica los mismos límites.
 - El rol nunca se elige en el registro: lo asigna la base (`estudiante`, o `docente` si el
   correo está preautorizado y la persona confirma su correo).
 - No hay módulo común de validación: esta HU crea `shared/validacion` (contrato 08)
@@ -30,17 +30,18 @@
 - Requisitos de contraseña como lista que se marca al cumplirse (texto + ícono, no solo color).
 - Tras registrarse: "Te enviamos un correo para confirmar tu cuenta." y el correo usado,
   con enlace a "Iniciar sesión". Mismo mensaje aunque el correo ya exista (no se revela).
-- Errores de Supabase traducidos con `traducirErrorAuth` (límite de correos, contraseña débil);
-  errores del backend (preautorizar) con el `message` de la respuesta estándar.
+- Errores con el `message` y los `errors` de la respuesta estándar del backend (ya en español);
+  `traducirErrorAuth` solo cubre la falta de conexión.
 
 ## Alcance
 **Incluye**
 - `npm install --save-exact react-hook-form zod @hookform/resolvers`.
 - `src/shared/validacion/limites.ts` y `campos.ts` según [contrato 08](../fase-1-contrato/08-validacion-de-formularios.md).
 - `Field` en `shared/ui` (label + control + ayuda + error con `aria-describedby`) y contador para `textarea`.
-- **Iniciar sesión**: esquema y atributos de §2; Supabase Auth como hoy.
-- **Registro**: `supabase.auth.signUp({ email, password, options: { data: { nombre }, emailRedirectTo } })`
-  en `features/auth/api/authApi.ts`, con `emailRedirectTo` = `<origen>/login`. Solo `nombre` en los metadatos.
+- **Iniciar sesión**: esquema y atributos de §2; `POST /auth/sesion` como hoy.
+- **Registro**: `POST /auth/registro` con `{ nombre, email, password, acepta_terminos }`. Requiere
+  agregar `acepta_terminos: Literal[True]` a `RegistroIn` en el backend (PR enlazado). El enlace
+  del correo usa la *Site URL* de Supabase (`<origen>/login`).
 - **Preautorizar docentes** (solo `admin`, en `/admin/docentes`): formulario de correo
   (`POST /admin/docentes/preautorizaciones`), tabla con estado `pendiente` / `aplicada`
   y acción "Retirar" en las pendientes (`DELETE`, con confirmación).
@@ -69,7 +70,7 @@ Ejecuta HU-F-313 en SIPE-SOUND-FULLSTACK. Lee primero los contratos 04 y 08.
 Crea shared/validacion (limites.ts espejo de app/core/longitudes.py del backend,
 campos.ts con los constructores) y Field en shared/ui. Reescribe Login y Registro
 con React Hook Form + zodResolver (mode "onTouched"); el registro sigue con
-supabase.auth.signUp (options.data.nombre). Borra la validación manual.
+POST /auth/registro (sin rol). Borra la validación manual.
 Crea /admin/docentes (guardada por rol admin) con las preautorizaciones; los
 errores 400 se asignan con setError a partir de ApiError.porCampo.
 Sin cambios de paleta; respeta el sistema de diseño.
@@ -90,7 +91,7 @@ Escenario: Límite físico
 
 Escenario: Registro exitoso
   Cuando completo datos válidos y envío
-  Entonces se llama a Supabase signUp con data { nombre } y sin rol
+  Entonces se llama a POST /auth/registro con nombre, email y password, sin rol
   Y veo "Te enviamos un correo para confirmar tu cuenta."
 
 Escenario: Docente preautorizado

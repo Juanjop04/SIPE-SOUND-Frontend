@@ -1,4 +1,4 @@
-import { obtenerToken } from "@/shared/api/obtenerToken.js";
+import { obtenerToken } from "@/shared/api/sesion.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 

@@ -8,8 +8,6 @@
 
 ```dotenv
 VITE_API_URL=http://localhost:5000/api/v1
-VITE_SUPABASE_URL=https://TU-PROYECTO.supabase.co
-VITE_SUPABASE_ANON_KEY=TU-ANON-KEY
 ```
 
 `src/shared/config/env.ts` las lee **una sola vez**, valida que existan y
@@ -84,13 +82,13 @@ export interface MetaPaginacion { pagina: number; por_pagina: number; total: num
 
 Responsabilidades:
 1. Construir la URL con `env.apiUrl`.
-2. Adjuntar `Authorization: Bearer <token>` si hay sesión (obtenida de `supabase.auth.getSession()`; Supabase refresca el token automáticamente).
+2. Adjuntar `Authorization: Bearer <token>` si hay sesión (`obtenerToken()` de `shared/api/sesion`, que renueva el token con `POST /auth/sesion/renovar` cuando vence).
 3. Serializar JSON y fijar `Content-Type`.
 4. Leer **siempre** el cuerpo como `RespuestaApi<T>`:
    - `success: true` → devuelve `data` (`get`, `post`…), o `{ data, meta, message }` con `getPaginado` / `conMensaje`.
    - `success: false` → lanza `ApiError` con `statusCode`, `status`, `message` y `errors`.
    - Cuerpo que no es JSON (proxy, caída) → `ApiError(0, "SIN_CONEXION", "No pudimos conectar…")`.
-5. Ante `401`: cerrar sesión local y redirigir a `/login?volver=<ruta>`.
+5. Ante `401`: intentar **una** renovación; si falla, cerrar sesión local y redirigir a `/login?volver=<ruta>`.
 6. Timeout de 15 s con `AbortController` (conectividad baja).
 
 ```ts
@@ -156,6 +154,20 @@ export function useLeccion(id: number) {
 Campos que cambiaron con HU-B-319: `duracion` (texto) ya no existe → usar
 `duracion_min` (entero, minutos). `GET/POST /progreso` no existen → `PUT
 /progreso/lecciones/{id}`, `PUT /progreso/ejercicios/{id}` y `GET /progreso/resumen`.
+
+## 4.1 Sesión (HU-F-207, contrato del backend §4.1.1)
+
+| Acción | Endpoint | Detalle |
+|---|---|---|
+| Registrarse | `POST /auth/registro` | `{nombre, email, password}`; misma respuesta exista o no el correo. |
+| Iniciar sesión | `POST /auth/sesion` | Devuelve `access_token`, `expira_en` y `usuario`; el backend pone la cookie `sipe_refresh`. |
+| Recuperar sesión al cargar / token vencido | `POST /auth/sesion/renovar` | Cuerpo `{}`; usa y rota la cookie. 401 = no hay sesión. |
+| Cerrar sesión | `DELETE /auth/sesion` | Cuerpo `{}` y `Bearer`; borra la cookie. |
+
+- Todas con `credentials: "include"` y `Content-Type: application/json` (el backend exige JSON como defensa CSRF).
+- El access token vive **solo en memoria** (`shared/api/sesion`); nunca en `localStorage`.
+- El rol se pide con `GET /me`; no se deduce del token.
+- En local, frontend y backend con el mismo host (`localhost`): con `127.0.0.1` la cookie no viaja.
 
 ## 5. Manejo de errores en la interfaz
 
