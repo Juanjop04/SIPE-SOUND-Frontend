@@ -15,7 +15,7 @@ export interface SkeletonProps {
 
 /** Marcador de carga. Es decorativo: quien lo usa marca aria-busy en la región. */
 export function Skeleton({ className, lineas = 1 }: SkeletonProps) {
-  const clase = cn("motion-safe:animate-pulse rounded-md bg-ink-2", className ?? "h-4 w-full");
+  const clase = cn("motion-safe:animate-pulse rounded-md bg-surface", className ?? "h-4 w-full");
   if (lineas <= 1) return <div aria-hidden="true" className={clase} />;
   return (
     <div aria-hidden="true" className="flex flex-col gap-2">
@@ -56,7 +56,7 @@ export function MensajeError({ mensaje, onReintentar, className }: MensajeErrorP
     <div
       role="alert"
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 rounded-md border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger",
+        "flex flex-wrap items-center justify-between gap-3 rounded-md border border-danger bg-ink-2 px-4 py-3 text-sm text-danger",
         className,
       )}
     >

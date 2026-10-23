@@ -1,5 +1,6 @@
 import { useAcordes } from "@/features/acordes";
-import { ChordDiagram } from "@/shared/music";
+import { cn } from "@/shared/lib/cn.js";
+import { CLASE_TESELA, TeselaAcorde } from "@/shared/music";
 import { Skeleton } from "@/shared/ui";
 
 /** Fila de diagramas de la lección; en móvil se desplaza en horizontal con scroll snap. */
@@ -18,12 +19,8 @@ export function AcordesLeccion({ nombres }: { nombres: string[] }) {
       ) : (
         <ul className="mt-4 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2">
           {acordes.map((acorde) => (
-            <li
-              key={acorde.id}
-              className="flex w-28 shrink-0 snap-start flex-col items-center gap-2"
-            >
-              <ChordDiagram {...acorde.diagram} />
-              <span className="font-mono text-sm text-paper">{acorde.nombre}</span>
+            <li key={acorde.id} className={cn(CLASE_TESELA, "w-32 shrink-0 snap-start")}>
+              <TeselaAcorde nombre={acorde.nombre} diagram={acorde.diagram} />
             </li>
           ))}
         </ul>

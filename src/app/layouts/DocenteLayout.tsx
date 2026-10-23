@@ -23,7 +23,7 @@ export function DocenteLayout() {
         </div>
       </aside>
 
-      <header className="flex h-14 items-center justify-between border-b border-linea px-4 lg:hidden">
+      <header className="flex h-14 items-center justify-between border-b border-linea bg-ink-2 px-4 lg:hidden">
         <Marca destino={paths.docente.inicio} />
         <Button variante="fantasma" tamano="sm" onClick={() => setMenuAbierto(true)}>
           <Menu size={18} aria-hidden="true" />

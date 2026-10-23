@@ -52,7 +52,7 @@ HU-F-314), `muted`, `paper`.
 | `EstudianteLayout` | Encabezado a todo el ancho en `ink-2` con borde inferior `linea` (sustituye al `TrasteDivider`). Barra inferior móvil en `ink-2`. |
 | `DocenteLayout` | Encabezado móvil en `ink-2`. |
 | `shared/music/TeselaAcorde` (nuevo) | Tesela `surface` + borde `linea` + `rounded-caja`, diagrama y nombre en `madera`. La usan `/acordes` (botón, hover con borde `accent`) y la lección. |
-| `/acordes` | Etiquetas de grupo ("Mayores") en `madera`. Nombre del acorde en el `Drawer` en `madera`. |
+| `/acordes` | Etiquetas de grupo ("Mayores") en `madera`. |
 | `shared/ui/Table` | Contenedor `rounded-caja` con borde `linea`; cabecera `surface`; filas alternas `ink-2`; hover `surface`. |
 | `claseControl`, `ControlBpm` | Fondo `surface` (el control se ve como objeto, no como hueco). |
 | `PanelModal`, `MenuCuenta`, `Aviso` | `surface-2`. |
@@ -60,6 +60,7 @@ HU-F-314), `muted`, `paper`.
 | Metrónomo | Columna en un panel `surface`; casillas de tiempo vacías en `ink-2`. |
 | `Skeleton` | `surface` (visible sobre el fondo nuevo). |
 | `Button` fantasma, filas clicables, opciones del menú | Hover `surface` (con `ink-2` en el encabezado ya no se notaría). |
+| Barra de acciones del editor (atril) | `ink-2`, como las demás barras fijas. |
 
 ### 3. Sistema de diseño
 `05-sistema-de-diseno.md`: tabla de tokens, proporciones (§2.2), contraste (§3) y la regla de

@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         ink: { DEFAULT: token("ink"), 2: token("ink-2") },
-        surface: token("surface"),
+        surface: { DEFAULT: token("surface"), 2: token("surface-2") },
         // "linea" y no "border": evita la clase ambigua border-border.
         linea: { DEFAULT: token("linea"), fuerte: token("linea-fuerte") },
         primary: {
@@ -18,6 +18,7 @@ export default {
         },
         accent: token("accent"),
         success: token("success"),
+        madera: token("madera"),
         danger: token("danger"),
         muted: token("muted"),
         paper: token("paper"),

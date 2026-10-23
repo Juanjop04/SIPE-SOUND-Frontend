@@ -52,7 +52,7 @@ export function BarraInferior() {
   return (
     <nav
       aria-label="Principal"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-linea bg-ink sm:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-linea bg-ink-2 sm:hidden"
     >
       <ul className="grid grid-cols-4">
         {DESTINOS.map(({ to, etiqueta, Icono, exacto }) => (

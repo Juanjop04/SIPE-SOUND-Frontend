@@ -32,7 +32,10 @@ export function Metronomo({ bpm, onCambiarBpm, tiempos, compas }: MetronomoProps
   }, [alternar]);
 
   return (
-    <section aria-labelledby={`${idBpm}-titulo`} className="flex flex-col gap-5">
+    <section
+      aria-labelledby={`${idBpm}-titulo`}
+      className="flex flex-col gap-5 rounded-caja border border-linea bg-surface p-5"
+    >
       <h2 id={`${idBpm}-titulo`} className="font-display text-xl font-semibold text-paper">
         Metrónomo
       </h2>
@@ -48,7 +51,7 @@ export function Metronomo({ bpm, onCambiarBpm, tiempos, compas }: MetronomoProps
           <span
             key={tiempo}
             className={cn(
-              "h-8 flex-1 rounded-md border border-linea-fuerte transition-colors duration-rapida",
+              "h-8 flex-1 rounded-md border border-linea-fuerte bg-ink-2 transition-colors duration-rapida",
               pulso === tiempo &&
                 (tiempo === 0 ? "border-success bg-success" : "border-accent bg-accent"),
             )}

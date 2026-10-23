@@ -22,7 +22,7 @@ export function BarraAcciones({
   return (
     <div
       data-fijo="abajo"
-      className="sticky bottom-0 z-20 -mx-4 mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-linea bg-ink px-4 py-3 sm:-mx-8 sm:px-8"
+      className="sticky bottom-0 z-20 -mx-4 mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-linea bg-ink-2 px-4 py-3 sm:-mx-8 sm:px-8"
     >
       <p className="text-sm text-muted">
         {estado ? <EstadoPunto estado={estado} /> : "Sin guardar"}

@@ -58,7 +58,7 @@ export function AvisosProvider({ children }: { children: ReactNode }) {
         {aviso && (
           <div
             key={aviso.id}
-            className={`pointer-events-auto flex max-w-md items-center gap-3 rounded-md border border-linea bg-surface px-4 py-3 text-sm ${CLASES_TIPO[aviso.tipo]}`}
+            className={`pointer-events-auto flex max-w-md items-center gap-3 rounded-md border border-linea bg-surface-2 px-4 py-3 text-sm ${CLASES_TIPO[aviso.tipo]}`}
           >
             <p>{aviso.mensaje}</p>
             <button

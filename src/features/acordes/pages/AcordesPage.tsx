@@ -1,6 +1,7 @@
 import { useCallback, useId, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ChordDiagram, TrasteDivider } from "@/shared/music";
+import { CLASE_TESELA, TeselaAcorde, TrasteDivider } from "@/shared/music";
+import { cn } from "@/shared/lib/cn.js";
 import { EstadoVacio, MensajeError, Select, Skeleton } from "@/shared/ui";
 import { PanelAcorde } from "../components/PanelAcorde";
 import { useAcordes } from "../hooks/useAcordes";
@@ -19,7 +20,7 @@ function Reticula({ acordes, onElegir }: { acordes: Acorde[]; onElegir: (a: Acor
       {agruparPorTipo(acordes).map((grupo, indice) => (
         <section key={grupo.tipo} aria-labelledby={`grupo-${grupo.tipo}`}>
           <TrasteDivider numero={indice + 1} />
-          <h2 id={`grupo-${grupo.tipo}`} className="mt-3 font-mono text-sm uppercase text-muted">
+          <h2 id={`grupo-${grupo.tipo}`} className="mt-3 font-mono text-sm uppercase text-madera">
             {grupo.titulo}
           </h2>
           <ul className="mt-4 grid grid-cols-3 gap-4 sm:grid-cols-4 lg:grid-cols-6">
@@ -28,14 +29,12 @@ function Reticula({ acordes, onElegir }: { acordes: Acorde[]; onElegir: (a: Acor
                 <button
                   type="button"
                   onClick={() => onElegir(acorde)}
-                  className="flex w-full flex-col items-center gap-2 rounded-md py-2 transition-colors duration-rapida hover:bg-ink-2"
-                >
-                  {acorde.diagram ? (
-                    <ChordDiagram {...acorde.diagram} />
-                  ) : (
-                    <span className="py-8 text-xs text-muted">Sin diagrama</span>
+                  className={cn(
+                    CLASE_TESELA,
+                    "transition-colors duration-rapida hover:border-accent focus-visible:border-accent",
                   )}
-                  <span className="font-mono text-sm text-paper">{acorde.nombre}</span>
+                >
+                  <TeselaAcorde nombre={acorde.nombre} diagram={acorde.diagram} />
                 </button>
               </li>
             ))}

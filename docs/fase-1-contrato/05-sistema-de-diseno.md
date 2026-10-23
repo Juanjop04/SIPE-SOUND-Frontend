@@ -14,6 +14,7 @@ tablatura). No se decora con música: se **organiza** como música.
 |---|---|
 | **Mástil** | Eje vertical de la ruta de aprendizaje. Los bloques son trastes que se recorren de arriba abajo. |
 | **Trastes** | Divisores: líneas finas de 1 px (`linea`) en lugar de tarjetas con sombra. |
+| **Madera** (palisandro) | Lo que se explora: nombres de acordes y etiquetas del catálogo en `madera` (HU-F-320). |
 | **Cuerdas** | Barras de progreso: una línea de 2–3 px que pasa de lila (`paper` al 55 %) a **ámbar** (`success`) cuando "suena" (completado). Es la misma lógica de color que ya usa la animación de `AuthLayout`. |
 | **Marcadores del mástil** (puntos en trastes 3, 5, 7, 9, 12) | Hitos de la ruta: aparecen solo en bloques que cierran nivel. |
 | **Símbolos del diagrama de acorde** | Estados: `×` (cuerda muda) = bloqueado · `○` (cuerda al aire) = disponible · `●` ámbar = aprobado. Coinciden con `ChordDiagram`, que el estudiante ya lee. |
@@ -29,16 +30,18 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 
 | Token CSS | Clase Tailwind | Hex | Rol |
 |---|---|---|---|
-| `--color-ink` | `ink` | `#1B1030` | Fondo de la aplicación. |
-| `--color-ink-2` *(derivado)* | `ink-2` | `#221640` | Capa intermedia (barra lateral, filas alternas). |
-| `--color-surface` | `surface` | `#2A1B4D` | Superficies elevadas (paneles, diálogos). |
-| `--color-linea` | `linea` | `#4A3470` | Trastes y divisores **decorativos**. |
-| `--color-linea-fuerte` *(derivado)* | `linea-fuerte` | `#7A66A3` | Bordes de **controles** (inputs, selects) — cumple 3:1. |
+| `--color-ink` | `ink` | `#120A21` | Fondo de la página (capa 0). |
+| `--color-ink-2` | `ink-2` | `#1E1436` | Capa 1: encabezado, barra lateral, barras fijas, filas alternas. |
+| `--color-surface` | `surface` | `#2C1F52` | Capa 2: lo que se toca o se lee como objeto (teselas de acordes, tablas, controles, metrónomo). |
+| `--color-surface-2` | `surface-2` | `#35265E` | Capa 3: lo que flota (`Drawer`, `Dialog`, menús, avisos). |
+| `--color-linea` | `linea` | `#5A4585` | Trastes y divisores **decorativos**. |
+| `--color-linea-fuerte` | `linea-fuerte` | `#8E7BBA` | Bordes de **controles** (inputs, selects) — ≥ 3:1 en todas las capas. |
 | `--color-primary` | `primary` | `#7C3AED` | Acción principal (fondo de botón). |
 | `--color-primary-hover` | `primary-hover` | `#6B2FD1` | Hover de acción principal. |
 | `--color-primary-claro` *(derivado)* | `primary-claro` | `#A78BFA` | Texto violeta sobre fondo oscuro cuando hace falta. |
 | `--color-accent` | `accent` | `#E29DE0` | Enlaces, foco (`anillo`), selección actual. |
 | `--color-success` | `success` | `#F5B942` | **Solo logro**: completado, aprobado, "suena". |
+| `--color-madera` | `madera` | `#E8A56F` | Cobre del palisandro: **lo que se explora** (nombres de acordes, etiquetas del catálogo). Nunca botones, enlaces ni logros. |
 | `--color-danger` | `danger` | `#F56C72` | Errores y acciones destructivas (HU-F-314: +5 % de luz sobre `#F2545B`). |
 | `--color-muted` | `muted` | `#C9BEE0` | Texto secundario. |
 | `--color-paper` | `paper` | `#F3EEFB` | Texto principal. |
@@ -51,11 +54,12 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 
 | Color | Proporción aproximada |
 |---|---|
-| `ink` / `ink-2` / `surface` | ~70 % |
+| `ink` / `ink-2` / `surface` / `surface-2` | ~70 % |
 | `paper` / `muted` (texto) | ~20 % |
 | `primary` | ≤ 8 % — un único botón primario por vista |
 | `accent` | ≤ 2 % |
 | `success` | Solo donde hay un logro real |
+| `madera` | ≤ 5 % — nombres de acordes y etiquetas del catálogo |
 
 ### 2.3 Tipografía
 
@@ -96,6 +100,8 @@ estados hover/foco/deshabilitado, `ink-2`) y registra aquí cada ajuste de lumin
 | `primary` | **3.2** | **2.7** | ❌ **Nunca como color de texto ni de foco.** Solo fondo de botón (texto `paper` encima: 5.0). |
 | `linea-fuerte` | 3.7 | 3.1 | Bordes de controles (WCAG 1.4.11) |
 | `linea` | 1.7 | 1.5 | Solo decorativo (trastes, divisores). Nunca en gráficos que hay que leer (`ChordDiagram`, umbrales): ahí `linea-fuerte`. |
+
+> Valores después de HU-F-320 (fondo `#120A21`, `surface` `#2C1F52`): `paper` 16.9 / 12.9 · `muted` 10.9 / 8.4 · `accent` 9.3 / 7.1 · `success` 10.9 / 8.4 · `danger` 6.7 / 5.1 · `madera` 9.2 / 7.1 · `primary-claro` 7.1 / 5.4 · `linea-fuerte` 5.2 / 4.0 · `linea` 2.4 / 1.8. Detalle en el [informe AUD-2026-01](../auditorias/AUD-2026-01-interfaz-y-contraste.md#6-después-de-hu-f-320).
 
 Ajustes de HU-F-314 ([informe AUD-2026-01](../auditorias/AUD-2026-01-interfaz-y-contraste.md)):
 - Puntos de dedos del `ChordDiagram` en `primary-claro` con número en `ink` (`primary` sobre `surface` daba 2.7).
@@ -143,7 +149,7 @@ Consecuencias directas sobre el código anterior (ya aplicadas en HU-F-301/F-302
 | Manchas difuminadas (`blur-3xl`, "blobs") — hoy existe una en `AuthLayout` | El propio `Fretboard` como elemento gráfico. |
 | *Glassmorphism* (`backdrop-blur`, `bg-white/10`) | `surface` sólido. |
 | Grilla de 3 tarjetas con ícono dentro de un círculo + título + párrafo | Lista o tabla con jerarquía tipográfica. |
-| Tarjetas con borde izquierdo de color como único recurso (hoy `Card` usa `border-l-4`) | `TrasteDivider` y espacio en blanco. |
+| Tarjetas con borde izquierdo de color como único recurso (hoy `Card` usa `border-l-4`) | `TrasteDivider` y espacio en blanco. Para lo que se toca (acorde, metrónomo, tabla): contenedor sólido `surface` con borde `linea`, sin sombra (HU-F-320). |
 | Emojis como íconos, ícono de destellos (✨ `Sparkles`), cohetes 🚀 | `MarcaEstado`, símbolos musicales, lucide solo para acciones (editar, borrar, buscar). |
 | Textos de marketing vacíos: "Desbloquea tu potencial", "Bienvenido de nuevo 👋", "Lleva tu música al siguiente nivel" | Voz de profesor de música, concreta: "Hoy: cambio de Em a Am. 10 minutos." |
 | *Hero* centrado con título gigante + subtítulo + dos botones | Encabezado alineado a la izquierda con el nombre, una frase concreta y **una** acción (el siguiente paso), junto a una ilustración propia. |

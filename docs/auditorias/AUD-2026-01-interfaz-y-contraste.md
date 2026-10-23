@@ -106,3 +106,37 @@ calculan como color compuesto (`a·frente + (1 − a)·fondo`).
 | HU | Alcance | Estimación |
 |---|---|---|
 | HU-F-319 · Tablas del atril en móvil | `TablaCursos` y `TablaContenido` como filas apiladas bajo 768 px, como en HU-F-309/F-310 (M-7). | 2 puntos |
+
+## 6. Después de HU-F-320
+
+Revisión del 2026-10-23 sobre capturas reales de `/acordes`, `/ejercicios` y `/ejercicios/1`: el
+contraste de texto cumplía, pero **las capas no se distinguían** (encabezado, contenido y paneles en el
+mismo tono). [HU-F-320](../fase-3-rediseno-y-panel-docente/HU-F-320-capas-y-calidez-de-la-paleta.md)
+añade una escala de cuatro capas y el tono `madera`.
+
+| Separación entre capas | Antes | Después |
+|---|---|---|
+| `ink-2` (encabezado) / `ink` | 1.08 | 1.11 + borde `linea` |
+| `surface` (contenedores) / `ink` | 1.17 | 1.31 + borde `linea` |
+| `surface-2` (lo que flota) / `ink` | — | 1.46 |
+| `linea` / `ink` | 1.73 | 2.41 |
+
+| Combinación | Después |
+|---|---|
+| `paper` sobre `ink` · `surface` · `surface-2` | 16.89 · 12.94 · 10.57 |
+| `muted` sobre `ink-2` · `surface` · `surface-2` | 9.87 · 8.37 · 7.50 |
+| `madera` sobre `ink` · `surface` · `surface-2` | 9.20 · 7.05 · 6.32 |
+| `danger` sobre `ink-2` (`MensajeError`) · `surface` · `surface-2` | 6.02 · 5.10 · 4.57 |
+| `primary-claro` (puntos del acorde) sobre `surface` · `surface-2` | 5.42 · 4.85 |
+| `ink` sobre `primary-claro` (número de dedo) | 7.07 |
+| `linea-fuerte` sobre `ink` · `ink-2` · `surface` · `surface-2` | 5.22 · 4.71 · 3.99 · 3.58 |
+| `Cuerda` sin sonar frente a su pista · sonando frente a su pista | 3.35 · 4.53 |
+| *Placeholder* `muted/70` sobre `surface` | 4.86 |
+| `paper` sobre `primary` (botón) | 5.00 |
+
+`MensajeError` pasa de `danger/10` (4.44 sobre `surface` con la paleta nueva) a fondo `ink-2` sólido
+con borde `danger` (6.02). La pista de `Cuerda` frente al fondo sube de 1.73 a 2.41: sigue mitigada
+(M-8).
+
+Comprobado en Chrome sin interfaz con el CSS de producción (teselas de acordes, botones y
+`MensajeError`); las pantallas con datos del backend quedan para la verificación manual del PR.

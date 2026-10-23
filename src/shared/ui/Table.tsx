@@ -52,7 +52,7 @@ export function Table<T>({
   }
 
   return (
-    <div className={cn("overflow-auto", className)}>
+    <div className={cn("overflow-auto rounded-caja border border-linea", className)}>
       <table className="w-full border-collapse text-sm">
         <caption className="sr-only">{etiqueta}</caption>
         <thead>
@@ -67,8 +67,8 @@ export function Table<T>({
             <tr
               key={obtenerId(fila)}
               className={cn(
-                "relative h-11 border-b border-linea",
-                onFilaClick && "cursor-pointer hover:bg-ink-2",
+                "relative h-11 border-b border-linea last:border-b-0 even:bg-ink-2",
+                onFilaClick && "cursor-pointer hover:bg-surface",
               )}
             >
               {columnas.map((columna, indice) => (
@@ -114,7 +114,7 @@ function Cabecera<T>({ columna, orden, onOrdenar }: CabeceraProps<T>) {
       scope="col"
       aria-sort={activa ? ARIA_SORT[activa.direccion] : undefined}
       className={cn(
-        "sticky top-0 z-10 h-11 border-b border-linea bg-ink-2 px-3 font-medium text-muted",
+        "sticky top-0 z-10 h-11 border-b border-linea bg-surface px-3 font-medium text-muted",
         columna.numerica ? "text-right" : "text-left",
       )}
     >
