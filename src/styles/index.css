@@ -1,8 +1,16 @@
+@import "./tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
   font-family: "Inter", sans-serif;
-  background-color: #1b1030;
+  background-color: rgb(var(--color-ink));
+}
+
+/* Foco visible y accesible en todo control (contrato 03 §6): accent sobre ink ≥ 3:1. */
+:focus-visible {
+  outline: 2px solid rgb(var(--color-accent));
+  outline-offset: 2px;
 }

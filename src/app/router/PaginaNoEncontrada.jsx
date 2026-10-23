@@ -8,7 +8,7 @@ export function PaginaNoEncontrada({
     <main className="mx-auto max-w-2xl px-6 py-8">
       <h2 className="mb-1 font-display text-xl font-semibold text-paper">Página no encontrada</h2>
       <p className="mb-6 text-sm text-muted">{mensaje}</p>
-      <Link to={paths.inicio} className="text-sm text-primary hover:underline">
+      <Link to={paths.inicio} className="text-sm text-accent hover:underline">
         Volver al inicio
       </Link>
     </main>

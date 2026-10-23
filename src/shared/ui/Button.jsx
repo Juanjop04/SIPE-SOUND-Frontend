@@ -3,7 +3,7 @@ import { cn } from "@/shared/lib/cn.js";
 const variants = {
   primary: "bg-primary hover:bg-primary-hover text-paper",
   success: "bg-success hover:bg-success/90 text-ink",
-  ghost: "bg-transparent border border-border text-muted hover:border-primary",
+  ghost: "bg-transparent border border-linea-fuerte text-muted hover:border-primary",
 };
 
 export function Button({ variant = "primary", className, children, ...props }) {

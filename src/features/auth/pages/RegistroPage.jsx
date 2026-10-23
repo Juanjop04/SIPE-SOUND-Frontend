@@ -18,7 +18,7 @@ function nivelPassword(p) {
 }
 
 const ETIQUETAS_NIVEL = ["", "Débil", "Aceptable", "Fuerte"];
-const COLORES_NIVEL = ["", "#F2545B", "#F5B942", "#7C3AED"];
+const CLASES_NIVEL = ["", "bg-danger", "bg-success", "bg-primary"];
 
 export default function Registro() {
   const [nombre, setNombre] = useState("");
@@ -95,7 +95,7 @@ export default function Registro() {
             <button
               type="button"
               onClick={() => setVerPassword((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded text-muted hover:text-paper focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7C3AED]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded text-muted hover:text-paper"
               aria-label={verPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               aria-pressed={verPassword}
             >
@@ -109,10 +109,9 @@ export default function Registro() {
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
-                  className="h-1.5 flex-1 rounded-full transition-colors"
-                  style={{
-                    backgroundColor: nivel >= n ? COLORES_NIVEL[nivel] : "rgba(243,238,251,0.15)",
-                  }}
+                  className={`h-1.5 flex-1 rounded-full transition-colors ${
+                    nivel >= n ? CLASES_NIVEL[nivel] : "bg-paper/15"
+                  }`}
                 />
               ))}
             </div>
@@ -125,7 +124,7 @@ export default function Registro() {
         {error && (
           <div
             role="alert"
-            className="rounded-lg border border-[#F2545B]/40 bg-[#F2545B]/10 px-4 py-3 text-sm text-[#F2545B]"
+            className="rounded-lg border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger"
           >
             {error}
           </div>
@@ -134,7 +133,7 @@ export default function Registro() {
         {exito && (
           <div
             role="status"
-            className="rounded-lg border border-[#7C3AED]/50 bg-[#7C3AED]/10 px-4 py-3 text-sm text-success"
+            className="rounded-lg border border-primary/50 bg-primary/10 px-4 py-3 text-sm text-success"
           >
             Cuenta creada. Te llevamos a iniciar sesión...
           </div>
@@ -149,7 +148,7 @@ export default function Registro() {
         ¿Ya tienes cuenta?{" "}
         <Link
           to={paths.login}
-          className="font-medium text-[#E29DE0] hover:underline focus-visible:underline"
+          className="font-medium text-accent hover:underline focus-visible:underline"
         >
           Inicia sesión
         </Link>

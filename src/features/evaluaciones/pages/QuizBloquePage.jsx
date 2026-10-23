@@ -56,7 +56,7 @@ export default function QuizBloque() {
     <main className="mx-auto max-w-2xl px-6 py-8">
       <Link
         to={paths.inicio}
-        className="mb-5 flex w-fit items-center gap-1 text-sm text-muted hover:text-primary"
+        className="mb-5 flex w-fit items-center gap-1 text-sm text-muted hover:text-accent"
       >
         <ArrowLeft size={16} aria-hidden="true" />
         Volver a bloques
@@ -117,7 +117,7 @@ export default function QuizBloque() {
                   className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
                     respuestas[p.id] === idx
                       ? "border-primary bg-primary/20 text-paper"
-                      : "border-border text-muted hover:border-primary/50"
+                      : "border-linea-fuerte text-muted hover:border-primary"
                   }`}
                 >
                   {opcion}

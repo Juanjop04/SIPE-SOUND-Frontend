@@ -70,7 +70,7 @@ export default function Progreso() {
           {items.length === 0 && (
             <p className="text-sm text-muted">
               Aun no has completado nada.{" "}
-              <Link to={paths.inicio} className="text-primary hover:underline">
+              <Link to={paths.inicio} className="text-accent hover:underline">
                 Empieza aqui
               </Link>
               .

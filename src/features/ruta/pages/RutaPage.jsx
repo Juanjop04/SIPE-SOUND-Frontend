@@ -52,7 +52,7 @@ export default function Home() {
 
                   {hayUsuario ? (
                     <Link to={paths.quiz(bloque.id)}>
-                      <button className="rounded-lg border border-primary px-3 py-2 text-sm text-primary transition-colors hover:bg-primary/10">
+                      <button className="rounded-lg border border-primary px-3 py-2 text-sm text-primary-claro transition-colors hover:bg-primary/10">
                         {tienePuntaje
                           ? `Repetir quiz (mejor resultado: ${bloque.mejor_puntaje}%)`
                           : "Hacer el quiz del bloque"}

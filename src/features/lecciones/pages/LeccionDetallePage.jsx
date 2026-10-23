@@ -43,7 +43,7 @@ export default function LeccionDetalle() {
     <main className="mx-auto max-w-2xl px-6 py-8">
       <Link
         to={paths.inicio}
-        className="mb-5 flex w-fit items-center gap-1 text-sm text-muted hover:text-primary"
+        className="mb-5 flex w-fit items-center gap-1 text-sm text-muted hover:text-accent"
       >
         <ArrowLeft size={16} aria-hidden="true" />
         Volver a lecciones
