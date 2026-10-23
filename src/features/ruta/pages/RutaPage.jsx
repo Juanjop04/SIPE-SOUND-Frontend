@@ -1,20 +1,14 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Lock, CheckCircle2 } from "lucide-react";
 import Header from "@/app/layouts/components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
-import { obtenerSesion } from "@/shared/api/sesion.js";
+import { useSession } from "@/features/auth";
 import { useRuta } from "../hooks/useRuta.js";
 
 export default function Home() {
   const { data: bloques = [], isPending: cargando, error } = useRuta();
-  const [hayUsuario, setHayUsuario] = useState(false);
-
-  useEffect(() => {
-    obtenerSesion().then((sesion) => {
-      setHayUsuario(!!sesion);
-    });
-  }, []);
+  const { usuario } = useSession();
+  const hayUsuario = Boolean(usuario);
 
   return (
     <div className="min-h-screen bg-ink">

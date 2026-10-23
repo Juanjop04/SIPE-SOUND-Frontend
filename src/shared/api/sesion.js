@@ -13,6 +13,24 @@ let renovacionEnCurso = null;
 // en cada petición de un visitante hasta que inicie sesión.
 let sinSesionConfirmado = false;
 
+// Quien necesite enterarse de los cambios (AuthProvider) se suscribe aquí.
+const suscriptores = new Set();
+// El access token vive en memoria de cada pestaña: las demás se enteran por este canal.
+const CANAL_SESION = "sipe-sesion";
+const AVISO_INICIO = "inicio";
+const AVISO_CIERRE = "cierre";
+const canal = typeof BroadcastChannel === "undefined" ? null : new BroadcastChannel(CANAL_SESION);
+
+function notificar() {
+  suscriptores.forEach((escuchar) => escuchar(sesionActual));
+}
+
+/** Llama a `escuchar(sesion | null)` en cada inicio, renovación o cierre. Devuelve la baja. */
+export function suscribirSesion(escuchar) {
+  suscriptores.add(escuchar);
+  return () => suscriptores.delete(escuchar);
+}
+
 function auth(metodo, ruta, opciones = {}) {
   return enviar(metodo, `/auth${ruta}`, { body: {}, ...opciones, conCredenciales: true }).then(
     (cuerpo) => cuerpo.data,
@@ -34,6 +52,7 @@ function guardar(datos) {
     expiraEn: (datos.expira_en ?? 0) * 1000,
     usuario: datos.usuario,
   };
+  notificar();
   return sesionActual;
 }
 
@@ -44,6 +63,7 @@ function estaVigente(sesion) {
 function descartarTrasFallo(error) {
   sesionActual = null;
   if (error instanceof ApiError && error.statusCode === 401) sinSesionConfirmado = true;
+  notificar();
   return null;
 }
 
@@ -61,6 +81,7 @@ export function renovarSesion() {
 export function olvidarSesion() {
   sesionActual = null;
   sinSesionConfirmado = true;
+  notificar();
 }
 
 export async function registrarCuenta({ nombre, email, password }) {
@@ -68,13 +89,31 @@ export async function registrarCuenta({ nombre, email, password }) {
 }
 
 export async function iniciarSesion(email, password) {
-  return guardar(await auth("POST", "/sesion", { body: { email, password } }).catch(conDetalle));
+  const sesion = guardar(
+    await auth("POST", "/sesion", { body: { email, password } }).catch(conDetalle),
+  );
+  canal?.postMessage(AVISO_INICIO);
+  return sesion;
 }
 
 export async function cerrarSesion() {
   const token = sesionActual?.accessToken;
   olvidarSesion();
+  canal?.postMessage(AVISO_CIERRE);
   await auth("DELETE", "/sesion", { token });
+}
+
+// Otra pestaña inició sesión: la cookie es compartida, basta con renovar.
+// Otra pestaña la cerró: se olvida también aquí.
+if (canal) {
+  canal.onmessage = ({ data }) => {
+    if (data === AVISO_INICIO) {
+      sinSesionConfirmado = false;
+      renovarSesion();
+    } else if (data === AVISO_CIERRE) {
+      olvidarSesion();
+    }
+  };
 }
 
 /** Sesión vigente o null. Nunca lanza: sin conexión o sin cookie equivale a no tener sesión. */

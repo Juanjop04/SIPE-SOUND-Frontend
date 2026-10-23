@@ -1,22 +1,15 @@
-import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { obtenerSesion } from "@/shared/api/sesion.js";
-import { cerrarSesion } from "@/features/auth";
+import { useSession } from "@/features/auth";
 import logo from "@/assets/brand/logo.png";
 
 export default function Header() {
-  const [usuario, setUsuario] = useState(null);
+  const { usuario, cerrarSesion } = useSession();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    obtenerSesion().then((sesion) => {
-      setUsuario(sesion?.usuario ?? null);
-    });
-  }, []);
-
+  // AuthProvider limpia la caché al cerrar sesión; no hace falta recargar la página.
   async function handleLogout() {
     await cerrarSesion();
-    navigate(0);
+    navigate("/");
   }
 
   return (
@@ -42,9 +35,9 @@ export default function Header() {
         {usuario ? (
           <>
             <span className="text-muted">{usuario.email}</span>
-            <a href="#" onClick={handleLogout} className="text-primary hover:underline">
+            <button type="button" onClick={handleLogout} className="text-primary hover:underline">
               Cerrar sesion
-            </a>
+            </button>
           </>
         ) : (
           <Link to="/login" className="text-primary hover:underline">
