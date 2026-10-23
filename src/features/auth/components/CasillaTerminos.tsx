@@ -1,6 +1,7 @@
 import { forwardRef, useId, type InputHTMLAttributes } from "react";
 import { Link } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
+import { ENLACE_EN_TEXTO } from "@/shared/ui";
 
 interface CasillaTerminosProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   error?: string;
@@ -23,12 +24,7 @@ export const CasillaTerminos = forwardRef<HTMLInputElement, CasillaTerminosProps
           />
           <span>
             Acepto los{" "}
-            <Link
-              to={paths.terminos}
-              target="_blank"
-              rel="noreferrer"
-              className="text-accent underline-offset-2 hover:underline"
-            >
+            <Link to={paths.terminos} target="_blank" rel="noreferrer" className={ENLACE_EN_TEXTO}>
               términos y condiciones
             </Link>{" "}
             y el tratamiento de mis datos.

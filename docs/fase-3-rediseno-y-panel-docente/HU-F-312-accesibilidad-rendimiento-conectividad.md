@@ -5,7 +5,7 @@
 | Fase | 3 · Cierre |
 | Prioridad | Should |
 | Estimación | 5 puntos |
-| Depende de | HU-F-304 … HU-F-311 |
+| Depende de | HU-F-304 … HU-F-318 |
 | Rama | `hu/HU-F-312-auditoria` |
 
 ## Historia
@@ -15,11 +15,15 @@
 
 ## Alcance
 **Incluye**
-- **Lighthouse (móvil, throttling 4G lenta)** en Ruta, Lección, Evaluación, Docente/Cursos: Rendimiento ≥ 85, Accesibilidad ≥ 95, Buenas prácticas ≥ 95.
+- **Lighthouse (móvil, throttling 4G lenta)** en Inicio, Ruta, Lección, Evaluación, Docente/Cursos: Rendimiento ≥ 85, Accesibilidad ≥ 95, Buenas prácticas ≥ 95.
 - **Fuentes**: cargar solo los pesos usados; `font-display: swap`; evaluar *self-hosting* con `@fontsource` para eliminar la dependencia de Google Fonts (reporte de bytes antes/después).
 - **Bundle**: JS inicial ≤ 180 kB gzip; `lucide-react` importado por ícono; revisar con `npx vite-bundle-visualizer` (sin instalarlo como dependencia).
 - **Red**: TanStack Query con `networkMode: "offlineFirst"` para catálogo; aviso discreto "Sin conexión: mostrando lo último que descargaste" cuando `navigator.onLine` es falso.
-- **Accesibilidad**: recorrido completo con teclado y NVDA/Narrador; corregir hallazgos; `lang="es-CO"` en `index.html`.
+- **Accesibilidad**: el contraste y los criterios de WCAG 2.2 ya se auditaron en HU-F-314; aquí se repite el
+  recorrido con teclado y NVDA/Narrador sobre las pantallas del rediseño (HU-F-315…F-318) para detectar regresiones;
+  `lang="es-CO"` en `index.html`.
+- **Inicio**: LCP ≤ 2,5 s en 4G lenta; ilustraciones (HU-F-316) fuera del chunk inicial; sin desplazamientos de
+  diseño (CLS ≤ 0,1) mientras cargan las secciones.
 - **Movimiento**: toda animación detenida con `prefers-reduced-motion`.
 - Informe `docs/auditorias/AUD-2026-xx.md` con métricas antes/después.
 

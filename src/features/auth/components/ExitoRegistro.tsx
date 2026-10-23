@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
+import { ENLACE_EN_TEXTO } from "@/shared/ui";
 
 /** Tras registrarse. Mismo mensaje exista o no el correo (no se revela qué cuentas existen). */
 export function ExitoRegistro({ mensaje, email }: { mensaje: string; email: string }) {
@@ -10,7 +11,7 @@ export function ExitoRegistro({ mensaje, email }: { mensaje: string; email: stri
       <p className="font-mono text-sm text-muted">{email}</p>
       <p className="text-sm text-muted">
         Abre el enlace del mensaje y luego{" "}
-        <Link to={paths.login} className="font-medium text-accent hover:underline">
+        <Link to={paths.login} className={`font-medium ${ENLACE_EN_TEXTO}`}>
           inicia sesión
         </Link>
         .

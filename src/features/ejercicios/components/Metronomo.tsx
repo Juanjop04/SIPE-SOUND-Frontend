@@ -48,7 +48,7 @@ export function Metronomo({ bpm, onCambiarBpm, tiempos, compas }: MetronomoProps
           <span
             key={tiempo}
             className={cn(
-              "h-8 flex-1 rounded-md border border-linea transition-colors duration-rapida",
+              "h-8 flex-1 rounded-md border border-linea-fuerte transition-colors duration-rapida",
               pulso === tiempo &&
                 (tiempo === 0 ? "border-success bg-success" : "border-accent bg-accent"),
             )}
@@ -58,7 +58,7 @@ export function Metronomo({ bpm, onCambiarBpm, tiempos, compas }: MetronomoProps
 
       <Button variante={sonando ? "secundario" : "primario"} onClick={alternar} className="w-full">
         {sonando ? "Pausar" : "Iniciar"}
-        <span className="font-mono text-xs opacity-80">espacio</span>
+        <span className="font-mono text-xs">espacio</span>
       </Button>
       <p aria-live="polite" className="sr-only">
         {sonando ? `Metrónomo en marcha, ${bpm} BPM` : "Metrónomo en pausa"}

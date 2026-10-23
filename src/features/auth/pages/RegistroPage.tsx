@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
-import { Button, Field, Input, MensajeError } from "@/shared/ui";
+import { Button, ENLACE_EN_TEXTO, Field, Input, MensajeError } from "@/shared/ui";
 import { LIMITES } from "@/shared/validacion";
 import { CamposPassword } from "../components/CamposPassword";
 import { CasillaTerminos } from "../components/CasillaTerminos";
@@ -65,7 +65,7 @@ export default function RegistroPage() {
 
       <p className="mt-8 text-sm text-muted">
         ¿Ya tienes cuenta?{" "}
-        <Link to={paths.login} className="font-medium text-accent hover:underline">
+        <Link to={paths.login} className={`font-medium ${ENLACE_EN_TEXTO}`}>
           Inicia sesión
         </Link>
       </p>

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
 import { useEnfriamiento } from "@/shared/hooks/useEnfriamiento";
-import { Button, Field, Input, MensajeError } from "@/shared/ui";
+import { Button, ENLACE_EN_TEXTO, Field, Input, MensajeError } from "@/shared/ui";
 import { LIMITES, aplicarErroresServidor, esDemasiadasSolicitudes } from "@/shared/validacion";
 import { iniciarSesion } from "../api/authApi";
 import { CampoPassword } from "../components/CampoPassword";
@@ -87,7 +87,7 @@ export default function LoginPage() {
 
       <p className="mt-8 text-sm text-muted">
         ¿Aún no tienes cuenta?{" "}
-        <Link to={paths.registro} className="font-medium text-accent hover:underline">
+        <Link to={paths.registro} className={`font-medium ${ENLACE_EN_TEXTO}`}>
           Crea una gratis
         </Link>
       </p>

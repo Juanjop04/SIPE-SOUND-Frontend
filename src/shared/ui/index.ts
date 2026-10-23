@@ -5,6 +5,7 @@ export {
   type VarianteBoton,
   type TamanoBoton,
 } from "./Button";
+export { ENLACE_EN_TEXTO } from "./enlace";
 export { Input, type InputProps } from "./Input";
 export { Textarea, type TextareaProps } from "./Textarea";
 export { Select, type SelectProps } from "./Select";
