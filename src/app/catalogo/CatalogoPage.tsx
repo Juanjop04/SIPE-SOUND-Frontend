@@ -1,5 +1,6 @@
 import { SeccionBotones, SeccionCampos } from "./SeccionesControles";
 import { SeccionEstados, SeccionPaneles, SeccionTabla } from "./SeccionesDatos";
+import { SeccionIlustraciones } from "./SeccionIlustraciones";
 import { SeccionMusica } from "./SeccionesMusica";
 
 // Catálogo interno de componentes (HU-F-302). Solo existe con `npm run dev`:
@@ -19,6 +20,7 @@ export default function CatalogoPage() {
       <SeccionPaneles />
       <SeccionEstados />
       <SeccionMusica />
+      <SeccionIlustraciones />
     </main>
   );
 }
