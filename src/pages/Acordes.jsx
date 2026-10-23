@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header.jsx";
 import { Card } from "@/shared/ui/Card.jsx";
-import ChordDiagram from "../components/ChordDiagram.jsx";
+import ChordDiagram from "@/shared/music/ChordDiagram.jsx";
 import { obtenerAcordes } from "../lib/api.js";
 
 const DIFICULTAD_COLOR = {
