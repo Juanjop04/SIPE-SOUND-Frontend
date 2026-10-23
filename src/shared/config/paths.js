@@ -5,7 +5,7 @@ export const paths = Object.freeze({
   inicio: "/",
   login: "/login",
   registro: "/registro",
-  recuperar: "/recuperar",
+  terminos: "/terminos",
   acordes: "/acordes",
   ejercicios: "/ejercicios",
   progreso: "/progreso",
@@ -18,6 +18,10 @@ export const paths = Object.freeze({
     cursos: "/docente/cursos",
     contenido: "/docente/contenido",
     evaluaciones: "/docente/evaluaciones",
+  }),
+  // Administración (solo rol admin, HU-F-313).
+  admin: Object.freeze({
+    docentes: "/admin/docentes",
   }),
 });
 

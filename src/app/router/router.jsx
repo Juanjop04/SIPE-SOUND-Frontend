@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
-import { cargarLoginPage, cargarRegistroPage, ROLES_ATRIL } from "@/features/auth";
+import { cargarDocentesPage } from "@/features/admin";
+import { cargarLoginPage, cargarRegistroPage, ROLES_ADMIN, ROLES_ATRIL } from "@/features/auth";
 import {
   cargarContenidoPage,
   cargarCursosPage,
@@ -10,6 +11,7 @@ import {
 import { cargarEjerciciosPage } from "@/features/ejercicios";
 import { cargarQuizBloquePage } from "@/features/evaluaciones";
 import { cargarLeccionDetallePage } from "@/features/lecciones";
+import { cargarTerminosPage } from "@/features/legal";
 import { cargarProgresoPage } from "@/features/progreso";
 import { cargarRutaPage } from "@/features/ruta";
 import { env } from "@/shared/config/env.js";
@@ -45,6 +47,7 @@ export const router = createBrowserRouter([
           { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
           { path: paths.acordes, lazy: pagina(cargarAcordesPage) },
           { path: paths.ejercicios, lazy: pagina(cargarEjerciciosPage) },
+          { path: paths.terminos, lazy: pagina(cargarTerminosPage) },
           {
             element: <RequireAuth />,
             children: [
@@ -74,6 +77,16 @@ export const router = createBrowserRouter([
               },
             ],
           },
+          {
+            // Administración: solo rol admin, dentro del mismo atril.
+            element: <RequireRole roles={ROLES_ADMIN} />,
+            children: [
+              {
+                lazy: cargarDocenteLayout,
+                children: [{ path: paths.admin.docentes, lazy: pagina(cargarDocentesPage) }],
+              },
+            ],
+          },
         ],
       },
       {
@@ -85,16 +98,16 @@ export const router = createBrowserRouter([
             handle: {
               titulo: "Aprende guitarra a tu ritmo",
               descripcion:
-                "Practica acordes, completa ejercicios y SUPERATE para desbloquear el siguiente nivel.",
+                "Practica acordes, completa ejercicios y aprueba cada bloque para desbloquear el siguiente.",
             },
           },
           {
             path: paths.registro,
             lazy: pagina(cargarRegistroPage),
             handle: {
-              titulo: "Tocar guitarra esta al alcance de tu mano",
+              titulo: "Tocar guitarra está al alcance de tu mano",
               descripcion:
-                "Crea tu cuenta gratis y preparate para los retos de cada leccion que te haran un mejor aprendiz.",
+                "Crea tu cuenta gratis: cada lección trae acordes, ejercicios con metrónomo y una evaluación al final del bloque.",
             },
           },
         ],

@@ -7,6 +7,9 @@ export const ROL = Object.freeze({
   admin: "admin",
 });
 
+/** Quién administra (/admin/*). */
+export const ROLES_ADMIN = Object.freeze([ROL.admin]);
+
 /** Quién puede entrar al atril (/docente/*). */
 export const ROLES_ATRIL = Object.freeze([ROL.docente, ROL.admin]);
 

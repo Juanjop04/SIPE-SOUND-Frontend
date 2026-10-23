@@ -1,7 +1,7 @@
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { obtenerSesion, suscribirSesion } from "@/shared/api/sesion.js";
-import { cerrarSesion as cerrarSesionApi } from "../api/authService.js";
+import { cerrarSesion as cerrarSesionApi } from "../api/authApi";
 import { perfilApi, perfilKeys, TIEMPO_PERFIL_MS } from "../api/perfilApi.js";
 import { sincronizarCache } from "../utils/sincronizarCache.js";
 
