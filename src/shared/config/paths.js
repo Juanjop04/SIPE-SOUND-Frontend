@@ -11,6 +11,7 @@ export const paths = Object.freeze({
   progreso: "/progreso",
   leccion: (id = ":id") => `/leccion/${id}`,
   quiz: (bloqueId = ":bloqueId") => `/quiz/${bloqueId}`,
+  catalogo: "/_componentes",
 });
 
 /** /login?volver=<ruta actual>, para regresar tras iniciar sesión. */

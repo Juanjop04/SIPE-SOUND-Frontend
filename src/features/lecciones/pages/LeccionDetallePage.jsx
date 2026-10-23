@@ -1,13 +1,12 @@
 import { useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Check } from "lucide-react";
-import { Card } from "@/shared/ui/Card.jsx";
-import { Button } from "@/shared/ui/Button.jsx";
 import { useSession } from "@/features/auth";
 import { useCompletarLeccion } from "@/features/progreso";
 import { useAcordes } from "@/features/acordes";
 import { useLeccion } from "../hooks/useLeccion.js";
 import { paths } from "@/shared/config/paths.js";
+import { Button } from "@/shared/ui";
 
 export default function LeccionDetalle() {
   // useParams() lee el ":id" de la URL. Si visitas /leccion/2, aquí id === "2"
@@ -74,19 +73,17 @@ export default function LeccionDetalle() {
 
           <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {acordesLeccion.map((acorde) => (
-              <Card key={acorde.id} className="border-l-0 text-center">
+              <div key={acorde.id} className="rounded-caja bg-surface p-5 text-center">
                 <p className="font-display text-lg font-semibold text-paper">{acorde.nombre}</p>
                 <p className="mt-1 font-mono text-xs text-muted">{acorde.tipo}</p>
                 <p className="mt-1 text-xs text-accent">{acorde.dificultad}</p>
-              </Card>
+              </div>
             ))}
           </div>
 
           {hayUsuario ? (
             <div className="flex items-center gap-3">
-              <Button variant="success" onClick={marcarCompletada}>
-                Marcar como completada
-              </Button>
+              <Button onClick={marcarCompletada}>Marcar como completada</Button>
               {guardado === "ok" && (
                 <span className="flex items-center gap-1 text-sm text-success">
                   <Check size={16} aria-hidden="true" /> guardado

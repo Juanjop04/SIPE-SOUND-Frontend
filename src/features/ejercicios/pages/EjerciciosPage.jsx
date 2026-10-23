@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
-import { Card } from "@/shared/ui/Card.jsx";
-import { Button } from "@/shared/ui/Button.jsx";
 import { useSession } from "@/features/auth";
 import { useCompletarEjercicio } from "@/features/progreso";
 import { useEjercicios } from "../hooks/useEjercicios.js";
+import { Button } from "@/shared/ui";
 
 export default function Ejercicios() {
   const { data: ejercicios = [], isPending: cargando, error } = useEjercicios();
@@ -32,7 +31,7 @@ export default function Ejercicios() {
 
       <div className="flex flex-col gap-4">
         {ejercicios.map((ej) => (
-          <Card key={ej.id}>
+          <div key={ej.id} className="rounded-caja bg-surface p-5">
             <h3 className="mb-1 text-base font-medium text-paper">{ej.nombre}</h3>
             {ej.descripcion && <p className="mb-2 text-sm text-muted">{ej.descripcion}</p>}
 
@@ -66,7 +65,7 @@ export default function Ejercicios() {
 
             {hayUsuario ? (
               <div className="flex items-center gap-3">
-                <Button variant="success" onClick={() => marcarCompletado(ej.id)}>
+                <Button variante="secundario" onClick={() => marcarCompletado(ej.id)}>
                   Marcar como completado
                 </Button>
                 {guardados[ej.id] === "ok" && (
@@ -81,7 +80,7 @@ export default function Ejercicios() {
             ) : (
               <p className="text-sm italic text-muted">Inicia sesion para guardar tu progreso</p>
             )}
-          </Card>
+          </div>
         ))}
       </div>
 

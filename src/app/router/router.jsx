@@ -6,6 +6,7 @@ import { cargarQuizBloquePage } from "@/features/evaluaciones";
 import { cargarLeccionDetallePage } from "@/features/lecciones";
 import { cargarProgresoPage } from "@/features/progreso";
 import { cargarRutaPage } from "@/features/ruta";
+import { env } from "@/shared/config/env.js";
 import { paths } from "@/shared/config/paths.js";
 import AuthLayout from "@/app/layouts/AuthLayout.jsx";
 import { PublicLayout } from "@/app/layouts/PublicLayout.jsx";
@@ -15,6 +16,11 @@ import { RequireAuth } from "./RequireAuth.jsx";
 
 // Cada página se descarga al visitarla (un chunk por página, conectividad baja).
 const pagina = (cargar) => async () => ({ Component: (await cargar()).default });
+
+// Catálogo de componentes: solo en `npm run dev`; en producción /_componentes da 404.
+const rutasDeDesarrollo = env.esDesarrollo
+  ? [{ path: paths.catalogo, lazy: pagina(() => import("@/app/catalogo/CatalogoPage")) }]
+  : [];
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +40,7 @@ export const router = createBrowserRouter([
               { path: paths.quiz(), lazy: pagina(cargarQuizBloquePage) },
             ],
           },
+          ...rutasDeDesarrollo,
           { path: "*", element: <PaginaNoEncontrada /> },
         ],
       },

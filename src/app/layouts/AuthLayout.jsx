@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Outlet, useMatches } from "react-router-dom";
-import { Fretboard } from "@/shared/music/Fretboard.jsx";
+import { Fretboard } from "@/shared/music";
 import logo from "@/assets/brand/logo.png";
 
 // Layout de /login y /registro. El título y la descripción del panel vienen del `handle`

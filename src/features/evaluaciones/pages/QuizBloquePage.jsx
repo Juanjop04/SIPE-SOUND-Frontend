@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
-import { Card } from "@/shared/ui/Card.jsx";
-import { Button } from "@/shared/ui/Button.jsx";
 import { useRuta } from "@/features/ruta";
 import { useEvaluacion, usePresentarIntento } from "../hooks/useEvaluacion.js";
 import { paths } from "@/shared/config/paths.js";
+import { Button } from "@/shared/ui";
 
 const PORCENTAJE_APROBACION_POR_DEFECTO = 80;
 const MENSAJE_SIN_QUIZ = "Este bloque todavía no tiene quiz.";
@@ -72,7 +71,7 @@ export default function QuizBloque() {
 
       {/* Resultado final */}
       {resultado && (
-        <Card className="mb-6 border-l-0 text-center">
+        <div className="mb-6 rounded-caja bg-surface p-5 text-center">
           {resultado.aprobado ? (
             <CheckCircle2 size={40} className="mx-auto mb-2 text-success" aria-hidden="true" />
           ) : (
@@ -87,25 +86,25 @@ export default function QuizBloque() {
               : "No alcanzaste el minimo, intenta de nuevo"}
           </p>
           {!resultado.aprobado && (
-            <Button variant="primary" className="mt-4" onClick={reintentar}>
+            <Button className="mt-4" onClick={reintentar}>
               Reintentar
             </Button>
           )}
           {resultado.aprobado && (
             <Link to={paths.inicio}>
-              <Button variant="success" className="mt-4">
+              <Button variante="secundario" className="mt-4">
                 Volver a bloques
               </Button>
             </Link>
           )}
-        </Card>
+        </div>
       )}
 
       {/* Preguntas */}
       {!resultado &&
         !cargando &&
         preguntas.map((p, i) => (
-          <Card key={p.id} className="mb-4 border-l-0">
+          <div key={p.id} className="mb-4 rounded-caja bg-surface p-5">
             <p className="mb-3 text-sm text-paper">
               {i + 1}. {p.enunciado}
             </p>
@@ -124,16 +123,11 @@ export default function QuizBloque() {
                 </button>
               ))}
             </div>
-          </Card>
+          </div>
         ))}
 
       {!resultado && !cargando && preguntas.length > 0 && (
-        <Button
-          variant="primary"
-          disabled={!todasRespondidas || enviando}
-          onClick={enviarQuiz}
-          className="w-full"
-        >
+        <Button disabled={!todasRespondidas || enviando} onClick={enviarQuiz} className="w-full">
           {enviando ? "Calificando..." : "Enviar respuestas"}
         </Button>
       )}

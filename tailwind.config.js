@@ -38,6 +38,11 @@ export default {
         xl: "14px",
         caja: "10px",
       },
+      // Movimiento (contrato 05 §2.4): 120 ms en hover, 200 ms en paneles.
+      transitionDuration: {
+        rapida: "120ms",
+        panel: "200ms",
+      },
       boxShadow: {
         // La única sombra del sistema: diálogos y menús flotantes.
         dialogo: "0 12px 32px rgb(var(--color-ink) / 0.6)",

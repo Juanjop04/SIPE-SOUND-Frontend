@@ -4,9 +4,8 @@ import { iniciarSesion } from "../api/authService.js";
 import { IconoOjo } from "../components/IconoOjo.jsx";
 import { traducirErrorLogin } from "../utils/traducirErrorAuth.js";
 import { destinoSeguro } from "../utils/destinoSeguro.js";
-import { Input } from "@/shared/ui/Input.jsx";
-import { Button } from "@/shared/ui/Button.jsx";
 import { paths } from "@/shared/config/paths.js";
+import { Button, Input } from "@/shared/ui";
 
 export default function Login() {
   const [email, setEmail] = useState("");

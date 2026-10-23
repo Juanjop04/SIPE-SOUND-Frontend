@@ -1,5 +1,4 @@
-import { Card } from "@/shared/ui/Card.jsx";
-import ChordDiagram from "@/shared/music/ChordDiagram.jsx";
+import { ChordDiagram } from "@/shared/music";
 import { useAcordes } from "../hooks/useAcordes.js";
 
 const DIFICULTAD_COLOR = {
@@ -21,7 +20,7 @@ export default function Acordes() {
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {acordes.map((acorde) => (
-          <Card key={acorde.id} className="border-l-0 text-center">
+          <div key={acorde.id} className="rounded-caja bg-surface p-5 text-center">
             <p className="mb-2 font-display text-xl font-semibold text-paper">{acorde.nombre}</p>
 
             {acorde.diagram ? (
@@ -34,7 +33,7 @@ export default function Acordes() {
             <p className={`mt-1 text-xs ${DIFICULTAD_COLOR[acorde.dificultad] ?? "text-muted"}`}>
               {acorde.dificultad}
             </p>
-          </Card>
+          </div>
         ))}
       </div>
 

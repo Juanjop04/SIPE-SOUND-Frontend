@@ -21,4 +21,6 @@ function leerApiUrl() {
 
 export const env = Object.freeze({
   apiUrl: leerApiUrl(),
+  // Solo en `npm run dev`: habilita el catálogo /_componentes (HU-F-302).
+  esDesarrollo: import.meta.env.DEV === true,
 });
