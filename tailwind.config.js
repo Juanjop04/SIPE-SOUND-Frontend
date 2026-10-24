@@ -19,6 +19,15 @@ export default {
         accent: token("accent"),
         success: token("success"),
         suena: token("suena"),
+        "sobre-primary": token("sobre-primary"),
+        relleno: { inicio: token("relleno-inicio"), fin: token("relleno-fin") },
+        logro: { inicio: token("logro-inicio"), fin: token("logro-fin") },
+        barra: {
+          DEFAULT: token("barra"),
+          texto: token("barra-texto"),
+          "texto-2": token("barra-texto-2"),
+          hover: token("barra-hover"),
+        },
         danger: token("danger"),
         muted: token("muted"),
         paper: token("paper"),
@@ -57,7 +66,7 @@ export default {
       },
       boxShadow: {
         // La única sombra del sistema: diálogos y menús flotantes.
-        dialogo: "0 12px 32px rgb(var(--color-ink) / 0.6)",
+        dialogo: "0 12px 32px rgb(var(--color-sombra) / 0.35)",
       },
     },
   },

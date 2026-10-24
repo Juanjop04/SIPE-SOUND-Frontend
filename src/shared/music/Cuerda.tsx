@@ -22,11 +22,11 @@ const GROSORES: Record<GrosorCuerda, string> = {
   5: "h-2",
 };
 
-// Degradado dentro de la paleta (contrato 05 §6, enmienda HU-F-322): ambos extremos ≥ 3:1
-// frente a la pista ink-2 (primary 3.59 · primary-claro 6.82 · success/60 4.09).
+// Degradado dentro de la paleta (contrato 05 §6, enmienda HU-F-322): cada tema define sus
+// extremos (tokens relleno-* y logro-*), todos ≥ 3:1 frente a la pista ink-2.
 const RELLENO = {
-  avance: "bg-gradient-to-r from-primary to-primary-claro",
-  completo: "bg-gradient-to-r from-success/60 to-success",
+  avance: "bg-gradient-to-r from-relleno-inicio to-relleno-fin",
+  completo: "bg-gradient-to-r from-logro-inicio to-logro-fin",
 };
 
 /** Barra de progreso como una cuerda de guitarra (contrato 05 §1 y §4). */

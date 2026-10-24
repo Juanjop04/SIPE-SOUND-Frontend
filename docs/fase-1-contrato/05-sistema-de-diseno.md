@@ -51,6 +51,12 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 | `--color-muted` | `muted` | `#AEB6D8` | Texto secundario. |
 | `--color-paper` | `paper` | `#F5F6FF` | Texto principal. |
 
+> **Tema claro** *(enmienda HU-F-323)*: los mismos tokens tienen valores claros en
+> `:root[data-tema="claro"]` (paleta institucional con ajustes AA; tabla de contraste en la HU).
+> Ningún componente asume un fondo oscuro: el texto sobre un botón primario es `sobre-primary`,
+> el menú lateral usa `barra`, `barra-texto`, `barra-texto-2` y `barra-hover`, y el degradado de
+> las barras usa `relleno-*` y `logro-*`, definidos por cada tema.
+
 > La clase `border` de la configuración original se renombró a `linea` en
 > HU-F-301 porque `border` choca con la utilidad homónima de Tailwind
 > (`border-border`).

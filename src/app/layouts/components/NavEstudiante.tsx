@@ -28,7 +28,7 @@ function useDestinos(): Destino[] {
   return DESTINOS.filter((d) => !d.conSesion || usuario);
 }
 
-/** Escritorio (≥ 1024 px): destinos con ícono; el activo con fondo primary (texto paper 4.64:1). */
+/** Escritorio (≥ 1024 px): destinos con ícono sobre la barra morada; el activo con fondo primary. */
 export function BarraLateral() {
   const destinos = useDestinos();
   return (
@@ -43,8 +43,8 @@ export function BarraLateral() {
                 cn(
                   "flex h-11 items-center gap-3 rounded-md px-3 text-sm transition-colors duration-rapida",
                   isActive
-                    ? "bg-primary text-paper"
-                    : "text-muted hover:bg-surface-2 hover:text-paper",
+                    ? "bg-primary text-sobre-primary"
+                    : "text-barra-texto-2 hover:bg-barra-hover hover:text-barra-texto",
                 )
               }
             >

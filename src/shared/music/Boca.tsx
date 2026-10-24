@@ -40,16 +40,16 @@ export function Boca({ valor, etiqueta, tamano = "md", className }: BocaProps) {
               offset="0%"
               className={
                 completo
-                  ? "[stop-color:rgb(var(--color-success)/0.6)]"
-                  : "[stop-color:rgb(var(--color-primary))]"
+                  ? "[stop-color:rgb(var(--color-logro-inicio))]"
+                  : "[stop-color:rgb(var(--color-relleno-inicio))]"
               }
             />
             <stop
               offset="100%"
               className={
                 completo
-                  ? "[stop-color:rgb(var(--color-success))]"
-                  : "[stop-color:rgb(var(--color-primary-claro))]"
+                  ? "[stop-color:rgb(var(--color-logro-fin))]"
+                  : "[stop-color:rgb(var(--color-relleno-fin))]"
               }
             />
           </linearGradient>

@@ -10,6 +10,17 @@
       href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <!-- Tema antes de pintar (HU-F-323): preferencia guardada o la del sistema; sin destello. -->
+    <script>
+      try {
+        var p = localStorage.getItem("sipe-tema");
+        var claro =
+          p === "claro" || (p !== "oscuro" && matchMedia("(prefers-color-scheme: light)").matches);
+        document.documentElement.dataset.tema = claro ? "claro" : "oscuro";
+      } catch (e) {
+        document.documentElement.dataset.tema = "oscuro";
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
