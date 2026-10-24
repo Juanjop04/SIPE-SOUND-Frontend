@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
+import { cargarMisCursosPage } from "@/features/cursos";
 import { cargarDocentesPage } from "@/features/admin";
 import { cargarLoginPage, cargarRegistroPage, ROLES_ADMIN, ROLES_ATRIL } from "@/features/auth";
 import {
@@ -61,6 +62,7 @@ export const router = createBrowserRouter([
             element: <RequireAuth />,
             children: [
               { path: paths.progreso, lazy: pagina(cargarProgresoPage) },
+              { path: paths.cursos, lazy: pagina(cargarMisCursosPage) },
               { path: paths.evaluacion(), lazy: pagina(cargarEvaluacionPage) },
               { path: paths.quiz(), lazy: pagina(cargarRedireccionQuizPage) },
             ],

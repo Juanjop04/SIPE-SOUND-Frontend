@@ -13,6 +13,8 @@ export const paths = Object.freeze({
   /** @param {string | number} [id] */
   ejercicio: (id = ":id") => `/ejercicios/${id}`,
   progreso: "/progreso",
+  /** Mis cursos: unirme con código y leer comentarios (HU-F-311). */
+  cursos: "/cursos",
   /** @param {string | number} [id] */
   leccion: (id = ":id") => `/leccion/${id}`,
   /** @param {string | number} [id] */

@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { SelectorRuta, useRutaDeCurso } from "@/features/cursos";
 import { useSession } from "@/features/auth";
 import { ESCRITORIO, useMediaQuery } from "@/shared/hooks/useMediaQuery";
 import { EstadoVacio, MensajeError } from "@/shared/ui";
@@ -55,7 +56,13 @@ function Ruta({ bloques }: { bloques: BloqueRuta[] }) {
 }
 
 export default function RutaPage() {
-  const { data: bloques, isPending, error, refetch } = useRuta();
+  const { cursoId, cursos, elegir } = useRutaDeCurso();
+  const {
+    data: bloques,
+    isPending,
+    error,
+    refetch,
+  } = useRuta(cursoId ? { curso_id: cursoId } : undefined);
 
   function contenido() {
     if (isPending) return <EsqueletoRuta />;
@@ -74,6 +81,9 @@ export default function RutaPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
       <h1 className="sr-only">Ruta de aprendizaje</h1>
+      <div className="mb-6 flex justify-end">
+        <SelectorRuta cursoId={cursoId} cursos={cursos} onElegir={elegir} />
+      </div>
       {contenido()}
     </main>
   );
