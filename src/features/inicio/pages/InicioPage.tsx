@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { usePerfil } from "@/features/auth";
+import { SelectorRuta, TuDocenteTeEscribio, useRutaDeCurso } from "@/features/cursos";
 import {
   avanceGlobal,
   cifrasDeProgreso,
@@ -22,7 +23,8 @@ import { fraseDeInicio, primerNombre, siguientePaso } from "../utils/siguientePa
 /** Inicio del estudiante (HU-F-315): solo datos reales; cada sección carga y falla por separado. */
 export default function InicioPage() {
   const { perfil } = usePerfil();
-  const ruta = useRuta();
+  const { cursoId, cursos, elegir } = useRutaDeCurso();
+  const ruta = useRuta(cursoId ? { curso_id: cursoId } : undefined);
   const resumen = useResumenProgreso();
   const actividad = useActividad();
   const [parametros, setParametros] = useSearchParams();
@@ -43,6 +45,9 @@ export default function InicioPage() {
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6">
+      <div className="flex justify-end empty:hidden">
+        <SelectorRuta cursoId={cursoId} cursos={cursos} onElegir={elegir} />
+      </div>
       <EncabezadoInicio
         nombre={primerNombre(perfil?.nombre)}
         nivel={perfil?.nivel ?? null}
@@ -61,6 +66,8 @@ export default function InicioPage() {
           actividad={actividad.data ?? null}
         />
       )}
+
+      <TuDocenteTeEscribio />
 
       <div className="grid gap-6 lg:grid-cols-12">
         <PanelInicio titulo="Continuar aprendiendo" className="lg:col-span-7" {...estadoRuta}>

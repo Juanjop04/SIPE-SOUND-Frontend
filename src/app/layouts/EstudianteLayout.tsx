@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { useSession } from "@/features/auth";
+import { UnionPendiente } from "@/features/cursos";
 import { paths } from "@/shared/config/paths.js";
 import { Marca } from "./components/Marca";
 import { MenuCuenta } from "./components/MenuCuenta";
@@ -48,6 +49,7 @@ export function EstudianteLayout({ children }: { children?: ReactNode }) {
         {children ?? <Outlet />}
       </div>
       <BarraInferior />
+      <UnionPendiente />
     </div>
   );
 }

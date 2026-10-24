@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
-import { Outlet, useMatches } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Outlet, useMatches, useSearchParams } from "react-router-dom";
+import { guardarCodigoPendiente } from "@/features/cursos";
 import { Fretboard } from "@/shared/music";
 import { SelectorTema } from "@/shared/ui";
 import logo from "@/assets/brand/logo.png";
@@ -11,6 +12,11 @@ export default function AuthLayout() {
   const [tocando, setTocando] = useState(false);
   const { titulo, descripcion } = useMatches().findLast((m) => m.handle?.titulo)?.handle ?? {};
   const contexto = useMemo(() => ({ setTocando }), []);
+  const [parametros] = useSearchParams();
+  const codigo = parametros.get("codigo");
+
+  // Enlace del docente (/registro?codigo=…, HU-F-311): se guarda hasta completar el acceso.
+  useEffect(() => guardarCodigoPendiente(codigo), [codigo]);
 
   return (
     <div className="relative min-h-screen bg-ink text-paper lg:grid lg:grid-cols-2">

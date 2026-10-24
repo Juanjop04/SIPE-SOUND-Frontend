@@ -59,6 +59,11 @@ export function MenuCuenta() {
           id={idMenu}
           className="absolute right-0 top-full z-50 mt-2 w-56 rounded-caja border border-linea bg-surface-2 p-1 shadow-dialogo"
         >
+          {!puedeUsarAtril(rol) && (
+            <Link to={paths.cursos} className={OPCION} onClick={() => setAbierto(false)}>
+              Mis cursos
+            </Link>
+          )}
           {puedeUsarAtril(rol) && (
             <Link to={paths.docente.inicio} className={OPCION} onClick={() => setAbierto(false)}>
               Volver al atril
