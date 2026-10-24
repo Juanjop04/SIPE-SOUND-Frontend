@@ -3,6 +3,8 @@
 // features no puede importar de app (app → features → shared).
 export const paths = Object.freeze({
   inicio: "/",
+  /** Ruta de aprendizaje (HU-F-315: con sesión de estudiante, "/" es el inicio). */
+  ruta: "/ruta",
   login: "/login",
   registro: "/registro",
   terminos: "/terminos",

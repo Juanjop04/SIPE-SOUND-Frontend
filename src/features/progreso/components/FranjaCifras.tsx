@@ -25,7 +25,7 @@ export function FranjaCifras({ cifras, avance }: { cifras: Cifra[]; avance: numb
           <span>Tu cuerda</span>
           <span>{avance} %</span>
         </p>
-        <Cuerda valor={avance} grosor={3} sonando={avance === 100} etiqueta="Avance global" />
+        <Cuerda valor={avance} grosor={5} sonando={avance === 100} etiqueta="Avance global" />
       </div>
     </section>
   );

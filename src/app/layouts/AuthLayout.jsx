@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Outlet, useMatches } from "react-router-dom";
 import { Fretboard } from "@/shared/music";
+import { SelectorTema } from "@/shared/ui";
 import logo from "@/assets/brand/logo.png";
 
 // Layout de /login y /registro. El título y la descripción del panel vienen del `handle`
@@ -12,7 +13,8 @@ export default function AuthLayout() {
   const contexto = useMemo(() => ({ setTocando }), []);
 
   return (
-    <div className="min-h-screen bg-ink text-paper lg:grid lg:grid-cols-2">
+    <div className="relative min-h-screen bg-ink text-paper lg:grid lg:grid-cols-2">
+      <SelectorTema className="absolute right-4 top-4 z-10" />
       {/* Panel de marca (solo escritorio) */}
       <aside className="relative hidden flex-col justify-between overflow-hidden bg-surface p-12 lg:flex">
         <div className="relative flex items-center gap-3">

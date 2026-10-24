@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { ROL, useSession } from "@/features/auth";
 import { cn } from "@/shared/lib/cn.js";
 import { paths } from "@/shared/config/paths.js";
-import { Button } from "@/shared/ui";
+import { Button, SelectorTema } from "@/shared/ui";
 
 const SECCIONES = [
   { to: paths.docente.inicio, etiqueta: "Resumen", exacto: true },
@@ -11,16 +11,41 @@ const SECCIONES = [
   { to: paths.docente.evaluaciones, etiqueta: "Evaluaciones" },
 ];
 
-// Selección actual: texto paper + marca accent de 2 px a la izquierda (sin fondo relleno).
-function claseEnlace({ isActive }: { isActive: boolean }) {
-  return cn(
-    "block border-l-2 px-3 py-2 text-sm transition-colors duration-rapida",
-    isActive ? "border-accent text-paper" : "border-transparent text-muted hover:text-paper",
-  );
+// Colores sobre la barra morada (escritorio) o sobre una superficie (Drawer en móvil).
+const TONOS = {
+  barra: {
+    activo: "border-barra-texto text-barra-texto",
+    inactivo: "border-transparent text-barra-texto-2 hover:text-barra-texto",
+    secundario: "text-barra-texto-2",
+    boton: "text-barra-texto-2 hover:bg-barra-hover hover:text-barra-texto",
+  },
+  superficie: {
+    activo: "border-accent text-paper",
+    inactivo: "border-transparent text-muted hover:text-paper",
+    secundario: "text-muted",
+    boton: "",
+  },
+};
+type Tono = (typeof TONOS)["barra"];
+
+// Selección actual: texto + marca de 2 px a la izquierda (sin fondo relleno).
+function claseEnlace(tono: Tono) {
+  return ({ isActive }: { isActive: boolean }) =>
+    cn(
+      "block border-l-2 px-3 py-2 text-sm transition-colors duration-rapida",
+      isActive ? tono.activo : tono.inactivo,
+    );
 }
 
 /** Contenido de la barra lateral del atril; en móvil se muestra dentro de un Drawer. */
-export function PanelAtril({ alNavegar }: { alNavegar?: () => void }) {
+export function PanelAtril({
+  alNavegar,
+  enBarra = false,
+}: {
+  alNavegar?: () => void;
+  enBarra?: boolean;
+}) {
+  const tono = enBarra ? TONOS.barra : TONOS.superficie;
   const { usuario, perfil, rol, cerrarSesion } = useSession();
   const secciones =
     rol === ROL.admin
@@ -40,7 +65,7 @@ export function PanelAtril({ alNavegar }: { alNavegar?: () => void }) {
         <ul className="flex flex-col gap-1">
           {secciones.map(({ to, etiqueta, exacto }) => (
             <li key={to}>
-              <NavLink to={to} end={exacto} className={claseEnlace} onClick={alNavegar}>
+              <NavLink to={to} end={exacto} className={claseEnlace(tono)} onClick={alNavegar}>
                 {etiqueta}
               </NavLink>
             </li>
@@ -51,15 +76,21 @@ export function PanelAtril({ alNavegar }: { alNavegar?: () => void }) {
         <NavLink
           to={paths.inicio}
           onClick={alNavegar}
-          className="px-3 text-sm text-accent hover:underline"
+          className={cn(
+            "px-3 text-sm hover:underline",
+            enBarra ? "text-barra-texto" : "text-accent",
+          )}
         >
           Ver como estudiante
         </NavLink>
-        <p className="truncate px-3 text-sm text-muted">{perfil?.nombre ?? usuario?.email}</p>
+        <SelectorTema enBarra={enBarra} className="px-2" />
+        <p className={cn("truncate px-3 text-sm", tono.secundario)}>
+          {perfil?.nombre ?? usuario?.email}
+        </p>
         <Button
           variante="fantasma"
           tamano="sm"
-          className="justify-start"
+          className={cn("justify-start", tono.boton)}
           onClick={handleCerrarSesion}
         >
           Cerrar sesión

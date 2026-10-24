@@ -16,10 +16,10 @@ export function DocenteLayout() {
 
   return (
     <div className="min-h-screen bg-ink lg:grid lg:grid-cols-[240px_1fr]">
-      <aside className="hidden border-r border-linea bg-ink-2 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:gap-8 lg:p-4">
-        <Marca destino={paths.docente.inicio} />
+      <aside className="hidden border-r border-linea bg-barra lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:gap-8 lg:p-4">
+        <Marca destino={paths.docente.inicio} enBarra />
         <div className="flex-1">
-          <PanelAtril />
+          <PanelAtril enBarra />
         </div>
       </aside>
 

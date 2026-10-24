@@ -18,10 +18,7 @@ export function ActividadReciente({ actividad }: { actividad: Actividad[] }) {
             className="grid grid-cols-[7rem_1fr_auto] gap-3 border-b border-linea py-2 text-sm"
           >
             <span className="font-mono text-muted">{formatearFecha(fecha)}</span>
-            <Link
-              to={`${paths.inicio}?bloque=${bloque.id}`}
-              className="text-paper hover:text-accent"
-            >
+            <Link to={`${paths.ruta}?bloque=${bloque.id}`} className="text-paper hover:text-accent">
               Evaluación del bloque {bloque.numero}
             </Link>
             <span className={`font-mono ${intento.aprobado ? "text-success" : "text-muted"}`}>

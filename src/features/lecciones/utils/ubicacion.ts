@@ -31,3 +31,21 @@ export function parrafos(contenido: string | null): string[] {
     .map((p) => p.trim())
     .filter(Boolean);
 }
+
+export type Continuidad =
+  { tipo: "leccion"; leccion: LeccionRuta } | { tipo: "evaluacion"; evaluacionId: number } | null;
+
+/**
+ * Qué sigue al practicar una lección (HU-F-318): la primera lección pendiente del mismo bloque
+ * (sin contar la actual) o, si ya no queda ninguna, la evaluación del bloque.
+ */
+export function continuidad(bloque: BloqueRuta | undefined, leccionId: number): Continuidad {
+  if (!bloque) return null;
+  const pendiente = [...bloque.lecciones]
+    .sort((a, b) => a.numero - b.numero)
+    .find((l) => l.id !== leccionId && !l.completado);
+  if (pendiente) return { tipo: "leccion", leccion: pendiente };
+  return bloque.evaluacion_id === null
+    ? null
+    : { tipo: "evaluacion", evaluacionId: bloque.evaluacion_id };
+}

@@ -13,7 +13,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 // Un nuevo estilo es una entrada del mapa, no un if (contrato 02 §4, "O").
 const VARIANTES: Record<VarianteBoton, string> = {
-  primario: "bg-primary text-paper hover:bg-primary-hover",
+  primario: "bg-primary text-sobre-primary hover:bg-primary-hover",
   secundario: "border border-linea-fuerte text-paper hover:border-accent",
   fantasma: "text-muted hover:bg-surface hover:text-paper",
   // Texto ink sobre danger: 6.3:1 (paper encima no llega a 4.5:1).

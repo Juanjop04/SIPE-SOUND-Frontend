@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCompletarLeccion } from "@/features/progreso";
-import type { LeccionRuta } from "@/features/ruta";
+import type { BloqueRuta, LeccionRuta } from "@/features/ruta";
 import { paths } from "@/shared/config/paths.js";
-import { Button, ENLACE_EN_TEXTO, MensajeError } from "@/shared/ui";
+import { Button, claseBoton, ENLACE_EN_TEXTO, MensajeError } from "@/shared/ui";
+import { continuidad } from "../utils/ubicacion";
 
 interface CierreLeccionProps {
   leccionId: number;
@@ -11,6 +12,31 @@ interface CierreLeccionProps {
   yaPracticada: boolean;
   anterior?: LeccionRuta;
   siguiente?: LeccionRuta;
+  /** Bloque de la lección en GET /ruta; sin él solo se ofrece volver a la ruta. */
+  bloque?: BloqueRuta;
+}
+
+/** Tras practicar: un único primario con lo que sigue y "Volver al bloque" (HU-F-318). */
+function QueSigue({ bloque, leccionId }: { bloque?: BloqueRuta; leccionId: number }) {
+  const paso = continuidad(bloque, leccionId);
+  const volver = bloque ? `${paths.ruta}?bloque=${bloque.id}` : paths.ruta;
+  return (
+    <div className="flex flex-wrap gap-3">
+      {paso?.tipo === "leccion" && (
+        <Link to={paths.leccion(paso.leccion.id)} className={claseBoton()}>
+          Siguiente lección: {paso.leccion.titulo}
+        </Link>
+      )}
+      {paso?.tipo === "evaluacion" && (
+        <Link to={paths.evaluacion(paso.evaluacionId)} className={claseBoton()}>
+          Presentar evaluación del bloque
+        </Link>
+      )}
+      <Link to={volver} className={claseBoton({ variante: "secundario" })}>
+        {bloque ? "Volver al bloque" : "Volver a la ruta"}
+      </Link>
+    </div>
+  );
 }
 
 /** Cuerda de 6 px que suena (ámbar) y vibra al marcar la lección; sin vibración si se pide. */
@@ -29,6 +55,7 @@ export function CierreLeccion({
   yaPracticada,
   anterior,
   siguiente,
+  bloque,
 }: CierreLeccionProps) {
   const completar = useCompletarLeccion();
   const [recienMarcada, setRecienMarcada] = useState(false);
@@ -45,6 +72,7 @@ export function CierreLeccion({
       <p aria-live="polite" className="text-sm text-muted">
         {practicada ? "Lección practicada: la ruta ya refleja tu avance." : ""}
       </p>
+      {conSesion && practicada && <QueSigue bloque={bloque} leccionId={leccionId} />}
       {conSesion && !practicada && (
         <Button
           className="self-start"

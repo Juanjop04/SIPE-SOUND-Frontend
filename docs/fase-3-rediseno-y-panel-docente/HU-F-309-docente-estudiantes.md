@@ -5,7 +5,7 @@
 | Fase | 3 · Panel docente |
 | Prioridad | Must |
 | Estimación | 5 puntos |
-| Depende de | HU-F-307, HU-F-314, **HU-B-310** |
+| Depende de | HU-F-307, HU-F-314, HU-F-320, **HU-B-310** |
 | Rama | `hu/HU-F-309-docente-estudiantes` |
 
 ## Historia

@@ -24,7 +24,7 @@ function Historial({ bloques }: { bloques: BloqueRuta[] }) {
         titulo="Aún no has presentado evaluaciones."
         descripcion="Cuando termines las lecciones del bloque 1, presenta su evaluación desde la ruta."
         accion={
-          <Link to={paths.inicio} className="text-sm text-accent hover:underline">
+          <Link to={paths.ruta} className="text-sm text-accent hover:underline">
             Ir a la ruta
           </Link>
         }
