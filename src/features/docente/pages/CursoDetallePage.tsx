@@ -4,6 +4,7 @@ import { EstadoVacio, MensajeError, Skeleton, Tabs } from "@/shared/ui";
 import { AjustesCurso } from "../cursos/components/AjustesCurso";
 import { EditorRutaCurso } from "../cursos/components/EditorRutaCurso";
 import { EncabezadoCurso } from "../cursos/components/EncabezadoCurso";
+import { PestanaEstudiantes } from "../estudiantes/components/PestanaEstudiantes";
 import { useCurso } from "../cursos/hooks/useCursos";
 import type { CursoDetalle } from "../types";
 
@@ -30,9 +31,7 @@ function Contenido({ curso }: { curso: CursoDetalle }) {
           {
             id: "estudiantes",
             etiqueta: "Estudiantes",
-            contenido: (
-              <EstadoVacio titulo="La lista de estudiantes llega en la próxima versión del atril." />
-            ),
+            contenido: <PestanaEstudiantes curso={curso} />,
           },
           {
             id: "ruta",

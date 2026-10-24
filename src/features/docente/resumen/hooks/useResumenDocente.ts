@@ -17,6 +17,9 @@ export function useComentarEstudiante() {
   return useMutation({
     mutationFn: ({ cursoId, estudianteId, mensaje }: Comentario) =>
       docenteApi.comentar(cursoId, estudianteId, mensaje),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: docenteKeys.resumen() }),
+    onSuccess: (_datos, { cursoId }) => {
+      queryClient.invalidateQueries({ queryKey: docenteKeys.resumen() });
+      queryClient.invalidateQueries({ queryKey: docenteKeys.estudiantes(cursoId) });
+    },
   });
 }
