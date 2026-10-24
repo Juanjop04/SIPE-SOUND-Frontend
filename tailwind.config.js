@@ -40,8 +40,10 @@ export default {
         DEFAULT: token("linea"),
       },
       fontFamily: {
-        display: ["Baloo 2", "sans-serif"],
-        sans: ["Inter", "sans-serif"],
+        // Entre comillas: un nombre sin comillas con un "2" suelto invalida la regla y los títulos
+        // caían en Inter (HU-F-312).
+        display: ['"Baloo 2"', "sans-serif"],
+        sans: ["Inter Variable", "sans-serif"],
         mono: ["IBM Plex Mono", "monospace"],
       },
       borderRadius: {

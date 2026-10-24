@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { paths } from "@/shared/config/paths.js";
-import { Button, Drawer } from "@/shared/ui";
+import { AvisoSinConexion, Button, Drawer } from "@/shared/ui";
 import { Marca } from "./components/Marca";
 import { PanelAtril } from "./components/PanelAtril";
 
@@ -35,6 +35,7 @@ export function DocenteLayout() {
       </Drawer>
 
       <div className="min-w-0">
+        <AvisoSinConexion />
         <Outlet />
       </div>
     </div>

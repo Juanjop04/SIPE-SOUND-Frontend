@@ -23,7 +23,6 @@ export function IndicePreguntas({ preguntas, respuestas, onIr, actual }: IndiceP
                 type="button"
                 onClick={() => onIr(indice)}
                 aria-current={actual === indice ? "step" : undefined}
-                aria-label={`Pregunta ${indice + 1}, ${respondida ? "respondida" : "sin responder"}`}
                 className={cn(
                   "flex items-center gap-2 rounded-md px-2 py-1 font-mono text-sm transition-colors duration-rapida",
                   actual === indice ? "text-accent" : "text-muted hover:text-paper",
@@ -32,7 +31,11 @@ export function IndicePreguntas({ preguntas, respuestas, onIr, actual }: IndiceP
                 <span aria-hidden="true" className={respondida ? "text-paper" : "text-muted"}>
                   {respondida ? "●" : "○"}
                 </span>
+                {/* Nombre desde el contenido, con el número visible dentro: control por voz
+                    (WCAG 2.5.3, HU-F-312). */}
+                <span className="sr-only">Pregunta </span>
                 {numero}
+                <span className="sr-only">, {respondida ? "respondida" : "sin responder"}</span>
               </button>
             </li>
           );

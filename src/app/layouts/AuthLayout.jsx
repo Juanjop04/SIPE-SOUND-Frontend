@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Outlet, useMatches, useSearchParams } from "react-router-dom";
 import { guardarCodigoPendiente } from "@/features/cursos";
 import { Fretboard } from "@/shared/music";
-import { SelectorTema } from "@/shared/ui";
-import logo from "@/assets/brand/logo.png";
+import { AvisoSinConexion, SelectorTema } from "@/shared/ui";
+import logo from "@/assets/brand/logo-120.webp";
 
 // Layout de /login y /registro. El título y la descripción del panel vienen del `handle`
 // de cada ruta (router.jsx); la página activa la vibración del mástil con
@@ -24,7 +24,7 @@ export default function AuthLayout() {
       {/* Panel de marca (solo escritorio) */}
       <aside className="relative hidden flex-col justify-between overflow-hidden bg-surface p-12 lg:flex">
         <div className="relative flex items-center gap-3">
-          <img src={logo} alt="" className="h-10 w-10 object-contain" />
+          <img src={logo} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
           <span className="font-display text-xl font-semibold">SIPE-SOUND</span>
         </div>
 
@@ -42,8 +42,9 @@ export default function AuthLayout() {
       {/* Contenido (formulario) */}
       <main className="flex min-h-screen items-center justify-center px-4 py-10 sm:px-8">
         <div className="w-full max-w-md">
+          <AvisoSinConexion className="mb-6 rounded-md border" />
           <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <img src={logo} alt="" className="h-10 w-10 object-contain" />
+            <img src={logo} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
             <span className="font-display text-xl font-semibold">SIPE-SOUND</span>
           </div>
           <Outlet context={contexto} />

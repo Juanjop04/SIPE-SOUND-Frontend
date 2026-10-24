@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
-import logo from "@/assets/brand/logo.png";
+import logo from "@/assets/brand/logo-120.webp";
 
 /** Logo + nombre; lleva a la ruta (estudiante) o al resumen del atril (docente). */
 export function Marca({
@@ -17,7 +17,7 @@ export function Marca({
       className={`flex shrink-0 items-center gap-2 ${enBarra ? "text-barra-texto" : "text-paper"}`}
     >
       <img src={logo} alt="" width={32} height={32} className="h-8 w-8 object-contain" />
-      <span className="font-display text-lg font-semibold">SIPE-SOUND</span>
+      <span className="whitespace-nowrap font-display text-lg font-semibold">SIPE-SOUND</span>
     </Link>
   );
 }

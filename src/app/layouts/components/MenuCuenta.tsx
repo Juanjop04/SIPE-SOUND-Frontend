@@ -49,7 +49,7 @@ export function MenuCuenta() {
         aria-expanded={abierto}
         aria-controls={idMenu}
         onClick={() => setAbierto((valor) => !valor)}
-        className="inline-flex h-10 max-w-[12rem] items-center gap-1 text-sm text-muted transition-colors duration-rapida hover:text-paper"
+        className="inline-flex h-10 max-w-[8rem] items-center gap-1 text-sm text-muted transition-colors duration-rapida hover:text-paper sm:max-w-[12rem]"
       >
         <span className="truncate">{perfil?.nombre ?? usuario?.email}</span>
         <ChevronDown size={16} aria-hidden="true" />
