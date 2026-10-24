@@ -14,6 +14,8 @@ export interface Destinatario {
   estudianteId: string;
   nombre: string;
   cursoId: number;
+  /** Texto sugerido y editable (p. ej. el recordatorio de una evaluación). */
+  mensaje?: string;
 }
 
 interface DialogoComentarioProps {
@@ -29,7 +31,7 @@ export function DialogoComentario({ destinatario, onCerrar }: DialogoComentarioP
   const { register, handleSubmit, setError, reset, formState } = useForm<Datos>({
     resolver: zodResolver(esquema),
     mode: "onTouched",
-    defaultValues: { mensaje: "" },
+    defaultValues: { mensaje: destinatario?.mensaje ?? "" },
   });
 
   function cerrar() {

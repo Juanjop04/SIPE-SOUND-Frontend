@@ -1,10 +1,11 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { TrasteDivider } from "@/shared/music";
-import { EstadoVacio, MensajeError, Skeleton, Tabs } from "@/shared/ui";
+import { MensajeError, Skeleton, Tabs } from "@/shared/ui";
 import { AjustesCurso } from "../cursos/components/AjustesCurso";
 import { EditorRutaCurso } from "../cursos/components/EditorRutaCurso";
 import { EncabezadoCurso } from "../cursos/components/EncabezadoCurso";
 import { PestanaEstudiantes } from "../estudiantes/components/PestanaEstudiantes";
+import { ListaEvaluaciones } from "../evaluaciones/components/ListaEvaluaciones";
 import { useCurso } from "../cursos/hooks/useCursos";
 import type { CursoDetalle } from "../types";
 
@@ -48,9 +49,7 @@ function Contenido({ curso }: { curso: CursoDetalle }) {
           {
             id: "evaluaciones",
             etiqueta: "Evaluaciones",
-            contenido: (
-              <EstadoVacio titulo="Las evaluaciones del curso llegan en la próxima versión del atril." />
-            ),
+            contenido: <ListaEvaluaciones cursoFijo={curso.id} />,
           },
           { id: "ajustes", etiqueta: "Ajustes", contenido: <AjustesCurso curso={curso} /> },
         ]}
