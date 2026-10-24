@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
 import { formatearFecha } from "@/shared/lib/formato";
-import { Button, Table, type ColumnaTabla } from "@/shared/ui";
+import { Paginacion, Table, type ColumnaTabla } from "@/shared/ui";
 import { useBloques } from "../api";
 import type { ContenidoDocente, EjercicioDocente, LeccionDocente, TipoContenido } from "../tipos";
 import { EstadoPunto } from "./EstadoPunto";
@@ -95,30 +95,3 @@ export function TablaContenido({ tipo, filas, meta, onPagina }: TablaContenidoPr
 }
 
 /** "← Anterior · 1–20 de 45 · Siguiente →" en mono. */
-function Paginacion({ meta, onPagina }: Pick<TablaContenidoProps, "meta" | "onPagina">) {
-  const desde = (meta.pagina - 1) * meta.por_pagina + 1;
-  const hasta = Math.min(meta.pagina * meta.por_pagina, meta.total);
-  return (
-    <nav aria-label="Páginas" className="flex items-center justify-between gap-3">
-      <Button
-        variante="fantasma"
-        tamano="sm"
-        disabled={meta.pagina <= 1}
-        onClick={() => onPagina(meta.pagina - 1)}
-      >
-        ← Anterior
-      </Button>
-      <span className="font-mono text-sm text-muted">
-        {desde}–{hasta} de {meta.total}
-      </span>
-      <Button
-        variante="fantasma"
-        tamano="sm"
-        disabled={hasta >= meta.total}
-        onClick={() => onPagina(meta.pagina + 1)}
-      >
-        Siguiente →
-      </Button>
-    </nav>
-  );
-}

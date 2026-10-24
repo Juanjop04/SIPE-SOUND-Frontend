@@ -1,8 +1,8 @@
 import { BookOpen, ClipboardCheck, Timer } from "lucide-react";
 import { useActividad, type EventoActividad } from "@/features/progreso";
 import { paths } from "@/shared/config/paths.js";
+import { fechaRelativa } from "@/shared/lib/formato";
 import { EstadoVacio } from "@/shared/ui";
-import { fechaRelativa } from "../utils/fechaRelativa";
 import { PanelInicio } from "./PanelInicio";
 
 const ICONOS = { leccion: BookOpen, ejercicio: Timer, evaluacion: ClipboardCheck };

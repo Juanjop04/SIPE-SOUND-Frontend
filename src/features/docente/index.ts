@@ -6,3 +6,5 @@ export const cargarEvaluacionesPage = () => import("./pages/EvaluacionesPage");
 export { PaginaAtril } from "./components/PaginaAtril";
 export const cargarEditorLeccionPage = () => import("./pages/EditorLeccionPage");
 export const cargarEditorEjercicioPage = () => import("./pages/EditorEjercicioPage");
+export const cargarEditorEvaluacionPage = () => import("./pages/EditorEvaluacionPage");
+export const cargarResultadosEvaluacionPage = () => import("./pages/ResultadosEvaluacionPage");
