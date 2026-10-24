@@ -4,7 +4,7 @@ import { useEnfriamiento } from "@/shared/hooks/useEnfriamiento";
 import { Button, useAviso } from "@/shared/ui";
 import { esDemasiadasSolicitudes } from "@/shared/validacion";
 import { useUnirse } from "../api";
-import { errorDeCodigo } from "../codigo";
+import { errorDeCodigo } from "../validarCodigo";
 import { CampoCodigo } from "./CampoCodigo";
 
 const HTTP_NO_ENCONTRADO = 404;

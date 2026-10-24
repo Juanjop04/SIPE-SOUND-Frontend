@@ -36,4 +36,5 @@ export { ConfirmarSalida, type ConfirmarSalidaProps } from "./ConfirmarSalida";
 export { AvisosProvider, useAviso, type DatosAviso, type TipoAviso } from "./Aviso";
 export { Migas, type MigasProps, type PasoMiga } from "./Migas";
 export { SelectorTema, type SelectorTemaProps } from "./SelectorTema";
+export { AvisoSinConexion } from "./AvisoSinConexion";
 export { Paginacion, type MetaPaginacion, type PaginacionProps } from "./Paginacion";

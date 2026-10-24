@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "Inter Variable", sans-serif;
   background-color: rgb(var(--color-ink));
 }
 

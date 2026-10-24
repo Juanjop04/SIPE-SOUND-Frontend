@@ -5,7 +5,7 @@ import { UnionPendiente } from "@/features/cursos";
 import { paths } from "@/shared/config/paths.js";
 import { Marca } from "./components/Marca";
 import { MenuCuenta } from "./components/MenuCuenta";
-import { SelectorTema } from "@/shared/ui";
+import { AvisoSinConexion, SelectorTema } from "@/shared/ui";
 import { BarraInferior, BarraLateral, NavEstudiante } from "./components/NavEstudiante";
 
 function Cuenta() {
@@ -41,11 +41,12 @@ export function EstudianteLayout({ children }: { children?: ReactNode }) {
             </span>
             <NavEstudiante />
             <div className="flex items-center gap-3">
-              <SelectorTema />
+              <SelectorTema compactoEnMovil />
               <Cuenta />
             </div>
           </header>
         </div>
+        <AvisoSinConexion />
         {children ?? <Outlet />}
       </div>
       <BarraInferior />

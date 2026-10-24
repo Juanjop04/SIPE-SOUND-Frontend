@@ -80,6 +80,8 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 | Texto (`font-sans`) | Inter | 16 (base) · 14 (secundario) | 400 / 500 |
 | Datos (`font-mono`) | IBM Plex Mono | 14 · 13 | 400 / 500 |
 
+- Fuentes alojadas en la app con `@fontsource` (HU-F-312): Inter variable, Baloo 2 600 y Plex Mono
+  400/500, solo subconjunto latino y `font-display: swap`. Un peso nuevo se agrega en `src/main.jsx`.
 - Títulos alineados a la izquierda. Longitud de línea de lectura ≤ 68 caracteres.
 - Números en tablas: `font-mono tabular-nums`, alineados a la derecha.
 

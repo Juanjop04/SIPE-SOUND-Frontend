@@ -10,8 +10,10 @@ import { PildoraEstado } from "./PildoraEstado";
 function Miniatura({ bloque, acordes }: { bloque: BloqueRuta; acordes: Map<string, Acorde> }) {
   const primero = bloque.acordes?.map((n) => acordes.get(n)).find((a) => a?.diagram);
   if (primero?.diagram) {
+    // Decorativa dentro del enlace: sin ocultarla, los números del diagrama ("○○○○23") se leían
+    // como parte del nombre del bloque (HU-F-312).
     return (
-      <span className="w-20">
+      <span aria-hidden="true" className="w-20">
         <ChordDiagram {...primero.diagram} />
       </span>
     );

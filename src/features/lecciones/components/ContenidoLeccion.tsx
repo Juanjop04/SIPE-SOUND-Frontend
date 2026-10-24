@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { Tablatura, TrasteDivider, type DatoTablatura } from "@/shared/music";
 import type { Leccion } from "../types";
 import { parrafos } from "../utils/ubicacion";
@@ -41,10 +40,11 @@ export function ContenidoLeccion({ leccion }: { leccion: VistaLeccion }) {
           </h2>
           <ul className="mt-3 flex flex-col gap-3">
             {temas.map((tema, indice) => (
-              <Fragment key={tema}>
+              // El separador va dentro del <li>: una <ul> solo puede tener <li> (HU-F-312).
+              <li key={tema} className="flex flex-col gap-3 text-muted">
                 {indice > 0 && <TrasteDivider />}
-                <li className="text-muted">{tema}</li>
-              </Fragment>
+                {tema}
+              </li>
             ))}
           </ul>
         </section>

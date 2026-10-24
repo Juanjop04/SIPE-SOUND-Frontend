@@ -43,7 +43,7 @@ export function Cuerda({ valor, etiqueta, grosor = 2, sonando = false, className
     >
       <div
         className={cn(
-          "h-full rounded-full transition-[width] duration-panel",
+          "h-full rounded-full transition-[width] duration-panel motion-reduce:transition-none",
           sonando ? RELLENO.completo : RELLENO.avance,
         )}
         // Valor calculado: el único style permitido (contrato 03 §5).

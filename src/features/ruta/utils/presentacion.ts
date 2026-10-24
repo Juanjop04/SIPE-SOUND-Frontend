@@ -23,8 +23,3 @@ export function cierraNivel(bloques: BloqueRuta[], indice: number): boolean {
   const siguiente = bloques[indice + 1];
   return !siguiente || siguiente.nivel !== bloques[indice].nivel;
 }
-
-/** "Bloque 3, Acordes mayores, bloqueado": nombre accesible de cada traste. */
-export function nombreAccesible(bloque: BloqueRuta): string {
-  return `Bloque ${bloque.numero}, ${bloque.titulo}, ${bloque.estado}`;
-}

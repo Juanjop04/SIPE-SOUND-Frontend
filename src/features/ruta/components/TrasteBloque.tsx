@@ -2,7 +2,6 @@ import { forwardRef } from "react";
 import { cn } from "@/shared/lib/cn.js";
 import { MarcaEstado } from "@/shared/music";
 import type { BloqueRuta } from "../types";
-import { nombreAccesible } from "../utils/presentacion";
 
 /** Cómo suena el tramo de cuerda de este traste respecto al último bloque aprobado. */
 export type TramoCuerda = "sonando" | "hastaAqui" | "quieta";
@@ -63,7 +62,6 @@ export const TrasteBloque = forwardRef<HTMLLIElement, TrasteBloqueProps>(functio
       id={id}
       role="option"
       aria-selected={seleccionado}
-      aria-label={nombreAccesible(bloque)}
       onClick={onSeleccionar}
       className={cn(
         "relative flex cursor-pointer select-none",
@@ -73,7 +71,12 @@ export const TrasteBloque = forwardRef<HTMLLIElement, TrasteBloqueProps>(functio
       )}
     >
       <TramosCuerda horizontal={horizontal} tramo={tramo} />
-      <span className="relative flex h-10 w-9 shrink-0 items-center justify-center">
+      {/* Nombre desde el contenido: "Bloque 01 <título>, <estado>" incluye el texto visible para el
+          control por voz (WCAG 2.5.3, HU-F-312); el estado se lee al final, no en la marca. */}
+      <span
+        aria-hidden="true"
+        className="relative flex h-10 w-9 shrink-0 items-center justify-center"
+      >
         <MarcaEstado estado={bloque.estado} className="bg-ink" />
       </span>
       <span
@@ -84,12 +87,14 @@ export const TrasteBloque = forwardRef<HTMLLIElement, TrasteBloqueProps>(functio
         )}
       >
         <span className="flex items-center gap-2 font-mono text-xs">
+          <span className="sr-only">Bloque </span>
           {String(bloque.numero).padStart(2, "0")}
           {cierraNivel && (
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-accent/70" />
           )}
         </span>
         <span className={cn("text-sm", horizontal && "line-clamp-2")}>{bloque.titulo}</span>
+        <span className="sr-only">, {bloque.estado}</span>
       </span>
     </li>
   );

@@ -52,4 +52,4 @@ Escenario: Sin conexión
 Chrome DevTools → Lighthouse (móvil) y Network → "Slow 4G" / "Offline".
 
 ## Definición de hecho específica
-- [ ] Informe de auditoría en `docs/auditorias/`.
+- [x] Informe de auditoría en `docs/auditorias/` ([AUD-2026-02](../auditorias/AUD-2026-02-rendimiento-accesibilidad-conectividad.md)).
