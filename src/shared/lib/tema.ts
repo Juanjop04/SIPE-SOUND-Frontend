@@ -12,17 +12,36 @@ export function leerPreferencia(): PreferenciaTema {
     const valor = localStorage.getItem(CLAVE);
     return valor === "claro" || valor === "oscuro" ? valor : "sistema";
   } catch {
-    return "sistema";
+    return enMemoria ?? "sistema";
   }
 }
 
+// Preferencia de esta visita cuando no hay almacenamiento (modo privado).
+let enMemoria: PreferenciaTema | null = null;
+const oyentes = new Set<() => void>();
+
+/** Para useSyncExternalStore: todos los selectores comparten UNA preferencia, también entre pestañas. */
+export function suscribirPreferencia(avisar: () => void): () => void {
+  oyentes.add(avisar);
+  const alCambiarOtraPestana = (evento: StorageEvent) => {
+    if (evento.key === CLAVE || evento.key === null) avisar();
+  };
+  window.addEventListener("storage", alCambiarOtraPestana);
+  return () => {
+    oyentes.delete(avisar);
+    window.removeEventListener("storage", alCambiarOtraPestana);
+  };
+}
+
 export function guardarPreferencia(preferencia: PreferenciaTema): void {
+  enMemoria = preferencia;
   try {
     if (preferencia === "sistema") localStorage.removeItem(CLAVE);
     else localStorage.setItem(CLAVE, preferencia);
   } catch {
     // Sin almacenamiento (modo privado): el tema vale solo para esta visita.
   }
+  oyentes.forEach((avisar) => avisar());
 }
 
 export function temaEfectivo(preferencia: PreferenciaTema): Tema {
