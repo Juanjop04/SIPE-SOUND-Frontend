@@ -1,14 +1,24 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { ROL, useSession } from "@/features/auth";
+import { ContadorNoLeidos } from "@/features/mensajes";
 import { cn } from "@/shared/lib/cn.js";
 import { paths } from "@/shared/config/paths.js";
 import { Button, SelectorTema } from "@/shared/ui";
 
-const SECCIONES = [
+interface Seccion {
+  to: string;
+  etiqueta: string;
+  exacto?: boolean;
+  contador?: boolean;
+}
+
+const SECCIONES: Seccion[] = [
   { to: paths.docente.inicio, etiqueta: "Resumen", exacto: true },
   { to: paths.docente.cursos, etiqueta: "Cursos" },
+  { to: paths.docente.progreso, etiqueta: "Progreso" },
   { to: paths.docente.contenido, etiqueta: "Contenido" },
   { to: paths.docente.evaluaciones, etiqueta: "Evaluaciones" },
+  { to: paths.docente.mensajes, etiqueta: "Mensajes", contador: true },
 ];
 
 // Colores sobre la barra morada (escritorio) o sobre una superficie (Drawer en móvil).
@@ -52,6 +62,7 @@ export function PanelAtril({
       ? [
           ...SECCIONES,
           { to: paths.admin.usuarios, etiqueta: "Usuarios", exacto: false },
+          { to: paths.admin.cursos, etiqueta: "Todos los cursos", exacto: false },
           { to: paths.admin.docentes, etiqueta: "Docentes", exacto: false },
         ]
       : SECCIONES;
@@ -67,10 +78,13 @@ export function PanelAtril({
     <div className="flex h-full flex-col justify-between gap-8">
       <nav aria-label="Atril">
         <ul className="flex flex-col gap-1">
-          {secciones.map(({ to, etiqueta, exacto }) => (
+          {secciones.map(({ to, etiqueta, exacto, contador }) => (
             <li key={to}>
               <NavLink to={to} end={exacto} className={claseEnlace(tono)} onClick={alNavegar}>
-                {etiqueta}
+                <span className="flex items-center">
+                  {etiqueta}
+                  {contador && <ContadorNoLeidos />}
+                </span>
               </NavLink>
             </li>
           ))}

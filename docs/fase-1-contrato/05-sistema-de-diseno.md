@@ -169,7 +169,7 @@ Reglas que se mantienen de HU-F-314:
 | Píldoras "Nuevo" / "Pro" decorativas | Píldoras de estado solo con estado real (Completado, En curso, Pendiente), con texto. |
 | Fotos de *stock* sin licencia, por URL externa o que simulen el contenido de una lección concreta | Fotos locales con licencia registrada (HU-F-321), por tipo de contenido. |
 | Gráficos decorativos o con datos de ejemplo | Un gráfico solo con datos reales, con alternativa en tabla; sin datos, estado vacío (HU-F-317). |
-| Enlaces a funciones que no existen (Logros, Notificaciones) | Se agregan cuando exista su HU. "Mi cuenta" ya existe (HU-F-403, 2026-10-25). |
+| Enlaces a funciones que no existen (Logros) | Se agregan cuando exista su HU. "Mi cuenta" (HU-F-403) y "Mensajes" (HU-F-407) ya existen (2026-10-25). |
 | Tablero docente con 4 tarjetas KPI y gráfico de dona | Franja de cifras + lista accionable. |
 
 ## 7. Voz y microcopia

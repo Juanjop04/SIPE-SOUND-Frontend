@@ -13,6 +13,10 @@ export const paths = Object.freeze({
   recuperar: "/recuperar",
   /** Destino del enlace del correo: `/restablecer#token=…` (el token va en el fragmento). */
   restablecer: "/restablecer",
+  /** Mensajes del estudiante (HU-F-407); el hilo abierto va en /mensajes/:hiloId. */
+  mensajes: "/mensajes",
+  /** @param {string} [hiloId] */
+  mensaje: (hiloId = ":hiloId") => `/mensajes/${hiloId}`,
   /** Mi cuenta: nombre, correo y contraseña (HU-F-403). */
   cuenta: "/cuenta",
   terminos: "/terminos",
@@ -37,6 +41,12 @@ export const paths = Object.freeze({
     cursos: "/docente/cursos",
     /** @param {string | number} [id] */
     curso: (id = ":id") => `/docente/cursos/${id}`,
+    /** Estudiantes × bloques del curso y quién necesita apoyo (HU-F-406). */
+    progreso: "/docente/progreso",
+    /** Mensajes del docente y del admin (HU-F-407). */
+    mensajes: "/docente/mensajes",
+    /** @param {string} [hiloId] */
+    mensaje: (hiloId = ":hiloId") => `/docente/mensajes/${hiloId}`,
     contenido: "/docente/contenido",
     /** @param {string | number} [id] "nueva" para crear */
     leccion: (id = ":id") => `/docente/contenido/lecciones/${id}`,
@@ -53,6 +63,8 @@ export const paths = Object.freeze({
     docentes: "/admin/docentes",
     /** Cuentas: estado, verificación, suspensión y permisos (HU-F-404). */
     usuarios: "/admin/usuarios",
+    /** Todos los cursos y sus estudiantes inscritos (HU-F-405). */
+    cursos: "/admin/cursos",
   }),
 });
 

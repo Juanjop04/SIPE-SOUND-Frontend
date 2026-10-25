@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Drawer, MensajeError, Skeleton } from "@/shared/ui";
 import { formatearFecha } from "@/shared/lib/formato";
 import { useDetalleUsuario } from "../hooks";
@@ -150,10 +151,12 @@ interface DetalleUsuarioProps {
   /** null = cerrado. */
   usuarioId: string | null;
   onCerrar: () => void;
+  /** Acciones extra bajo los cursos (retirar de todos, enlace a los cursos a cargo). */
+  accionesCursos?: (cuenta: Detalle) => ReactNode;
 }
 
 /** Detalle de una cuenta en un Drawer: datos, cursos, progreso y la historia del administrador. */
-export function DetalleUsuario({ usuarioId, onCerrar }: DetalleUsuarioProps) {
+export function DetalleUsuario({ usuarioId, onCerrar, accionesCursos }: DetalleUsuarioProps) {
   const { data, isPending, error, refetch } = useDetalleUsuario(usuarioId);
   return (
     <Drawer
@@ -171,7 +174,10 @@ export function DetalleUsuario({ usuarioId, onCerrar }: DetalleUsuarioProps) {
       {data && (
         <div className="flex flex-col gap-8">
           <Datos u={data} />
-          <Cursos u={data} />
+          <div className="flex flex-col gap-3">
+            <Cursos u={data} />
+            {accionesCursos?.(data)}
+          </div>
           <Progreso u={data} />
           <Historia u={data} />
         </div>

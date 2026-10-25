@@ -61,7 +61,7 @@ function Formulario({
       {conflicto && (
         <p className="text-sm text-muted">
           Antes de eliminarla,{" "}
-          <Link to={paths.admin.docentes} className={ENLACE_EN_TEXTO}>
+          <Link to={`${paths.admin.cursos}?docente=${usuario.id}`} className={ENLACE_EN_TEXTO}>
             reasigna sus cursos
           </Link>
           .
