@@ -20,6 +20,8 @@ export const paths = Object.freeze({
   /** Mi cuenta: nombre, correo y contraseña (HU-F-403). */
   cuenta: "/cuenta",
   terminos: "/terminos",
+  /** Pantalla obligatoria cuando hay una versión nueva de los términos (HU-F-510). */
+  aceptarTerminos: "/aceptar-terminos",
   acordes: "/acordes",
   ejercicios: "/ejercicios",
   /** @param {string | number} [id] */
@@ -65,6 +67,8 @@ export const paths = Object.freeze({
     usuarios: "/admin/usuarios",
     /** Todos los cursos y sus estudiantes inscritos (HU-F-405). */
     cursos: "/admin/cursos",
+    /** Editor Markdown de los términos y condiciones (HU-F-510). */
+    terminos: "/admin/terminos",
   }),
 });
 
