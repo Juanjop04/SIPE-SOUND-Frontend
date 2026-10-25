@@ -1,9 +1,19 @@
 import { NavLink } from "react-router-dom";
-import { Activity, House, Mail, Map, Music, Timer, type LucideIcon } from "lucide-react";
+import {
+  Activity,
+  GraduationCap,
+  House,
+  Mail,
+  Map,
+  Music,
+  Timer,
+  type LucideIcon,
+} from "lucide-react";
 import { useSession } from "@/features/auth";
 import { ContadorNoLeidos } from "@/features/mensajes";
 import { cn } from "@/shared/lib/cn.js";
 import { paths } from "@/shared/config/paths.js";
+import { EtiquetaFlotante } from "./EtiquetaFlotante";
 
 interface Destino {
   to: string;
@@ -17,14 +27,18 @@ interface Destino {
   contador?: boolean;
   /** La barra inferior móvil ya tiene 5 destinos: este va como ícono en el encabezado. */
   fueraDeBarraInferior?: boolean;
+  /** Con sesión sale de la barra inferior (pasa al encabezado); un visitante sí lo ve ahí. */
+  fueraDeBarraConSesion?: boolean;
 }
 
-// Orden de HU-F-318: Inicio · Ruta · Ejercicios · Acordes · Mi progreso.
+// Orden de HU-F-318 y HU-F-504: Inicio · Ruta · Mis cursos · Ejercicios · Acordes · Mi progreso.
+// La barra inferior móvil (5 destinos con sesión): Inicio · Ruta · Mis cursos · Ejercicios · Mi progreso.
 const DESTINOS: Destino[] = [
   { to: paths.inicio, etiqueta: "Inicio", Icono: House, exacto: true, conSesion: true },
   { to: paths.ruta, etiqueta: "Ruta", Icono: Map },
+  { to: paths.cursos, etiqueta: "Mis cursos", Icono: GraduationCap, conSesion: true },
   { to: paths.ejercicios, etiqueta: "Ejercicios", Icono: Timer },
-  { to: paths.acordes, etiqueta: "Acordes", Icono: Music },
+  { to: paths.acordes, etiqueta: "Acordes", Icono: Music, fueraDeBarraConSesion: true },
   { to: paths.progreso, etiqueta: "Mi progreso", Icono: Activity, conSesion: true },
   {
     to: paths.mensajes,
@@ -42,34 +56,70 @@ function useDestinos(): Destino[] {
 }
 
 /** Escritorio (≥ 1024 px): destinos con ícono sobre la barra morada; el activo con fondo primary. */
-export function BarraLateral() {
+export function BarraLateral({ contraido = false }: { contraido?: boolean }) {
   const destinos = useDestinos();
   return (
     <nav aria-label="Principal">
       <ul className="flex flex-col gap-1">
         {destinos.map(({ to, etiqueta, Icono, exacto, contador }) => (
           <li key={to}>
-            <NavLink
+            <EnlaceLateral
               to={to}
-              end={exacto}
-              className={({ isActive }) =>
-                cn(
-                  "flex h-11 items-center gap-3 rounded-md px-3 text-sm transition-colors duration-rapida",
-                  isActive
-                    ? "bg-primary text-sobre-primary"
-                    : "text-barra-texto-2 hover:bg-barra-hover hover:text-barra-texto",
-                )
-              }
-            >
-              <Icono size={18} aria-hidden="true" />
-              {etiqueta}
-              {contador && <ContadorNoLeidos />}
-            </NavLink>
+              exacto={exacto}
+              etiqueta={etiqueta}
+              Icono={Icono}
+              contador={contador}
+              contraido={contraido}
+            />
           </li>
         ))}
       </ul>
     </nav>
   );
+}
+
+interface EnlaceLateralProps {
+  to: string;
+  exacto?: boolean;
+  etiqueta: string;
+  Icono: LucideIcon;
+  contador?: boolean;
+  contraido: boolean;
+}
+
+// Con el menú contraído (HU-F-507): solo el ícono; el nombre sigue para lectores de pantalla y
+// aparece al pasar el mouse o enfocar. El contador de mensajes pasa a una insignia en la esquina.
+function EnlaceLateral({ to, exacto, etiqueta, Icono, contador, contraido }: EnlaceLateralProps) {
+  const enlace = (
+    <NavLink
+      to={to}
+      end={exacto}
+      title={contraido ? etiqueta : undefined}
+      className={({ isActive }) =>
+        cn(
+          "relative flex h-11 items-center gap-3 rounded-md text-sm transition-colors duration-rapida",
+          contraido ? "justify-center px-0" : "px-3",
+          isActive
+            ? "bg-primary text-sobre-primary"
+            : "text-barra-texto-2 hover:bg-barra-hover hover:text-barra-texto",
+        )
+      }
+    >
+      <Icono size={18} aria-hidden="true" className="shrink-0" />
+      <span className={cn(contraido && "sr-only")}>{etiqueta}</span>
+      {contador && (
+        <span
+          className={cn(
+            "flex flex-1 items-center",
+            contraido && "absolute right-1 top-0.5 flex-none text-[10px]",
+          )}
+        >
+          <ContadorNoLeidos />
+        </span>
+      )}
+    </NavLink>
+  );
+  return contraido ? <EtiquetaFlotante texto={etiqueta}>{enlace}</EtiquetaFlotante> : enlace;
 }
 
 // Tableta y móvil: texto paper + marca accent de 2 px (como un traste); no solo color.
@@ -109,7 +159,10 @@ export function NavEstudiante() {
 
 /** Móvil: barra inferior fija con ícono y etiqueta (objetivo de 64 px) sobre la zona segura. */
 export function BarraInferior() {
-  const destinos = useDestinos().filter((d) => !d.fueraDeBarraInferior);
+  const { usuario } = useSession();
+  const destinos = useDestinos().filter(
+    (d) => !d.fueraDeBarraInferior && !(usuario && d.fueraDeBarraConSesion),
+  );
   return (
     <nav
       aria-label="Principal"

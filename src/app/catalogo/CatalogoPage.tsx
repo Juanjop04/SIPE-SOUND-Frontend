@@ -1,5 +1,6 @@
 import { SeccionBotones, SeccionCampos } from "./SeccionesControles";
 import { SeccionEstados, SeccionPaneles, SeccionTabla } from "./SeccionesDatos";
+import { SeccionGraficos } from "./SeccionGraficos";
 import { SeccionIlustraciones } from "./SeccionIlustraciones";
 import { SeccionMusica } from "./SeccionesMusica";
 
@@ -21,6 +22,7 @@ export default function CatalogoPage() {
       <SeccionEstados />
       <SeccionMusica />
       <SeccionIlustraciones />
+      <SeccionGraficos />
     </main>
   );
 }
