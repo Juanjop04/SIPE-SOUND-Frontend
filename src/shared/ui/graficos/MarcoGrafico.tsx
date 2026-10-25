@@ -1,9 +1,12 @@
 import { useId, useState, type ReactNode } from "react";
 import { Button } from "../Button";
 
+/** Una celda de la tabla alternativa: texto, número o un enlace (para abrir lo que la barra representa). */
+export type CeldaTabla = string | number | ReactNode;
+
 export interface TablaGrafico {
   columnas: string[];
-  filas: (string | number)[][];
+  filas: CeldaTabla[][];
 }
 
 export interface MarcoGraficoProps {
@@ -36,8 +39,9 @@ function Tabla({ tabla, titulo }: { tabla: TablaGrafico; titulo: string }) {
           </tr>
         </thead>
         <tbody>
-          {tabla.filas.map((fila) => (
-            <tr key={fila.join("|")} className="border-b border-linea last:border-b-0">
+          {tabla.filas.map((fila, indiceFila) => (
+            // Las filas no tienen id propio: el orden de los datos del gráfico es estable.
+            <tr key={indiceFila} className="border-b border-linea last:border-b-0">
               {fila.map((celda, i) => (
                 <td
                   key={tabla.columnas[i]}

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Bar,
   BarChart,
@@ -27,6 +28,11 @@ export interface BarrasHorizontalesProps {
   datos: BarraHorizontal[];
   /** Clic en una barra (por ejemplo, abrir el bloque). */
   onElegir?: (id: string | number) => void;
+  /**
+   * Destino de cada barra: la tabla alternativa lo ofrece como enlace "Abrir", que sí se alcanza
+   * con teclado (Recharts no da Enter a cada barra).
+   */
+  hrefDe?: (id: string | number) => string;
 }
 
 const ALTO_FILA = 44;
@@ -87,10 +93,21 @@ export function BarrasHorizontales({
   lectura,
   datos,
   onElegir,
+  hrefDe,
 }: BarrasHorizontalesProps) {
+  const columnas = ["Nombre", "Avance (%)", "Estado"];
   const tabla = {
-    columnas: ["Nombre", "Avance (%)", "Estado"],
-    filas: datos.map((d) => [d.nombre, d.valor, ESTADO_GRAFICO[d.estado].texto]),
+    columnas: hrefDe ? [...columnas, "Ir a"] : columnas,
+    filas: datos.map((d) => {
+      const fila = [d.nombre, d.valor, ESTADO_GRAFICO[d.estado].texto];
+      if (!hrefDe) return fila;
+      return [
+        ...fila,
+        <Link key="ir" to={hrefDe(d.id)} className="text-accent underline underline-offset-2">
+          Abrir
+        </Link>,
+      ];
+    }),
   };
   return (
     <MarcoGrafico titulo={titulo} unidad={unidad} lectura={lectura} tabla={tabla}>
