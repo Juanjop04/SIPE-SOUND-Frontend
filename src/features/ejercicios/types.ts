@@ -14,4 +14,15 @@ export interface Ejercicio {
   pasos: string[] | null;
   /** Video guía de YouTube (HU-B-410); null o ausente si no tiene. */
   video?: VideoGuiaDatos | null;
+  /** Mi avance (HU-B-501); solo viene con sesión. */
+  mi_progreso?: MiProgresoEjercicio;
+}
+
+export type EstadoEjercicio = "sin_iniciar" | "en_curso" | "finalizado";
+
+/** Lo que el backend calcula del avance del estudiante en un ejercicio (HU-B-501). */
+export interface MiProgresoEjercicio {
+  estado: EstadoEjercicio;
+  mejor_bpm: number | null;
+  ultimo_registro: string | null;
 }

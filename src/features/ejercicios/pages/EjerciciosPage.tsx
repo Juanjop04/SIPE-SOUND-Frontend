@@ -1,76 +1,122 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useCallback, useState } from "react";
+import { Link } from "react-router-dom";
+import { useSession } from "@/features/auth";
 import { paths } from "@/shared/config/paths.js";
 import {
-  type ColumnaTabla,
+  Button,
+  ENLACE_EN_TEXTO,
   EncabezadoPagina,
   EstadoVacio,
   MensajeError,
   Skeleton,
-  Table,
 } from "@/shared/ui";
-import { FiltroNivel } from "../components/FiltroNivel";
+import { BarraDeFiltros } from "../components/BarraDeFiltros";
+import { PestanasDeAvance } from "../components/PestanasDeAvance";
+import { TarjetaEjercicio } from "../components/TarjetaEjercicio";
 import { useEjercicios } from "../hooks/useEjercicios";
-import type { Ejercicio } from "../types";
+import { useFiltrosEjercicios } from "../hooks/useFiltrosEjercicios";
+import {
+  acordesDisponibles,
+  contarPorEstado,
+  estadoDelEjercicio,
+  filtrarYOrdenar,
+  hayFiltros,
+  sinFiltroDeEstado,
+  soloPorEstado,
+  type FiltrosEjercicios,
+} from "../utils/tarjetas";
 
-const COLUMNAS: ColumnaTabla<Ejercicio>[] = [
-  { id: "nombre", encabezado: "Nombre", celda: (e) => e.nombre, valorOrden: (e) => e.nombre },
-  { id: "nivel", encabezado: "Nivel", celda: (e) => e.nivel, valorOrden: (e) => e.nivel },
-  {
-    id: "bpm",
-    encabezado: "BPM",
-    numerica: true,
-    celda: (e) => e.bpm_recomendado ?? "—",
-    valorOrden: (e) => e.bpm_recomendado ?? 0,
-  },
-  { id: "compas", encabezado: "Compás", numerica: true, celda: (e) => e.compas ?? "—" },
-];
-
-function Contenido({ nivel }: { nivel: string }) {
-  const navigate = useNavigate();
-  const { data, isPending, error, refetch } = useEjercicios();
-  if (isPending) return <Skeleton lineas={5} className="h-11 w-full" />;
-  if (error) return <MensajeError mensaje={error.message} onReintentar={() => refetch()} />;
-
-  const filas = nivel ? data.filter((e) => e.nivel === nivel) : data;
-  if (filas.length === 0) {
-    return (
-      <EstadoVacio
-        titulo={
-          nivel ? `No hay ejercicios de nivel ${nivel}.` : "Aún no hay ejercicios publicados."
-        }
-        descripcion="Mientras tanto, repasa los acordes de tu ruta."
-      />
-    );
-  }
+function SinResultados({
+  filtros,
+  onQuitar,
+}: {
+  filtros: FiltrosEjercicios;
+  onQuitar: () => void;
+}) {
+  const conFiltros = hayFiltros(filtros);
+  const soloEnCurso = filtros.estado === "en_curso" && soloPorEstado(filtros);
   return (
-    <Table
-      etiqueta="Ejercicios para practicar con metrónomo"
-      filas={filas}
-      columnas={COLUMNAS}
-      obtenerId={(e) => e.id}
-      onFilaClick={(e) => navigate(paths.ejercicio(e.id))}
+    <EstadoVacio
+      titulo={soloEnCurso ? "No hay ejercicios en curso." : "No hay ejercicios con estos filtros."}
+      descripcion={
+        conFiltros ? "Prueba con «Todos» o quita los filtros." : "Aún no hay ejercicios."
+      }
+      accion={
+        conFiltros ? (
+          <Button variante="secundario" onClick={onQuitar}>
+            Quitar filtros
+          </Button>
+        ) : undefined
+      }
     />
   );
 }
 
+/** Ejercicios en tarjetas con filtro por estado de avance (HU-F-503). */
 export default function EjerciciosPage() {
-  const [parametros, setParametros] = useSearchParams();
-  const nivel = parametros.get("nivel") ?? "";
+  const { usuario } = useSession();
+  const { filtros, cambiar, quitar: quitarDeLaUrl } = useFiltrosEjercicios();
+  // Remontar la barra vacía el buscador cuando "Quitar filtros" cambia la URL.
+  const [reinicio, setReinicio] = useState(0);
+  const quitar = useCallback(() => {
+    quitarDeLaUrl();
+    setReinicio((n) => n + 1);
+  }, [quitarDeLaUrl]);
+  const { data, isPending, error, refetch } = useEjercicios();
+  const conFiltros = hayFiltros(filtros);
+  const visibles = data ? filtrarYOrdenar(data, filtros) : [];
+  const conteo = contarPorEstado(data ? sinFiltroDeEstado(data, filtros) : []);
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <EncabezadoPagina
         titulo="Ejercicios"
         descripcion="Rutinas para practicar a tempo, paso a paso."
         foto="practica-ritmo"
       >
-        <FiltroNivel
-          valor={nivel}
-          onCambiar={(valor) => setParametros(valor ? { nivel: valor } : {}, { replace: true })}
-        />
+        {usuario ? (
+          <PestanasDeAvance
+            actual={filtros.estado}
+            conteo={conteo}
+            onElegir={(estado) => cambiar({ estado: estado === "todos" ? null : estado })}
+          />
+        ) : (
+          <p className="text-sm text-muted">
+            <Link to={paths.login} className={ENLACE_EN_TEXTO}>
+              Inicia sesión
+            </Link>{" "}
+            para guardar tu avance y filtrar por estado.
+          </p>
+        )}
       </EncabezadoPagina>
+
+      <div className="mt-6">
+        <BarraDeFiltros
+          key={reinicio}
+          filtros={filtros}
+          acordes={acordesDisponibles(data ?? [])}
+          conSesion={Boolean(usuario)}
+          hayFiltros={conFiltros}
+          onCambiar={cambiar}
+          onQuitar={quitar}
+        />
+      </div>
+
       <div className="mt-8" aria-live="polite">
-        <Contenido nivel={nivel} />
+        {isPending && <Skeleton lineas={4} className="h-40 w-full" />}
+        {error && <MensajeError mensaje={error.message} onReintentar={() => refetch()} />}
+        {data && visibles.length === 0 && <SinResultados filtros={filtros} onQuitar={quitar} />}
+        {visibles.length > 0 && (
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {visibles.map((e) => (
+              <TarjetaEjercicio
+                key={e.id}
+                ejercicio={e}
+                destacado={filtros.orden === "recomendado" && estadoDelEjercicio(e) === "en_curso"}
+              />
+            ))}
+          </ul>
+        )}
       </div>
     </main>
   );
