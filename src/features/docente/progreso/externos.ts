@@ -3,3 +3,4 @@
 export { useCurso } from "../cursos/hooks/useCursos";
 export { ORDENES, descargar, ordenDe } from "../estudiantes/utils";
 export type { BloqueSeguido, IntentoSeguido, Retroalimentacion } from "../estudiantes/tipos";
+export { evaluacionesApi, evaluacionesKeys } from "../evaluaciones/api";

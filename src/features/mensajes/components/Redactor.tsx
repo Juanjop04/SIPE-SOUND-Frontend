@@ -138,7 +138,13 @@ function CamposMensaje({
   );
 }
 
-function Formulario({ soloDocentes, onCerrar }: { soloDocentes: boolean; onCerrar: () => void }) {
+interface FormularioProps {
+  soloDocentes: boolean;
+  onCerrar: () => void;
+  para?: Destinatario;
+}
+
+function Formulario({ soloDocentes, onCerrar, para }: FormularioProps) {
   const { avisar } = useAviso();
   const enviar = useEnviarMensaje();
   // El texto se escribe al instante; la consulta espera a que se deje de escribir.
@@ -156,9 +162,14 @@ function Formulario({ soloDocentes, onCerrar }: { soloDocentes: boolean; onCerra
   } = useForm<DatosRedactar>({
     resolver: zodResolver(esquemaRedactar),
     mode: "onTouched",
-    defaultValues: { destino: "", asunto: "", cuerpo: "" },
+    defaultValues: { destino: para ? valorDestino(para) : "", asunto: "", cuerpo: "" },
   });
-  const lista = destinatarios.data ?? [];
+  // La persona elegida desde fuera ("Escribirle") siempre es una opción, aunque la búsqueda no la traiga.
+  const encontrados = destinatarios.data ?? [];
+  const lista =
+    para && !encontrados.some((d) => valorDestino(d) === valorDestino(para))
+      ? [para, ...encontrados]
+      : encontrados;
 
   function mandar(destino: Destinatario, datos: DatosRedactar) {
     enviar.mutate(mensajeParaDestino(destino, datos.asunto, datos.cuerpo), {
@@ -220,13 +231,20 @@ interface RedactorProps {
   onCerrar: () => void;
   /** El estudiante solo elige entre sus docentes: sin búsqueda de personas. */
   soloDocentes: boolean;
+  /** Persona con la que se abre el redactor (p. ej. desde "Necesitan apoyo"). */
+  para?: Destinatario;
 }
 
 /** Redactar un mensaje en un Drawer. El backend decide a quién se puede escribir. */
-export function Redactor({ abierto, onCerrar, soloDocentes }: RedactorProps) {
+export function Redactor({ abierto, onCerrar, soloDocentes, para }: RedactorProps) {
   return (
     <Drawer abierto={abierto} onCerrar={onCerrar} titulo="Nuevo mensaje">
-      <Formulario soloDocentes={soloDocentes} onCerrar={onCerrar} />
+      <Formulario
+        key={para ? valorDestino(para) : "nuevo"}
+        soloDocentes={soloDocentes}
+        onCerrar={onCerrar}
+        para={para}
+      />
     </Drawer>
   );
 }

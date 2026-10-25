@@ -5,3 +5,4 @@ export { BarrasPorDia, type BarraDia } from "./BarrasPorDia";
 export { PuntosConLinea, type PuntoEvaluacion } from "./PuntosConLinea";
 export { BarraApilada, type TramoApilado } from "./BarraApilada";
 export { ESTADO_GRAFICO, colorToken, type EstadoGrafico } from "./colores";
+export { BarrasAgrupadas, type CategoriaAgrupada, type SerieAgrupada } from "./BarrasAgrupadas";

@@ -39,3 +39,4 @@ export { Migas, type MigasProps, type PasoMiga } from "./Migas";
 export { SelectorTema, type SelectorTemaProps } from "./SelectorTema";
 export { AvisoSinConexion } from "./AvisoSinConexion";
 export { Paginacion, type MetaPaginacion, type PaginacionProps } from "./Paginacion";
+export { Interruptor } from "./Interruptor";
