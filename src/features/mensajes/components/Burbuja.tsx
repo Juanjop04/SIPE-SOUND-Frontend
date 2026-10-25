@@ -1,6 +1,6 @@
 import { cn } from "@/shared/lib/cn.js";
 import type { MensajeDeHilo } from "../tipos";
-import { nombreDe, rolDe } from "../utils";
+import { nombreDe } from "../utils";
 import { horaDelMensaje, textoDeAviso } from "../utilsChat";
 
 /** Un mensaje: recibidos a la izquierda en `surface`, propios a la derecha en `primary`. */
@@ -15,7 +15,6 @@ export function Burbuja({ mensaje, primero }: { mensaje: MensajeDeHilo; primero:
           ) : (
             <span className="text-paper">
               {nombreDe(mensaje.remitente)}
-              {mensaje.remitente && ` · ${rolDe(mensaje.remitente)}`}
               {" · "}
             </span>
           )}

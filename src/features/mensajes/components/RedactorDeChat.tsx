@@ -1,6 +1,5 @@
-import { useState, type FormEvent, type KeyboardEvent } from "react";
-import { Button, MensajeError } from "@/shared/ui";
-import { LIMITES } from "@/shared/validacion";
+import { useState } from "react";
+import { CampoDeMensaje } from "./CampoDeMensaje";
 import { useEnviarMensaje } from "../hooks";
 import { esquemaRespuesta } from "../schemas";
 
@@ -69,38 +68,15 @@ export function RedactorDeChat({ responderA, onPendiente, onReintento }: Props) 
     mandar(r.data.cuerpo);
   };
 
-  const alEnviar = (e: FormEvent) => {
-    e.preventDefault();
-    probar();
-  };
-  const alTeclear = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
-      e.preventDefault();
-      probar();
-    }
-  };
-
   return (
-    <form noValidate onSubmit={alEnviar} className="border-t border-linea p-3">
-      {/* El backend decide quién responde a quién: su mensaje (403, 429…) se muestra tal cual. */}
-      {enviar.error && <MensajeError mensaje={enviar.error.message} />}
-      {errorLocal && <MensajeError mensaje={errorLocal} />}
-      <div className="flex items-end gap-2">
-        <textarea
-          aria-label="Escribe tu respuesta"
-          placeholder="Escribe tu respuesta"
-          rows={2}
-          value={texto}
-          maxLength={LIMITES.cuerpoMensaje.max}
-          onChange={(e) => setTexto(e.target.value)}
-          onKeyDown={alTeclear}
-          className="min-h-[44px] flex-1 resize-none rounded-caja border border-linea-fuerte bg-surface px-3 py-2 text-paper placeholder:text-muted focus-visible:border-accent"
-        />
-        <Button type="submit" cargando={enviar.isPending}>
-          Enviar
-        </Button>
-      </div>
-      <p className="mt-1 text-xs text-muted">Enter envía · Mayús+Enter, nueva línea</p>
-    </form>
+    <CampoDeMensaje
+      etiqueta="Escribe tu respuesta"
+      texto={texto}
+      onTexto={setTexto}
+      onEnviar={probar}
+      enviando={enviar.isPending}
+      // El backend decide quién responde a quién: su mensaje (403, 429…) se muestra tal cual.
+      errores={[enviar.error?.message, errorLocal]}
+    />
   );
 }

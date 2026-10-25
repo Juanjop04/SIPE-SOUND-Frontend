@@ -1,11 +1,6 @@
 // Funciones puras de la mensajería (HU-F-407).
-import type { Alcance, Destinatario, NuevoMensaje, Persona, RolPersona } from "./tipos";
-
-const ETIQUETA_ROL: Record<RolPersona, string> = {
-  estudiante: "Estudiante",
-  docente: "Docente",
-  admin: "Administrador",
-};
+import { LIMITES } from "@/shared/validacion";
+import type { Alcance, Destinatario, NuevoMensaje, Persona } from "./tipos";
 
 /** "Marta Ríos"; sin cuenta (el remitente ya no existe) se dice sin inventar un nombre. */
 export function nombreDe(persona: Persona | null): string {
@@ -13,8 +8,17 @@ export function nombreDe(persona: Persona | null): string {
   return [persona.nombre, persona.apellido].filter(Boolean).join(" ");
 }
 
-export function rolDe(persona: Persona | null): string {
-  return persona ? ETIQUETA_ROL[persona.rol] : "";
+/**
+ * El asunto de un hilo nuevo es el nombre de quien lo envía (HU-F-508): nadie lo escribe. El
+ * backend pide 3 a 120 caracteres; un nombre más corto se completa y uno más largo se recorta.
+ */
+export function asuntoDeNombre(
+  persona: { nombre: string; apellido: string | null } | null,
+): string {
+  const nombre = persona ? [persona.nombre, persona.apellido].filter(Boolean).join(" ").trim() : "";
+  const asunto =
+    nombre.length >= LIMITES.asunto.min ? nombre : `Mensaje de ${nombre || "un usuario"}`;
+  return asunto.slice(0, LIMITES.asunto.max);
 }
 
 /** Valor del <option> del selector: identifica tipo e id sin ambigüedad. */

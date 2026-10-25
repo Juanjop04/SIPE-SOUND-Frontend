@@ -4,6 +4,9 @@ import { paths } from "@/shared/config/paths.js";
 import { LIMITES } from "@/shared/validacion";
 import type { FiltroBandeja, FiltrosBandeja } from "./tipos";
 
+/** Id reservado: la conversación en borrador (nunca coincide con el UUID de un hilo). */
+export const HILO_NUEVO = "nuevo";
+
 export const FILTROS: { valor: FiltroBandeja; etiqueta: string }[] = [
   { valor: "recibidos", etiqueta: "Recibidos" },
   { valor: "enviados", etiqueta: "Enviados" },
@@ -18,6 +21,8 @@ export function useRutasMensajes() {
   return {
     bandeja: enAtril ? paths.docente.mensajes : paths.mensajes,
     hilo: (id: string) => (enAtril ? paths.docente.mensaje(id) : paths.mensaje(id)),
+    /** El chat en borrador vive en la misma ruta del hilo, con el id reservado "nuevo". */
+    nuevo: enAtril ? paths.docente.mensaje(HILO_NUEVO) : paths.mensaje(HILO_NUEVO),
   };
 }
 
@@ -46,7 +51,10 @@ export function useFiltrosBandeja() {
     [setParametros],
   );
 
-  return { filtros, cambiar, busqueda: parametros.toString() };
+  // Para el chat nuevo (?para=&nombre=) no viaja a los hilos que se abren desde la bandeja.
+  const aLaBandeja = new URLSearchParams(parametros);
+  ["para", "nombre"].forEach((clave) => aLaBandeja.delete(clave));
+  return { filtros, cambiar, busqueda: aLaBandeja.toString() };
 }
 
 /** Añade a una ruta los filtros de la bandeja (?filtro=&q=…) para no perderlos al abrir un hilo. */

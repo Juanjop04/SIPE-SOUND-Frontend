@@ -6,7 +6,7 @@ import { LIMITES } from "@/shared/validacion";
 import { useBandeja } from "../hooks";
 import type { HiloDeBandeja } from "../tipos";
 import { FILTROS, conBusqueda, useFiltrosBandeja, useRutasMensajes } from "../useFiltrosBandeja";
-import { nombreDe, rolDe } from "../utils";
+import { nombreDe } from "../utils";
 import { horaCorta } from "../utilsChat";
 import { Iniciales } from "./Iniciales";
 import type { ReactNode } from "react";
@@ -29,6 +29,8 @@ function FilaHilo({
 }) {
   const sinLeer = hilo.no_leidos > 0;
   const { remitente, propio, extracto, creado_en } = hilo.ultimo;
+  // Los hilos nuevos usan el nombre de quien escribe como asunto: repetirlo no dice nada.
+  const asuntoAporta = propio || hilo.asunto !== nombreDe(remitente);
   return (
     <li>
       <Link
@@ -49,17 +51,16 @@ function FilaHilo({
               )}
             >
               {propio ? "Tú" : nombreDe(remitente)}
-              {!propio && remitente && (
-                <span className="font-normal text-muted"> · {rolDe(remitente)}</span>
-              )}
             </span>
             <time dateTime={creado_en} className="shrink-0 font-mono text-xs text-muted">
               {horaCorta(creado_en)}
             </time>
           </span>
-          <span className={cn("truncate text-sm", sinLeer ? "text-paper" : "text-muted")}>
-            {hilo.asunto}
-          </span>
+          {asuntoAporta && (
+            <span className={cn("truncate text-sm", sinLeer ? "text-paper" : "text-muted")}>
+              {hilo.asunto}
+            </span>
+          )}
           <span className="flex items-center justify-between gap-3">
             <span className="truncate text-xs text-muted">{extracto}</span>
             {sinLeer && (
