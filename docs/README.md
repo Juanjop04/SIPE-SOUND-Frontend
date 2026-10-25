@@ -96,7 +96,7 @@ Cada HU se despliega **después** de su HU de backend.
 | 5 | [HU-F-405 Admin: docentes, cursos y accesos](fase-4-cuentas-y-comunicacion/HU-F-405-admin-docentes-y-cursos.md) | 5 | F-404, **B-406** | 🔍 |
 | 6 | [HU-F-406 Panel de progreso del docente](fase-4-cuentas-y-comunicacion/HU-F-406-panel-de-progreso-docente.md) | 5 | F-309, **B-408** | 🔍 |
 | 7 | [HU-F-407 Mensajes: bandeja, hilos y avisos](fase-4-cuentas-y-comunicacion/HU-F-407-mensajeria-interna.md) | 8 | F-318, F-403, **B-409** | 🔍 |
-| 8 | [HU-F-408 Video guía de YouTube embebido](fase-4-cuentas-y-comunicacion/HU-F-408-videos-guia.md) | 5 | F-305, F-308, F-312, **B-410** | ⬜ |
+| 8 | [HU-F-408 Video guía de YouTube embebido](fase-4-cuentas-y-comunicacion/HU-F-408-videos-guia.md) | 5 | F-305, F-308, F-312, **B-410** | 🔍 |
 
 ```
 Backend : B401 B402 B403 B404 B407 B405 B406 │ B408 B409 B410

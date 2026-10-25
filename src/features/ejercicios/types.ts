@@ -1,3 +1,5 @@
+import type { VideoGuiaDatos } from "@/shared/lib/youtube";
+
 /** GET /ejercicios (HU-B-306). */
 export interface Ejercicio {
   id: number;
@@ -10,4 +12,6 @@ export interface Ejercicio {
   duracion_min: number | null;
   acordes: string[] | null;
   pasos: string[] | null;
+  /** Video guía de YouTube (HU-B-410); null o ausente si no tiene. */
+  video?: VideoGuiaDatos | null;
 }

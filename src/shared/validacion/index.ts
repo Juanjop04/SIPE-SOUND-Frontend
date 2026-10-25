@@ -9,6 +9,8 @@ export {
   passwordActual,
   codigoVerificacion,
   codigoCurso,
+  videoYoutube,
+  inicioDeVideo,
   entero,
   lista,
   aceptaTerminos,

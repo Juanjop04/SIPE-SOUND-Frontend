@@ -4,11 +4,12 @@ import {
   type Control,
   type FieldErrors,
   type UseFormRegister,
+  type UseFormSetValue,
 } from "react-hook-form";
 import { EncabezadoEjercicio, PasosEjercicio } from "@/features/ejercicios";
 import { useLecciones } from "@/features/lecciones";
 import { TrasteDivider } from "@/shared/music";
-import { Field, ListaEditable, Select } from "@/shared/ui";
+import { Field, ListaEditable, Select, VideoGuia } from "@/shared/ui";
 import { LIMITES } from "@/shared/validacion";
 import { COMPASES, esquemaEjercicio, type DatosEjercicio, type EntradaEjercicio } from "../schemas";
 import type { EjercicioDocente } from "../tipos";
@@ -20,6 +21,7 @@ import {
   CampoNivel,
   CampoTitulo,
 } from "./CamposComunes";
+import { CampoVideo, valoresDeVideo, videoDeCampos } from "./CampoVideo";
 import { MarcoEditor } from "./MarcoEditor";
 import { PieEditor } from "./PieEditor";
 import { SelectorAcordes } from "./SelectorAcordes";
@@ -34,6 +36,8 @@ const CAMPOS = [
   "duracion_min",
   "acordes",
   "pasos",
+  "video_url",
+  "video_inicio",
 ] as const;
 const BPM_INICIAL = 60;
 
@@ -48,6 +52,7 @@ function valoresDe(e: EjercicioDocente | null): EntradaEjercicio {
     duracion_min: e?.duracion_min ? String(e.duracion_min) : "",
     acordes: e?.acordes ?? [],
     pasos: e?.pasos ?? [],
+    ...valoresDeVideo(e?.video),
   };
 }
 
@@ -55,9 +60,24 @@ interface CamposProps {
   register: UseFormRegister<EntradaEjercicio>;
   control: Control<EntradaEjercicio, unknown, DatosEjercicio>;
   errors: FieldErrors<EntradaEjercicio>;
+  setValue: UseFormSetValue<EntradaEjercicio>;
 }
 
-function CamposEjercicio({ register, control, errors }: CamposProps) {
+/** El título de la vista previa del video es el del ejercicio que se está escribiendo. */
+function VideoDeEjercicio({ register, control, errors, setValue }: CamposProps) {
+  const titulo = useWatch({ control, name: "nombre" });
+  return (
+    <CampoVideo
+      register={register}
+      control={control}
+      errors={errors}
+      setValue={setValue}
+      titulo={titulo}
+    />
+  );
+}
+
+function CamposEjercicio({ register, control, errors, setValue }: CamposProps) {
   // Lecciones publicadas del catálogo (las del estudiante): a ellas se asocia el ejercicio.
   const lecciones = useLecciones();
   return (
@@ -125,6 +145,7 @@ function CamposEjercicio({ register, control, errors }: CamposProps) {
           />
         )}
       />
+      <VideoDeEjercicio register={register} control={control} errors={errors} setValue={setValue} />
     </>
   );
 }
@@ -136,6 +157,7 @@ function PreviaEjercicio({
   control: Control<EntradaEjercicio, unknown, DatosEjercicio>;
 }) {
   const v = useWatch({ control });
+  const video = videoDeCampos(v.video_url, v.video_inicio);
   return (
     <>
       <EncabezadoEjercicio
@@ -150,6 +172,7 @@ function PreviaEjercicio({
         }}
       />
       <TrasteDivider className="my-6" />
+      {video && <VideoGuia video={video} titulo={v.nombre || "Video guía"} className="mb-6" />}
       <PasosEjercicio pasos={(v.pasos ?? []).filter((p): p is string => Boolean(p?.trim()))} />
     </>
   );
@@ -166,7 +189,7 @@ export function FormularioEjercicio({ inicial }: { inicial: EjercicioDocente | n
     valoresIniciales: valoresDe(inicial),
     campos: CAMPOS,
   });
-  const { register, control, formState } = formulario;
+  const { register, control, formState, setValue } = formulario;
 
   return (
     <MarcoEditor
@@ -174,7 +197,12 @@ export function FormularioEjercicio({ inicial }: { inicial: EjercicioDocente | n
       previa={<PreviaEjercicio control={control} />}
       formulario={
         <form onSubmit={guardar} noValidate className="flex flex-col gap-5">
-          <CamposEjercicio register={register} control={control} errors={formState.errors} />
+          <CamposEjercicio
+            register={register}
+            control={control}
+            errors={formState.errors}
+            setValue={setValue}
+          />
           <PieEditor
             editor={editor}
             estado={inicial?.estado ?? null}

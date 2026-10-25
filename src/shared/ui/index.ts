@@ -21,6 +21,7 @@ export {
   type DireccionOrden,
 } from "./Table";
 export { Dialog, type DialogProps } from "./Dialog";
+export { VideoGuia, type VideoGuiaProps } from "./VideoGuia";
 export { Drawer, type DrawerProps } from "./Drawer";
 export { Tabs, type TabsProps, type Pestana } from "./Tabs";
 export {
