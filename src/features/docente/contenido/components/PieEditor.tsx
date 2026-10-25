@@ -1,4 +1,5 @@
 import { ConfirmarSalida, MensajeError } from "@/shared/ui";
+import { usePuedeBorrar } from "../externos";
 import type { EstadoContenido } from "../tipos";
 import type { useEditorContenido } from "../useEditorContenido";
 import { BarraAcciones } from "./BarraAcciones";
@@ -11,6 +12,8 @@ interface PieEditorProps {
   errorGeneral: string | null;
   hayCambios: boolean;
   onPublicar: () => void;
+  /** Quién lo creó: solo él (o un admin) puede borrarlo (HU-B-412). */
+  autorId?: string | null;
 }
 
 /** Errores, barra de acciones, zona de eliminar y confirmación al salir: comunes a ambos editores. */
@@ -20,7 +23,9 @@ export function PieEditor({
   errorGeneral,
   hayCambios,
   onPublicar,
+  autorId,
 }: PieEditorProps) {
+  const puedeBorrar = usePuedeBorrar(autorId);
   return (
     <>
       {errorGeneral && <MensajeError className="mt-6" mensaje={errorGeneral} />}
@@ -30,7 +35,13 @@ export function PieEditor({
         onPublicar={onPublicar}
         onCambiarEstado={(nuevo) => editor.cambiarEstado(nuevo).catch(() => null)}
       />
-      {estado !== null && (
+      {estado !== null && !puedeBorrar && (
+        <p className="mt-12 border-t border-linea pt-6 text-sm text-muted">
+          Este contenido lo creó otra persona: puedes editarlo, publicarlo y archivarlo, pero solo
+          su autor puede borrarlo.
+        </p>
+      )}
+      {estado !== null && puedeBorrar && (
         <ZonaEliminar
           nombre={editor.config.nombre}
           mensajeEnUso={editor.config.mensajeEnUso}

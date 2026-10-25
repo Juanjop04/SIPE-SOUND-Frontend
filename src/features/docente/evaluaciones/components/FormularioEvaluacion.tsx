@@ -15,7 +15,7 @@ import { AccionesEvaluacion } from "./AccionesEvaluacion";
 import { DatosGenerales } from "./DatosGenerales";
 import { SeccionPreguntas } from "./SeccionPreguntas";
 import { VistaEstudiante } from "./VistaEstudiante";
-import { ZonaEliminarEvaluacion } from "./ZonaEliminarEvaluacion";
+import { ZonaBorrado } from "./ZonaBorrado";
 
 const CAMPOS = [
   "titulo",
@@ -112,7 +112,8 @@ export function FormularioEvaluacion({ inicial, cursoId }: FormularioEvaluacionP
         onVistaEstudiante={() => setVista(true)}
       />
       {inicial && (
-        <ZonaEliminarEvaluacion
+        <ZonaBorrado
+          autorId={inicial.autor_id}
           publicada={inicial.estado === "publicada"}
           ocupado={editor.ocupado}
           onEliminar={editor.eliminarEvaluacion}

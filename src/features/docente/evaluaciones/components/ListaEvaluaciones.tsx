@@ -11,6 +11,7 @@ import {
   Table,
   type ColumnaTabla,
 } from "@/shared/ui";
+import { Autoria } from "../externos";
 import { useEvaluacionesDocente } from "../api";
 import { useCursos, type Curso } from "../datos";
 import type { EstadoEvaluacion, EvaluacionDocente } from "../tipos";
@@ -64,6 +65,11 @@ function columnasDe(
     },
     ...curso,
     { id: "preguntas", encabezado: "Preguntas", numerica: true, celda: (e) => e.preguntas },
+    {
+      id: "autoria",
+      encabezado: "Autoría",
+      celda: (e) => <Autoria autor={e.autor} modificadoPor={e.modificado_por} />,
+    },
     { id: "estado", encabezado: "Estado", celda: (e) => <Estado estado={e.estado} /> },
     {
       id: "limite",
