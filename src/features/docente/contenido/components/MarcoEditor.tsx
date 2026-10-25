@@ -25,8 +25,11 @@ export function MarcoEditor({ titulo, formulario, previa }: MarcoEditorProps) {
 
   return (
     <main className="mx-auto max-w-6xl px-4 pt-8 sm:px-8">
-      <Link to={paths.docente.contenido} className="font-mono text-sm text-muted hover:text-accent">
-        Contenido ›
+      <Link
+        to={paths.docente.contenido}
+        className="font-mono text-sm text-accent underline underline-offset-2 hover:decoration-2"
+      >
+        ← Contenido
       </Link>
       <h1 className="mb-8 mt-2 font-display text-3xl font-semibold text-paper">{titulo}</h1>
       {esEscritorio ? (

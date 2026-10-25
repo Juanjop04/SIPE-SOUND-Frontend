@@ -69,7 +69,7 @@ function CursosArchivados() {
       open={abierto}
       onToggle={(e) => setAbierto((e.currentTarget as HTMLDetailsElement).open)}
     >
-      <summary className="cursor-pointer text-sm text-accent hover:underline">
+      <summary className="cursor-pointer text-sm text-accent underline underline-offset-2 hover:decoration-2">
         Cursos archivados
       </summary>
       <div className="mt-4">{abierto && <ListaArchivados />}</div>

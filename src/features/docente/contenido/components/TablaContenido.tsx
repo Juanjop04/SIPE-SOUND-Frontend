@@ -54,7 +54,10 @@ function columnasDe(
       id: "acciones",
       encabezado: "Acciones",
       celda: (c) => (
-        <Link to={editor(c)} className="text-sm text-accent hover:underline">
+        <Link
+          to={editor(c)}
+          className="text-sm text-accent underline underline-offset-2 hover:decoration-2"
+        >
           Editar
         </Link>
       ),

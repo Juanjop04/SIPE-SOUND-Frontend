@@ -80,7 +80,7 @@ function columnasDe({
           <button
             type="button"
             onClick={() => onAccion("detalle", u)}
-            className="whitespace-nowrap text-left hover:underline"
+            className="whitespace-nowrap text-left underline decoration-linea-fuerte underline-offset-2 hover:decoration-accent"
           >
             {nombreCompleto(u)}
           </button>
@@ -125,7 +125,7 @@ function ListaApilada(props: TablaUsuariosProps) {
               <button
                 type="button"
                 onClick={() => onAccion("detalle", u)}
-                className="text-left font-medium text-paper hover:underline"
+                className="text-left font-medium text-paper underline decoration-linea-fuerte underline-offset-2 hover:decoration-accent"
               >
                 {nombreCompleto(u)}
               </button>

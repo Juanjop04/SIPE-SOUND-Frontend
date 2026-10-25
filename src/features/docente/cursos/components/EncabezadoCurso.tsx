@@ -22,8 +22,11 @@ export function EncabezadoCurso({ curso }: { curso: CursoDetalle }) {
 
   return (
     <header className="flex flex-col gap-4">
-      <Link to={paths.docente.cursos} className="font-mono text-sm text-muted hover:text-accent">
-        Cursos ›
+      <Link
+        to={paths.docente.cursos}
+        className="font-mono text-sm text-accent underline underline-offset-2 hover:decoration-2"
+      >
+        ← Cursos
       </Link>
       <h1 className="font-display text-3xl font-semibold text-paper">{curso.nombre}</h1>
       <Tablatura

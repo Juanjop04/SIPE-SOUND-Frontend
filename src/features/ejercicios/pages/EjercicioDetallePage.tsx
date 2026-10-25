@@ -31,7 +31,7 @@ function Practica({ ejercicio }: { ejercicio: Ejercicio }) {
         {ejercicio.leccion_id !== null && (
           <Link
             to={paths.leccion(ejercicio.leccion_id)}
-            className="text-sm text-accent hover:underline"
+            className="text-sm text-accent underline underline-offset-2 hover:decoration-2"
           >
             Volver a la lección
           </Link>

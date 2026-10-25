@@ -25,7 +25,10 @@ export function TuDocenteTeEscribio() {
         <h2 id="tu-docente" className="font-display text-xl font-semibold text-paper">
           Tu docente te escribió
         </h2>
-        <Link to={paths.cursos} className="text-sm text-accent hover:underline">
+        <Link
+          to={paths.cursos}
+          className="text-sm text-accent underline underline-offset-2 hover:decoration-2"
+        >
           Ver todos
         </Link>
       </div>

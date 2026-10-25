@@ -18,7 +18,10 @@ function Cuenta() {
   if (estaCargando) return <span className="w-24" aria-hidden="true" />;
   if (usuario) return <MenuCuenta />;
   return (
-    <Link to={paths.login} className="text-sm text-accent hover:underline">
+    <Link
+      to={paths.login}
+      className="text-sm text-accent underline underline-offset-2 hover:decoration-2"
+    >
       Iniciar sesión
     </Link>
   );

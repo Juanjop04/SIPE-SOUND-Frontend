@@ -77,7 +77,7 @@ function Paneles({ ancha, hiloId, bandeja, hilo }: PanelesProps) {
     >
       <Link
         to={conBusqueda(rutas.bandeja, busqueda)}
-        className="w-fit text-sm text-accent hover:underline"
+        className={claseBoton({ variante: "secundario", tamano: "sm", className: "w-fit" })}
       >
         ← Volver a mensajes
       </Link>

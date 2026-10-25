@@ -20,7 +20,7 @@ export function ListaLecciones({ lecciones }: { lecciones: LeccionRuta[] }) {
           </span>
           <Link
             to={paths.leccion(leccion.id)}
-            className="text-paper transition-colors duration-rapida hover:text-accent"
+            className="text-paper underline decoration-linea-fuerte underline-offset-4 transition-colors duration-rapida hover:text-accent hover:decoration-accent"
           >
             {leccion.titulo}
           </Link>

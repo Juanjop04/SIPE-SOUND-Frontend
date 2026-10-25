@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
-import { EstadoVacio, MensajeError, Skeleton } from "@/shared/ui";
+import { EstadoVacio, MensajeError, Skeleton, claseBoton } from "@/shared/ui";
 import { PaginaAtril } from "../components/PaginaAtril";
 import { useEvaluacionDocente, useResultadosEvaluacion } from "../evaluaciones/api";
 import { DialogoComentario, type Destinatario } from "../evaluaciones/datos";
@@ -37,7 +37,7 @@ export default function ResultadosEvaluacionPage() {
     >
       <Link
         to={paths.docente.evaluacion(id)}
-        className="-mt-4 mb-6 inline-block text-sm text-accent hover:underline"
+        className={claseBoton({ variante: "secundario", tamano: "sm", className: "-mt-4 mb-6" })}
       >
         ← Volver a la evaluación
       </Link>

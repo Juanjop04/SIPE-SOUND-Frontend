@@ -83,7 +83,10 @@ export function EstudiantesResultados({
       celda: (e) => {
         const a = detalle(e);
         return a ? (
-          <Link to={a} className="text-paper hover:text-accent">
+          <Link
+            to={a}
+            className="text-paper underline decoration-linea-fuerte underline-offset-4 hover:text-accent hover:decoration-accent"
+          >
             {e.nombre}
           </Link>
         ) : (
