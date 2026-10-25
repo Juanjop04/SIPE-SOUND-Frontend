@@ -102,3 +102,28 @@ Cada HU se despliega **después** de su HU de backend.
 Backend : B401 B402 B403 B404 B407 B405 B406 │ B408 B409 B410
 Frontend:       F401 F402 ─── F403 ─ F404 F405 │ F406 F407 F408
 ```
+
+## Fase 5 · Experiencia y visualización
+
+Mejoras de diseño y de recorrido pedidas el 2026-10-25. Decisiones compartidas con el backend:
+`SIPE-SOUND-BACKEND/docs/fase-5-experiencia-y-visualizacion/00-decisiones-fase-5.md`. Cada HU se
+despliega **después** de su HU de backend, si la tiene. Ya corregidos fuera de HU: el 429 de la
+solicitud de cambio de nombre y el modo "Tema del sistema".
+
+| Orden | HU | Pts | Depende de | Estado |
+|---|---|---|---|---|
+| 1 | [HU-F-507 Barra superior y menú lateral contraíble](fase-5-experiencia-y-visualizacion/HU-F-507-barra-superior-y-menu-contraible.md) | 5 | F-303, F-403, F-407 | ⬜ |
+| 2 | [HU-F-504 Mis cursos con avance y estado](fase-5-experiencia-y-visualizacion/HU-F-504-mis-cursos-con-avance.md) | 8 | F-311, F-318, **B-502** | ⬜ |
+| 3 | [HU-F-502 Mi progreso con gráficos](fase-5-experiencia-y-visualizacion/HU-F-502-mi-progreso-con-graficos.md) | 8 | F-317, F-322 | ⬜ |
+| 4 | [HU-F-503 Ejercicios en tarjetas y filtro por avance](fase-5-experiencia-y-visualizacion/HU-F-503-ejercicios-en-tarjetas.md) | 5 | F-321, **B-501** | ⬜ |
+| 5 | [HU-F-501 Mensajes con diseño de chat](fase-5-experiencia-y-visualizacion/HU-F-501-mensajes-tipo-chat.md) | 8 | F-407, F-507 | ⬜ |
+| 6 | [HU-F-505 Docente: cursos y estudiantes en pocos clics](fase-5-experiencia-y-visualizacion/HU-F-505-docente-cursos-y-estudiantes.md) | 8 | F-309, F-406, F-507 | ⬜ |
+| 7 | [HU-F-506 Panel de progreso con gráficas y evaluaciones](fase-5-experiencia-y-visualizacion/HU-F-506-panel-de-progreso-con-graficas.md) | 13 | F-406, F-502, **B-503** | ⬜ |
+
+```
+Backend : B501 B502 B503
+Frontend: F507 ─ F504 ─ F502 ─ F503 ─ F501 ─ F505 ─ F506
+```
+
+F-507 va primero porque cambia los layouts que usan las demás; F-502 antes de F-506 porque
+F-506 reutiliza sus gráficos.
