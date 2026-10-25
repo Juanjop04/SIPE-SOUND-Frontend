@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { Activity, House, Map, Music, Timer, type LucideIcon } from "lucide-react";
+import { Activity, House, Mail, Map, Music, Timer, type LucideIcon } from "lucide-react";
 import { useSession } from "@/features/auth";
+import { ContadorNoLeidos } from "@/features/mensajes";
 import { cn } from "@/shared/lib/cn.js";
 import { paths } from "@/shared/config/paths.js";
 
@@ -12,6 +13,10 @@ interface Destino {
   exacto?: boolean;
   /** Inicio y Mi progreso necesitan cuenta: sin sesión no se muestran. */
   conSesion?: boolean;
+  /** Con el contador de mensajes sin leer junto a la etiqueta. */
+  contador?: boolean;
+  /** La barra inferior móvil ya tiene 5 destinos: este va como ícono en el encabezado. */
+  fueraDeBarraInferior?: boolean;
 }
 
 // Orden de HU-F-318: Inicio · Ruta · Ejercicios · Acordes · Mi progreso.
@@ -21,6 +26,14 @@ const DESTINOS: Destino[] = [
   { to: paths.ejercicios, etiqueta: "Ejercicios", Icono: Timer },
   { to: paths.acordes, etiqueta: "Acordes", Icono: Music },
   { to: paths.progreso, etiqueta: "Mi progreso", Icono: Activity, conSesion: true },
+  {
+    to: paths.mensajes,
+    etiqueta: "Mensajes",
+    Icono: Mail,
+    conSesion: true,
+    contador: true,
+    fueraDeBarraInferior: true,
+  },
 ];
 
 function useDestinos(): Destino[] {
@@ -34,7 +47,7 @@ export function BarraLateral() {
   return (
     <nav aria-label="Principal">
       <ul className="flex flex-col gap-1">
-        {destinos.map(({ to, etiqueta, Icono, exacto }) => (
+        {destinos.map(({ to, etiqueta, Icono, exacto, contador }) => (
           <li key={to}>
             <NavLink
               to={to}
@@ -50,6 +63,7 @@ export function BarraLateral() {
             >
               <Icono size={18} aria-hidden="true" />
               {etiqueta}
+              {contador && <ContadorNoLeidos />}
             </NavLink>
           </li>
         ))}
@@ -67,7 +81,7 @@ export function NavEstudiante() {
   return (
     <nav aria-label="Principal" className="hidden sm:block lg:hidden">
       <ul className="flex items-center gap-6">
-        {destinos.map(({ to, etiqueta, exacto }) => (
+        {destinos.map(({ to, etiqueta, exacto, contador }) => (
           <li key={to}>
             <NavLink
               to={to}
@@ -80,6 +94,11 @@ export function NavEstudiante() {
               }
             >
               {etiqueta}
+              {contador && (
+                <span className="ml-2 inline-flex">
+                  <ContadorNoLeidos />
+                </span>
+              )}
             </NavLink>
           </li>
         ))}
@@ -90,7 +109,7 @@ export function NavEstudiante() {
 
 /** Móvil: barra inferior fija con ícono y etiqueta (objetivo de 64 px) sobre la zona segura. */
 export function BarraInferior() {
-  const destinos = useDestinos();
+  const destinos = useDestinos().filter((d) => !d.fueraDeBarraInferior);
   return (
     <nav
       aria-label="Principal"

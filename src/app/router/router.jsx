@@ -24,6 +24,7 @@ import {
   cargarResultadosEvaluacionPage,
   cargarResumenPage,
 } from "@/features/docente";
+import { cargarMensajesPage } from "@/features/mensajes";
 import { cargarEjercicioDetallePage, cargarEjerciciosPage } from "@/features/ejercicios";
 import { cargarEvaluacionPage, cargarRedireccionQuizPage } from "@/features/evaluaciones";
 import { cargarLeccionDetallePage } from "@/features/lecciones";
@@ -74,6 +75,8 @@ export const router = createBrowserRouter([
             children: [
               { path: paths.progreso, lazy: pagina(cargarProgresoPage) },
               { path: paths.cursos, lazy: pagina(cargarMisCursosPage) },
+              { path: paths.mensajes, lazy: pagina(cargarMensajesPage) },
+              { path: paths.mensaje(), lazy: pagina(cargarMensajesPage) },
               { path: paths.evaluacion(), lazy: pagina(cargarEvaluacionPage) },
               { path: paths.quiz(), lazy: pagina(cargarRedireccionQuizPage) },
             ],
@@ -96,6 +99,8 @@ export const router = createBrowserRouter([
                   { path: paths.docente.cursos, lazy: pagina(cargarCursosPage) },
                   { path: paths.docente.curso(), lazy: pagina(cargarCursoDetallePage) },
                   { path: paths.docente.progreso, lazy: pagina(cargarProgresoDocentePage) },
+                  { path: paths.docente.mensajes, lazy: pagina(cargarMensajesPage) },
+                  { path: paths.docente.mensaje(), lazy: pagina(cargarMensajesPage) },
                   { path: paths.docente.contenido, lazy: pagina(cargarContenidoPage) },
                   { path: paths.docente.leccion(), lazy: pagina(cargarEditorLeccionPage) },
                   { path: paths.docente.ejercicio(), lazy: pagina(cargarEditorEjercicioPage) },

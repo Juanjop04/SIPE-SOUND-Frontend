@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { useSession } from "@/features/auth";
 import { UnionPendiente } from "@/features/cursos";
+import { AtajoMensajes } from "@/features/mensajes";
 import { paths } from "@/shared/config/paths.js";
 import { Marca } from "./components/Marca";
 import { MenuCuenta } from "./components/MenuCuenta";
@@ -42,6 +43,7 @@ export function EstudianteLayout({ children }: { children?: ReactNode }) {
             <NavEstudiante />
             <div className="flex items-center gap-3">
               <SelectorTema compactoEnMovil />
+              <AtajoMensajes />
               <Cuenta />
             </div>
           </header>

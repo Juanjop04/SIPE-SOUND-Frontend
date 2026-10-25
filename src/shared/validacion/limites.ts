@@ -5,6 +5,9 @@ export const LIMITES = {
   nombrePersona: { min: 2, max: 80 },
   email: { max: 254 },
   password: { min: 8, max: 72 },
+  // app/core/longitudes.py (mensajes.asunto y mensajes.cuerpo, HU-B-409)
+  asunto: { min: 3, max: 120 },
+  cuerpoMensaje: { min: 1, max: 4000 },
   // app/schemas/auth.py (CodigoIn): 6 dígitos
   codigoVerificacion: { largo: 6 },
   titulo: { min: 3, max: 120 },
