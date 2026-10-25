@@ -27,6 +27,10 @@ export interface Perfil {
   /** Permiso por persona que da el admin (los admins siempre pueden). */
   puede_editar_nombre: boolean;
   correo_verificado_en: string | null;
+  /** Versión de los términos que aceptó y la vigente; pendiente = debe aceptar (HU-B-411). */
+  terminos_version: number | null;
+  terminos_version_vigente: number;
+  terminos_pendientes: boolean;
 }
 
 export interface ValorSesion {

@@ -1,30 +1,26 @@
-import { TrasteDivider } from "@/shared/music";
-import { SECCIONES_TERMINOS } from "../contenido";
+import { MensajeError, Markdown, Skeleton } from "@/shared/ui";
+import { useTerminosVigentes } from "../api";
+import { formatearFecha } from "@/shared/lib/formato";
 
-/** Lectura editorial: una columna ≤ 68 caracteres, secciones separadas como trastes. */
+/** Lectura editorial de los términos vigentes (los edita el administrador, HU-F-510). */
 export default function TerminosPage() {
+  const { data, isPending, error, refetch } = useTerminosVigentes();
   return (
     <main className="mx-auto max-w-[68ch] px-4 py-8 sm:px-6">
-      <h1 className="font-display text-3xl font-semibold text-paper">Términos y condiciones</h1>
-      <p className="mt-2 text-sm text-muted">
-        Lo que aceptas al crear tu cuenta en SIPE-SOUND y cómo cuidamos tus datos.
-      </p>
-      {SECCIONES_TERMINOS.map((seccion) => (
-        <section
-          key={seccion.numero}
-          aria-labelledby={`termino-${seccion.numero}`}
-          className="mt-8"
-        >
-          <TrasteDivider numero={seccion.numero} className="mb-4" />
-          <h2
-            id={`termino-${seccion.numero}`}
-            className="font-display text-xl font-semibold text-paper"
-          >
-            {seccion.titulo}
-          </h2>
-          <p className="mt-2 leading-relaxed text-muted">{seccion.texto}</p>
-        </section>
-      ))}
+      {isPending && (
+        <div aria-busy="true">
+          <Skeleton lineas={8} className="h-6 w-full" />
+        </div>
+      )}
+      {error && <MensajeError mensaje={error.message} onReintentar={() => refetch()} />}
+      {data && (
+        <>
+          <Markdown texto={data.contenido} />
+          <p className="mt-8 font-mono text-xs text-muted">
+            Versión {data.version} · Actualizada el {formatearFecha(data.actualizado_en)}
+          </p>
+        </>
+      )}
     </main>
   );
 }

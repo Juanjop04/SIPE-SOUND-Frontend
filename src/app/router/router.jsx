@@ -2,7 +2,12 @@ import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
 import { cargarCuentaPage } from "@/features/cuenta";
 import { cargarMisCursosPage } from "@/features/cursos";
-import { cargarCursosAdminPage, cargarDocentesPage, cargarUsuariosPage } from "@/features/admin";
+import {
+  cargarCursosAdminPage,
+  cargarDocentesPage,
+  cargarTerminosAdminPage,
+  cargarUsuariosPage,
+} from "@/features/admin";
 import {
   cargarLoginPage,
   cargarRecuperarPage,
@@ -28,7 +33,7 @@ import { cargarMensajesPage } from "@/features/mensajes";
 import { cargarEjercicioDetallePage, cargarEjerciciosPage } from "@/features/ejercicios";
 import { cargarEvaluacionPage, cargarRedireccionQuizPage } from "@/features/evaluaciones";
 import { cargarLeccionDetallePage } from "@/features/lecciones";
-import { cargarTerminosPage } from "@/features/legal";
+import { cargarAceptarTerminosPage, cargarTerminosPage, GuardiaTerminos } from "@/features/legal";
 import { cargarProgresoPage } from "@/features/progreso";
 import { cargarRutaPage } from "@/features/ruta";
 import { env } from "@/shared/config/env.js";
@@ -57,8 +62,14 @@ const rutasDeDesarrollo = env.esDesarrollo
 
 export const router = createBrowserRouter([
   {
+    element: <GuardiaTerminos />,
     errorElement: <ErrorDeRuta />,
     children: [
+      {
+        // Sin menú: quien debe aceptar los términos solo ve esto (HU-F-510).
+        element: <RequireAuth />,
+        children: [{ path: paths.aceptarTerminos, lazy: pagina(cargarAceptarTerminosPage) }],
+      },
       {
         element: <EstudianteLayout />,
         children: [
@@ -145,6 +156,7 @@ export const router = createBrowserRouter([
                       { path: paths.admin.usuarios, lazy: pagina(cargarUsuariosPage) },
                       { path: paths.admin.cursos, lazy: pagina(cargarCursosAdminPage) },
                       { path: paths.admin.docentes, lazy: pagina(cargarDocentesPage) },
+                      { path: paths.admin.terminos, lazy: pagina(cargarTerminosAdminPage) },
                     ],
                   },
                 ],
