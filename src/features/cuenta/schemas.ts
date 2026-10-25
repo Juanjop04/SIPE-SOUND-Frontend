@@ -6,6 +6,7 @@ import {
   nombrePersonaOpcional,
   password,
   passwordActual,
+  texto,
 } from "@/shared/validacion";
 
 // El apellido es opcional en las cuentas anteriores a HU-B-407: vacío no se envía.
@@ -15,6 +16,10 @@ export const esquemaDatosPersonales = z.object({
 });
 export type EntradaDatosPersonales = z.input<typeof esquemaDatosPersonales>;
 export type DatosPersonales = z.output<typeof esquemaDatosPersonales>;
+
+// El backend acepta 1 a 4000; pedimos un poco más para que el aviso sea útil al administrador.
+export const esquemaSolicitudNombre = z.object({ cuerpo: texto(10, 500) });
+export type DatosSolicitudNombre = z.output<typeof esquemaSolicitudNombre>;
 
 export const esquemaContrasenaActual = z.object({ password_actual: passwordActual() });
 export type DatosContrasenaActual = z.output<typeof esquemaContrasenaActual>;

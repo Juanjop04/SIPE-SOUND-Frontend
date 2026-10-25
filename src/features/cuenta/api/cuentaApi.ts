@@ -16,6 +16,14 @@ export function editarNombre(cambios: {
 }
 
 /**
+ * POST /me/solicitud-nombre: aviso a todos los administradores (asunto fijo) pidiendo que
+ * habiliten el cambio de nombre. Los administradores no lo necesitan: reciben 422.
+ */
+export function solicitarCambioDeNombre(cuerpo: string): Promise<Respuesta<{ id: string }>> {
+  return http.conMensaje("POST", "/me/solicitud-nombre", { cuerpo });
+}
+
+/**
  * POST /me/reautenticacion: paso 1, la contraseña actual. Si coincide, envía un código al correo
  * actual y devuelve el correo enmascarado. Contraseña errada → 401 "La contraseña actual no coincide."
  */

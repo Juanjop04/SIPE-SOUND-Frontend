@@ -51,6 +51,8 @@ export const paths = Object.freeze({
   // Administración (solo rol admin, HU-F-313).
   admin: Object.freeze({
     docentes: "/admin/docentes",
+    /** Cuentas: estado, verificación, suspensión y permisos (HU-F-404). */
+    usuarios: "/admin/usuarios",
   }),
 });
 
