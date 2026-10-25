@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/features/auth";
 import { mensajesApi, mensajesKeys } from "./datos";
@@ -32,19 +33,32 @@ export function useBandeja(filtros: FiltrosBandeja) {
   });
 }
 
-/** Abrir un hilo lo marca como leído: el contador y la bandeja se vuelven a pedir. */
+/** El hilo abierto se vuelve a consultar cada 15 s con la pestaña visible (HU-F-501). */
+export const INTERVALO_HILO_MS = 15_000;
+
+/**
+ * Abrir un hilo lo marca como leído en el backend. Se consulta cada 15 s mientras la pestaña esté
+ * visible y haya conexión (TanStack Query pausa el intervalo en segundo plano y sin red). Quien lo
+ * usa refresca el contador y la bandeja cuando llega algo (`useAvisarLectura`).
+ */
 export function useHilo(id: string | undefined) {
-  const queryClient = useQueryClient();
   return useQuery({
     queryKey: mensajesKeys.hilo(id ?? ""),
-    queryFn: async () => {
-      const hilo = await mensajesApi.hilo(id ?? "");
-      void queryClient.invalidateQueries({ queryKey: mensajesKeys.noLeidos() });
-      void queryClient.invalidateQueries({ queryKey: [...mensajesKeys.todo, "bandeja"] });
-      return hilo;
-    },
+    queryFn: () => mensajesApi.hilo(id ?? ""),
     enabled: Boolean(id),
+    refetchInterval: INTERVALO_HILO_MS,
+    refetchIntervalInBackground: false,
+    networkMode: "online",
   });
+}
+
+/** Leer un hilo cambia el contador de no leídos y la bandeja: se vuelven a pedir. */
+export function useAvisarLectura() {
+  const queryClient = useQueryClient();
+  return useCallback(() => {
+    void queryClient.invalidateQueries({ queryKey: mensajesKeys.noLeidos() });
+    void queryClient.invalidateQueries({ queryKey: [...mensajesKeys.todo, "bandeja"] });
+  }, [queryClient]);
 }
 
 /** Personas, cursos y grupos a los que esta persona puede escribir (el backend decide). */
