@@ -1,0 +1,71 @@
+/*
+ * Tokens del sistema de diseño "Diapasón" (contrato 05 §2). ÚNICO lugar con valores de color.
+ * Canales RGB sin rgb(): Tailwind los usa como rgb(var(--color-x) / <alpha-value>),
+ * así funcionan las opacidades (bg-primary/10). JavaScript los lee con leerColorToken().
+ */
+:root {
+  /* Paleta del rediseño (HU-F-320, maqueta aprobada con ajustes AA). Capas: página → barras → tarjetas → lo que flota. */
+  --color-ink: 11 16 32; /* #0B1020 · fondo de la página */
+  --color-ink-2: 16 22 43; /* #10162B · barra lateral, encabezado, barras fijas, pistas de progreso */
+  --color-surface: 23 29 51; /* #171D33 · tarjetas, tablas, controles (siempre con borde linea) */
+  --color-surface-2: 31 39 68; /* #1F2744 · lo que flota: Drawer, Dialog, menús, avisos */
+  --color-linea: 58 70 115; /* #3A4673 · bordes de tarjetas y divisores */
+  --color-linea-fuerte: 107 120 168; /* #6B78A8 · bordes de controles (≥ 3:1 en toda capa) */
+  --color-primary: 98 87 245; /* #6257F5 · fondo de botón y relleno de progreso; nunca texto */
+  --color-primary-hover: 83 72 230; /* #5348E6 · más oscuro: el texto del botón gana contraste */
+  --color-primary-claro: 154 148 250; /* #9A94FA · violeta legible como texto o trazo */
+  --color-accent: 185 200 255; /* #B9C8FF · lavanda: enlaces, foco, íconos, gráficos */
+  --color-success: 52 211 153; /* #34D399 · verde: solo logro (completado, aprobado) */
+  --color-suena: 245 185 66; /* #F5B942 · ámbar: solo la cuerda que suena */
+  --color-danger: 247 112 122; /* #F7707A · errores y acciones destructivas */
+  --color-muted: 174 182 216; /* #AEB6D8 · texto secundario */
+  --color-paper: 245 246 255; /* #F5F6FF · texto principal */
+  /* Texto sobre un fondo primary (botón, ítem activo). */
+  --color-sobre-primary: 245 246 255;
+  /* Relleno degradado de Cuerda y Boca (HU-F-322); ambos extremos ≥ 3:1 frente a la pista ink-2. */
+  --color-relleno-inicio: 98 87 245; /* primary · 3.59 */
+  --color-relleno-fin: 154 148 250; /* primary-claro · 6.82 */
+  --color-logro-inicio: 38 135 109; /* success al 60 % sobre ink-2 · 4.07 */
+  --color-logro-fin: 52 211 153; /* success · 9.32 */
+  /* Barra lateral del estudiante: en el tema oscuro es la capa ink-2. */
+  --color-barra: 16 22 43;
+  --color-barra-texto: 245 246 255;
+  --color-barra-texto-2: 174 182 216;
+  --color-barra-hover: 31 39 68;
+  /* Sombra de diálogos y menús (la única del sistema). */
+  --color-sombra: 11 16 32;
+  color-scheme: dark;
+}
+
+/*
+ * Tema claro (HU-F-323): paleta institucional del equipo con ajustes AA. Lo activa
+ * data-tema="claro" en <html> (preferencia guardada o la del sistema, ver index.html).
+ */
+:root[data-tema="claro"] {
+  --color-ink: 243 241 255; /* #F3F1FF · lavanda muy clara: fondo de la página */
+  --color-ink-2: 231 227 251; /* #E7E3FB · encabezado, pistas, filas alternas */
+  --color-surface: 255 255 255; /* #FFFFFF · tarjetas y contenidos */
+  --color-surface-2: 255 255 255; /* #FFFFFF · lo que flota (con sombra) */
+  --color-linea: 217 212 242; /* #D9D4F2 · bordes de tarjetas y divisores */
+  --color-linea-fuerte: 123 117 168; /* #7B75A8 · bordes de controles (≥ 3.39) */
+  --color-primary: 91 61 235; /* #5B3DEB · violeta: botones e indicadores */
+  --color-primary-hover: 74 45 212; /* #4A2DD4 */
+  --color-primary-claro: 74 45 212; /* #4A2DD4 · violeta como texto (≥ 6.41) */
+  --color-accent: 76 51 201; /* #4C33C9 · enlaces y foco (≥ 6.39) */
+  --color-success: 8 113 77; /* #08714D · verde legible como texto (≥ 4.82); #19B981 daba 2.53 */
+  --color-suena: 168 108 5; /* #A86C05 · ámbar de la cuerda que suena (≥ 3.91) */
+  --color-danger: 184 43 54; /* #B82B36 · errores (≥ 4.88) */
+  --color-muted: 79 88 128; /* #4F5880 · texto secundario (≥ 5.52) */
+  --color-paper: 33 27 80; /* #211B50 · texto principal (≥ 12.55) */
+  --color-sobre-primary: 255 255 255; /* blanco sobre #5B3DEB · 6.34 */
+  --color-relleno-inicio: 91 61 235; /* #5B3DEB · 5.07 frente a la pista */
+  --color-relleno-fin: 115 88 240; /* #7358F0 · 3.83 */
+  --color-logro-inicio: 14 138 95; /* #0E8A5F · 3.48 */
+  --color-logro-fin: 8 113 77; /* #08714D · 4.82 */
+  --color-barra: 33 27 80; /* #211B50 · morado institucional del menú lateral */
+  --color-barra-texto: 255 255 255; /* 15.7 */
+  --color-barra-texto-2: 201 193 255; /* #C9C1FF · lavanda · 9.39 */
+  --color-barra-hover: 46 38 104; /* #2E2668 · texto 13.18 */
+  --color-sombra: 33 27 80;
+  color-scheme: light;
+}
