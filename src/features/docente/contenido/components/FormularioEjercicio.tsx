@@ -22,6 +22,7 @@ import {
   CampoTitulo,
 } from "./CamposComunes";
 import { CampoVideo, valoresDeVideo, videoDeCampos } from "./CampoVideo";
+import { textoDeAutoria } from "../externos";
 import { MarcoEditor } from "./MarcoEditor";
 import { PieEditor } from "./PieEditor";
 import { SelectorAcordes } from "./SelectorAcordes";
@@ -194,6 +195,15 @@ export function FormularioEjercicio({ inicial }: { inicial: EjercicioDocente | n
   return (
     <MarcoEditor
       titulo={inicial ? "Editar ejercicio" : "Nuevo ejercicio"}
+      autoria={
+        inicial
+          ? textoDeAutoria({
+              autor: inicial.autor ?? null,
+              modificado_por: inicial.modificado_por ?? null,
+              actualizado_en: inicial.actualizado_en,
+            })
+          : undefined
+      }
       previa={<PreviaEjercicio control={control} />}
       formulario={
         <form onSubmit={guardar} noValidate className="flex flex-col gap-5">
@@ -209,6 +219,7 @@ export function FormularioEjercicio({ inicial }: { inicial: EjercicioDocente | n
             errorGeneral={errorGeneral}
             hayCambios={formState.isDirty}
             onPublicar={publicar}
+            autorId={inicial?.autor_id}
           />
         </form>
       }

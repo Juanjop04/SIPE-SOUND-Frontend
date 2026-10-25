@@ -21,6 +21,7 @@ import {
   CampoTitulo,
 } from "./CamposComunes";
 import { CampoVideo, valoresDeVideo, videoDeCampos } from "./CampoVideo";
+import { textoDeAutoria } from "../externos";
 import { MarcoEditor } from "./MarcoEditor";
 import { PieEditor } from "./PieEditor";
 import { SelectorAcordes } from "./SelectorAcordes";
@@ -187,6 +188,15 @@ export function FormularioLeccion({ inicial }: { inicial: LeccionDocente | null 
   return (
     <MarcoEditor
       titulo={inicial ? "Editar lección" : "Nueva lección"}
+      autoria={
+        inicial
+          ? textoDeAutoria({
+              autor: inicial.autor ?? null,
+              modificado_por: inicial.modificado_por ?? null,
+              actualizado_en: inicial.actualizado_en,
+            })
+          : undefined
+      }
       previa={<PreviaLeccion control={control} />}
       formulario={
         <form onSubmit={guardar} noValidate className="flex flex-col gap-5">
@@ -202,6 +212,7 @@ export function FormularioLeccion({ inicial }: { inicial: LeccionDocente | null 
             errorGeneral={errorGeneral}
             hayCambios={formState.isDirty}
             onPublicar={publicar}
+            autorId={inicial?.autor_id}
           />
         </form>
       }

@@ -6,12 +6,14 @@ import { Tabs } from "@/shared/ui";
 
 interface MarcoEditorProps {
   titulo: string;
+  /** Quién lo creó y quién lo modificó (HU-B-412), bajo el título. */
+  autoria?: string;
   formulario: ReactNode;
   previa: ReactNode;
 }
 
 /** Escritorio: formulario (7/12) + vista previa en vivo (5/12). Móvil: Tabs "Editar / Vista previa". */
-export function MarcoEditor({ titulo, formulario, previa }: MarcoEditorProps) {
+export function MarcoEditor({ titulo, autoria, formulario, previa }: MarcoEditorProps) {
   const esEscritorio = useMediaQuery(ESCRITORIO);
   const marcoPrevia = (
     <div
@@ -31,7 +33,8 @@ export function MarcoEditor({ titulo, formulario, previa }: MarcoEditorProps) {
       >
         ← Contenido
       </Link>
-      <h1 className="mb-8 mt-2 font-display text-3xl font-semibold text-paper">{titulo}</h1>
+      <h1 className="mt-2 font-display text-3xl font-semibold text-paper">{titulo}</h1>
+      <p className="mb-8 mt-2 min-h-5 font-mono text-xs text-muted">{autoria}</p>
       {esEscritorio ? (
         <div className="grid grid-cols-12 gap-10">
           <div className="col-span-7">{formulario}</div>
