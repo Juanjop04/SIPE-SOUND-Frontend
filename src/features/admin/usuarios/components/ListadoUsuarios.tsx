@@ -1,7 +1,7 @@
 import { Button, EstadoVacio, MensajeError, Paginacion, Skeleton } from "@/shared/ui";
 import { useUsuarios } from "../hooks";
 import type { FiltrosUsuarios, Usuario } from "../tipos";
-import type { AccionUsuario } from "./MenuAcciones";
+import type { AccionUsuario } from "./AccionesFila";
 import { TablaUsuarios } from "./TablaUsuarios";
 
 interface ListadoUsuariosProps {

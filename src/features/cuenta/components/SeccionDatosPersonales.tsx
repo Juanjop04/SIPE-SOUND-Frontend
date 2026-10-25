@@ -1,11 +1,16 @@
+import { useCallback, useState } from "react";
+import { DialogoSolicitudNombre } from "./DialogoSolicitudNombre";
 import type { PerfilCuenta } from "../types";
 import { Button, Field, Input, MensajeError } from "@/shared/ui";
 import { useDatosPersonales } from "../hooks/useDatosPersonales";
 import { SeccionCuenta } from "./SeccionCuenta";
 
-const TEXTO_BLOQUEADO = "Para cambiar tu nombre, pídele al administrador que lo habilite.";
+const TEXTO_BLOQUEADO =
+  "Para cambiar tu nombre, pídele al administrador que lo habilite: puedes escribirle desde aquí.";
 
 function SoloLectura({ perfil }: { perfil: PerfilCuenta }) {
+  const [pidiendo, setPidiendo] = useState(false);
+  const cerrar = useCallback(() => setPidiendo(false), []);
   return (
     <>
       <dl className="grid gap-3 sm:grid-cols-2">
@@ -19,6 +24,12 @@ function SoloLectura({ perfil }: { perfil: PerfilCuenta }) {
         </div>
       </dl>
       <p className="text-sm text-muted">{TEXTO_BLOQUEADO}</p>
+      <div>
+        <Button variante="secundario" onClick={() => setPidiendo(true)}>
+          Solicitar cambio de nombre
+        </Button>
+      </div>
+      <DialogoSolicitudNombre abierto={pidiendo} onCerrar={cerrar} />
     </>
   );
 }

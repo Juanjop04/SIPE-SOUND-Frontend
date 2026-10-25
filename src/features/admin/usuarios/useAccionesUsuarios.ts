@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { AccionUsuario } from "./components/MenuAcciones";
+import type { AccionUsuario } from "./components/AccionesFila";
 import type { Pendiente } from "./components/DialogosUsuarios";
 import { usePermisoNombre, usePermisoNombreEnLote, useReactivar, useReenviarCodigo } from "./hooks";
 import type { Usuario } from "./tipos";
@@ -26,7 +26,6 @@ export function useAccionesUsuarios(
     else if (accion === "reenviar") reenvio.reenviar(usuario);
     else if (accion === "reactivar") reactivar.mutate(usuario);
     else if (accion === "permitir") permiso.mutate({ usuario, permitir: true });
-    else if (accion === "bloquear") permiso.mutate({ usuario, permitir: false });
     else setPendiente({ accion, usuario });
   }
 

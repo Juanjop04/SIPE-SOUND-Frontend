@@ -4,7 +4,7 @@ import { ESCRITORIO_MEDIO, useMediaQuery } from "@/shared/hooks/useMediaQuery";
 import { Table, type ColumnaTabla } from "@/shared/ui";
 import type { EstadoCuenta, Usuario } from "../tipos";
 import { ETIQUETA_ESTADO, ETIQUETA_ROL, nombreCompleto, textoEnvio } from "../utils";
-import { MenuAcciones, type AccionUsuario } from "./MenuAcciones";
+import { AccionesFila, type AccionUsuario } from "./AccionesFila";
 
 const COLOR_ESTADO: Record<EstadoCuenta, string> = {
   pendiente_verificacion: "border-linea-fuerte text-muted",
@@ -76,13 +76,16 @@ function columnasDe({
       id: "nombre",
       encabezado: "Nombre",
       celda: (u) => (
-        <button
-          type="button"
-          onClick={() => onAccion("detalle", u)}
-          className="whitespace-nowrap text-left hover:underline"
-        >
-          {nombreCompleto(u)}
-        </button>
+        <div className="flex flex-col">
+          <button
+            type="button"
+            onClick={() => onAccion("detalle", u)}
+            className="whitespace-nowrap text-left hover:underline"
+          >
+            {nombreCompleto(u)}
+          </button>
+          <span className="text-xs text-muted">{ETIQUETA_ROL[u.rol]}</span>
+        </div>
       ),
     },
     {
@@ -90,7 +93,6 @@ function columnasDe({
       encabezado: "Correo",
       celda: (u) => <span className="whitespace-nowrap font-mono text-xs">{u.email}</span>,
     },
-    { id: "rol", encabezado: "Rol", celda: (u) => ETIQUETA_ROL[u.rol] },
     { id: "estado", encabezado: "Estado", celda: (u) => <PildoraEstado estado={u.estado} /> },
     {
       id: "envio",
@@ -109,7 +111,7 @@ function columnasDe({
     {
       id: "acciones",
       encabezado: "Acciones",
-      celda: (u) => <MenuAcciones usuario={u} onAccion={onAccion} />,
+      celda: (u) => <AccionesFila usuario={u} onAccion={onAccion} />,
     },
   ];
 }
@@ -137,8 +139,8 @@ function ListaApilada(props: TablaUsuariosProps) {
             <p className="text-xs">
               {ETIQUETA_ROL[u.rol]} · <Envio usuario={u} enviando={enviando.has(u.id)} />
             </p>
+            <AccionesFila usuario={u} onAccion={onAccion} />
           </div>
-          <MenuAcciones usuario={u} onAccion={onAccion} />
         </li>
       ))}
     </ul>
