@@ -80,3 +80,25 @@ Frontend:            F201 F202 ────────────────�
 ```
 
 > Siguiente HU del frontend: **HU-F-320** (después de HU-F-314 y HU-F-316).
+
+## Fase 4 · Cuentas y comunicación
+
+Decisiones compartidas con el backend (correo por Gmail SMTP, códigos propios, reglas de
+mensajería y videos): `SIPE-SOUND-BACKEND/docs/fase-4-cuentas-y-comunicacion/00-decisiones-fase-4.md`.
+Cada HU se despliega **después** de su HU de backend.
+
+| Orden | HU | Pts | Depende de | Estado |
+|---|---|---|---|---|
+| 1 | [HU-F-401 Verificar el correo con código](fase-4-cuentas-y-comunicacion/HU-F-401-verificacion-de-correo.md) | 5 | F-313, F-207, **B-402** | ⬜ |
+| 2 | [HU-F-402 Recuperar la contraseña](fase-4-cuentas-y-comunicacion/HU-F-402-recuperar-contrasena.md) | 3 | F-401, **B-403** | ⬜ |
+| 3 | [HU-F-403 Mi cuenta: nombre, correo y contraseña](fase-4-cuentas-y-comunicacion/HU-F-403-mi-cuenta.md) | 5 | F-402, **B-404**, **B-407** | ⬜ |
+| 4 | [HU-F-404 Admin: usuarios](fase-4-cuentas-y-comunicacion/HU-F-404-admin-usuarios.md) | 8 | F-313, F-403, **B-405**, **B-407** | ⬜ |
+| 5 | [HU-F-405 Admin: docentes, cursos y accesos](fase-4-cuentas-y-comunicacion/HU-F-405-admin-docentes-y-cursos.md) | 5 | F-404, **B-406** | ⬜ |
+| 6 | [HU-F-406 Panel de progreso del docente](fase-4-cuentas-y-comunicacion/HU-F-406-panel-de-progreso-docente.md) | 5 | F-309, **B-408** | ⬜ |
+| 7 | [HU-F-407 Mensajes: bandeja, hilos y avisos](fase-4-cuentas-y-comunicacion/HU-F-407-mensajeria-interna.md) | 8 | F-318, F-403, **B-409** | ⬜ |
+| 8 | [HU-F-408 Video guía de YouTube embebido](fase-4-cuentas-y-comunicacion/HU-F-408-videos-guia.md) | 5 | F-305, F-308, F-312, **B-410** | ⬜ |
+
+```
+Backend : B401 B402 B403 B404 B407 B405 B406 │ B408 B409 B410
+Frontend:       F401 F402 ─── F403 ─ F404 F405 │ F406 F407 F408
+```
