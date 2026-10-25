@@ -12,7 +12,7 @@ API en el repositorio hermano `SIPE-SOUND-BACKEND`.
 
 1. Lee `docs/fase-1-contrato/` completo (contrato vinculante).
 2. Si la tarea toca algo visible, `docs/fase-1-contrato/05-sistema-de-diseno.md` es obligatorio.
-3. Lee la HU asignada en `docs/fase-2-reestructuracion/` o `docs/fase-3-rediseno-y-panel-docente/`.
+3. Lee la HU asignada en `docs/fase-2-reestructuracion/`, `docs/fase-3-rediseno-y-panel-docente/` o `docs/fase-4-cuentas-y-comunicacion/` (y las decisiones de la fase 4 en `SIPE-SOUND-BACKEND/docs/fase-4-cuentas-y-comunicacion/00-decisiones-fase-4.md`).
 
 ## Reglas que no se negocian
 

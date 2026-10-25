@@ -22,6 +22,11 @@ export interface Perfil {
   rol: Rol;
   nivel: string | null;
   email: string | null;
+  /** null en las cuentas anteriores a HU-B-407. */
+  apellido: string | null;
+  /** Permiso por persona que da el admin (los admins siempre pueden). */
+  puede_editar_nombre: boolean;
+  correo_verificado_en: string | null;
 }
 
 export interface ValorSesion {

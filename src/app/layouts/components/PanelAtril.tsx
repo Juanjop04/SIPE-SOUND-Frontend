@@ -84,9 +84,14 @@ export function PanelAtril({
           Ver como estudiante
         </NavLink>
         <SelectorTema enBarra={enBarra} className="px-2" />
-        <p className={cn("truncate px-3 text-sm", tono.secundario)}>
+        <NavLink
+          to={paths.cuenta}
+          onClick={alNavegar}
+          className={cn("truncate px-3 text-sm hover:underline", tono.secundario)}
+        >
           {perfil?.nombre ?? usuario?.email}
-        </p>
+          <span className="block text-xs">Mi cuenta</span>
+        </NavLink>
         <Button
           variante="fantasma"
           tamano="sm"

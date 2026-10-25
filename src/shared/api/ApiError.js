@@ -8,13 +8,15 @@ export class ApiError extends Error {
    * @param {string} status   VALIDACION, NO_ENCONTRADO…
    * @param {string} message  ya en español
    * @param {string[]} [errors]
+   * @param {Record<string, unknown>} [meta]  datos extra de la respuesta (p. ej. requiere_verificacion)
    */
-  constructor(statusCode, status, message, errors = []) {
+  constructor(statusCode, status, message, errors = [], meta = {}) {
     super(message);
     this.name = "ApiError";
     this.statusCode = statusCode;
     this.status = status;
     this.errors = errors;
+    this.meta = meta;
   }
 
   /**

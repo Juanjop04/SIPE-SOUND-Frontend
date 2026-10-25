@@ -1,8 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
+import { cargarCuentaPage } from "@/features/cuenta";
 import { cargarMisCursosPage } from "@/features/cursos";
 import { cargarDocentesPage } from "@/features/admin";
-import { cargarLoginPage, cargarRegistroPage, ROLES_ADMIN, ROLES_ATRIL } from "@/features/auth";
+import {
+  cargarLoginPage,
+  cargarRecuperarPage,
+  cargarRegistroPage,
+  cargarRestablecerPage,
+  cargarVerificarPage,
+  ROLES_ADMIN,
+  ROLES_ATRIL,
+} from "@/features/auth";
 import {
   cargarContenidoPage,
   cargarCursoDetallePage,
@@ -24,6 +33,7 @@ import { env } from "@/shared/config/env.js";
 import { paths } from "@/shared/config/paths.js";
 import AuthLayout from "@/app/layouts/AuthLayout.jsx";
 import { EstudianteLayout } from "@/app/layouts/EstudianteLayout";
+import { LayoutDeCuenta } from "@/app/layouts/LayoutDeCuenta";
 import { ErrorDeRuta } from "./ErrorDeRuta.jsx";
 import { NoEncontradoPage } from "./PaginasDeError";
 import { PaginaRaiz } from "./PaginaRaiz";
@@ -98,6 +108,11 @@ export const router = createBrowserRouter([
             ],
           },
           {
+            // Mi cuenta (HU-F-403): cualquier rol, con el layout de su rol.
+            element: <LayoutDeCuenta />,
+            children: [{ path: paths.cuenta, lazy: pagina(cargarCuentaPage) }],
+          },
+          {
             // Administración: solo rol admin, dentro del mismo atril.
             element: <RequireRole roles={ROLES_ADMIN} />,
             children: [
@@ -128,6 +143,33 @@ export const router = createBrowserRouter([
               titulo: "Tocar guitarra está al alcance de tu mano",
               descripcion:
                 "Crea tu cuenta gratis: cada lección trae acordes, ejercicios con metrónomo y una evaluación al final del bloque.",
+            },
+          },
+          {
+            path: paths.recuperar,
+            lazy: pagina(cargarRecuperarPage),
+            handle: {
+              titulo: "Todos olvidamos algo alguna vez",
+              descripcion:
+                "Te enviamos un enlace para elegir otra contraseña. Tus lecciones y tu progreso siguen intactos.",
+            },
+          },
+          {
+            path: paths.restablecer,
+            lazy: pagina(cargarRestablecerPage),
+            handle: {
+              titulo: "Casi listo para volver a tocar",
+              descripcion:
+                "Elige una contraseña nueva. Al guardarla, cerramos tus sesiones abiertas en otros equipos.",
+            },
+          },
+          {
+            path: paths.verificar,
+            lazy: pagina(cargarVerificarPage),
+            handle: {
+              titulo: "Un paso más y empiezas a practicar",
+              descripcion:
+                "Confirmamos tu correo con un código para proteger tu cuenta. Solo toma un minuto.",
             },
           },
         ],

@@ -5,6 +5,8 @@ export const LIMITES = {
   nombrePersona: { min: 2, max: 80 },
   email: { max: 254 },
   password: { min: 8, max: 72 },
+  // app/schemas/auth.py (CodigoIn): 6 dígitos
+  codigoVerificacion: { largo: 6 },
   titulo: { min: 3, max: 120 },
   // app/schemas/contenido.py (LeccionCrear.numero)
   numeroLeccion: { min: 1, max: 9999 },
