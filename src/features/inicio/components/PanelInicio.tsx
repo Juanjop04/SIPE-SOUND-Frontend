@@ -39,7 +39,10 @@ export function PanelInicio(props: PanelInicioProps) {
         </h2>
         {accion}
         {!accion && enlace && (
-          <Link to={enlace.a} className="text-sm text-accent hover:underline">
+          <Link
+            to={enlace.a}
+            className="text-sm text-accent underline underline-offset-2 hover:decoration-2"
+          >
             {enlace.texto}
           </Link>
         )}

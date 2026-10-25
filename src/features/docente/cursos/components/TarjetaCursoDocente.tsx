@@ -69,7 +69,7 @@ function Atencion({ datos }: { datos: CursoConProgreso }) {
           <li key={a.estudiante_id} className="text-sm">
             <Link
               to={enlaceDeCurso(base, "estudiantes", a.estudiante_id)}
-              className="text-accent hover:underline"
+              className="text-accent underline underline-offset-2 hover:decoration-2"
             >
               {nombreCompleto(a)}
             </Link>
@@ -124,14 +124,14 @@ export function TarjetaCursoDocente({ datos }: { datos: CursoConProgreso }) {
         )}
         <Link
           to={enlaceDeCurso(base, "ruta")}
-          className="text-sm text-accent hover:underline"
+          className="text-sm text-accent underline underline-offset-2 hover:decoration-2"
           aria-label={`Ruta y evaluaciones de ${curso.nombre}`}
         >
           Ruta y evaluaciones
         </Link>
         <Link
           to={enlaceDeCurso(base, "ajustes")}
-          className="text-sm text-accent hover:underline"
+          className="text-sm text-accent underline underline-offset-2 hover:decoration-2"
           aria-label={`Ajustes de ${curso.nombre}`}
         >
           Ajustes

@@ -15,7 +15,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const VARIANTES: Record<VarianteBoton, string> = {
   primario: "bg-primary text-sobre-primary hover:bg-primary-hover",
   secundario: "border border-linea-fuerte text-paper hover:border-accent",
-  fantasma: "text-muted hover:bg-surface hover:text-paper",
+  // Con borde: un texto suelto no dice que se puede pulsar (HU-F-509).
+  fantasma: "border border-linea text-paper hover:border-accent hover:bg-surface",
   // Texto ink sobre danger: 6.3:1 (paper encima no llega a 4.5:1).
   peligro: "bg-danger text-ink hover:bg-danger/90",
 };

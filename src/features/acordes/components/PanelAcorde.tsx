@@ -24,7 +24,10 @@ function LeccionesDelAcorde({ nombre }: { nombre: string }) {
     <ul className="flex flex-col">
       {lecciones.map((leccion) => (
         <li key={leccion.id} className="border-b border-linea py-2">
-          <Link to={paths.leccion(leccion.id)} className="text-paper hover:text-accent">
+          <Link
+            to={paths.leccion(leccion.id)}
+            className="text-paper underline decoration-linea-fuerte underline-offset-4 hover:text-accent hover:decoration-accent"
+          >
             <span className="font-mono text-sm text-muted">
               {String(leccion.numero).padStart(2, "0")}
             </span>{" "}

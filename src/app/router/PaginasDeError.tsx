@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
 import { TrasteDivider } from "@/shared/music";
+import { claseBoton } from "@/shared/ui";
 
 interface PaginaDeErrorProps {
   /** Código en mono, como un número de traste. */
@@ -24,7 +25,7 @@ function PaginaDeError({
       <h1 className="mt-2 font-display text-3xl font-semibold text-paper">{titulo}</h1>
       <p className="mt-3 max-w-prose text-muted">{descripcion}</p>
       <TrasteDivider className="my-8" />
-      <Link to={volverA} className="text-sm text-accent hover:underline">
+      <Link to={volverA} className={claseBoton({ variante: "secundario" })}>
         {volverA === paths.inicio
           ? "Volver a la ruta de aprendizaje"
           : "Volver al inicio del atril"}

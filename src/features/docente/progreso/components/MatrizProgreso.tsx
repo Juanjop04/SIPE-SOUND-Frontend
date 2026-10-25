@@ -89,7 +89,7 @@ function Tabla({ filas, columnas, bloques, estudiantesDelCurso, onVer }: MatrizP
                 <button
                   type="button"
                   onClick={() => onVer(f.estudiante_id)}
-                  className="text-left hover:underline"
+                  className="text-left underline decoration-linea-fuerte underline-offset-2 hover:decoration-accent"
                 >
                   {nombreCompleto(f)}
                 </button>
@@ -138,7 +138,7 @@ function Lista({ filas, columnas, onVer }: MatrizProgresoProps) {
           <button
             type="button"
             onClick={() => onVer(f.estudiante_id)}
-            className="w-fit text-left text-paper hover:underline"
+            className="w-fit text-left text-paper underline decoration-linea-fuerte underline-offset-2 hover:decoration-accent"
           >
             {nombreCompleto(f)}
           </button>
