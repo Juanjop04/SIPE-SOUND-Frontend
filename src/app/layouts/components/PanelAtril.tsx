@@ -7,6 +7,7 @@ import { Button, SelectorTema } from "@/shared/ui";
 const SECCIONES = [
   { to: paths.docente.inicio, etiqueta: "Resumen", exacto: true },
   { to: paths.docente.cursos, etiqueta: "Cursos" },
+  { to: paths.docente.progreso, etiqueta: "Progreso" },
   { to: paths.docente.contenido, etiqueta: "Contenido" },
   { to: paths.docente.evaluaciones, etiqueta: "Evaluaciones" },
 ];
