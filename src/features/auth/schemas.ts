@@ -18,6 +18,7 @@ export type DatosLogin = z.infer<typeof esquemaLogin>;
 export const esquemaRegistro = z
   .object({
     nombre: nombrePersona(),
+    apellido: nombrePersona(),
     email: email(),
     password: password(),
     // Solo en el frontend: no se envía al backend.

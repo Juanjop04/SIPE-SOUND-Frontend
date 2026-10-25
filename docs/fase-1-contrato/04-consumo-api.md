@@ -163,7 +163,7 @@ Campos que cambiaron con HU-B-319: `duracion` (texto) ya no existe → usar
 
 | Acción | Endpoint | Detalle |
 |---|---|---|
-| Registrarse | `POST /auth/registro` | `{nombre, email, password}`; misma respuesta exista o no el correo. |
+| Registrarse | `POST /auth/registro` | `{nombre, apellido, email, password, acepta_terminos}`; misma respuesta exista o no el correo. |
 | Iniciar sesión | `POST /auth/sesion` | Devuelve `access_token`, `expira_en` y `usuario`; el backend pone la cookie `sipe_refresh`. |
 | Recuperar sesión al cargar / token vencido | `POST /auth/sesion/renovar` | Cuerpo `{}`; usa y rota la cookie. 401 = no hay sesión. |
 | Cerrar sesión | `DELETE /auth/sesion` | Cuerpo `{}` y `Bearer`; borra la cookie. |

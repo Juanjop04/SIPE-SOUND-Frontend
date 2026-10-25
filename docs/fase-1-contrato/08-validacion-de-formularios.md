@@ -68,7 +68,7 @@ siguen la §7.2 del contrato del backend y se aplican en HU-F-310.
 | Formulario | Campos | Endpoint | HU |
 |---|---|---|---|
 | Iniciar sesión | correo, contraseña | `POST /auth/sesion` | HU-F-313 |
-| Registro (estudiantes y docentes preautorizados) | nombre, correo, contraseña, confirmar, términos | `POST /auth/registro` (`acepta_terminos` pendiente en el backend, ver HU-B-322) | HU-F-313 |
+| Registro (estudiantes y docentes preautorizados) | nombre, apellido, correo, contraseña, confirmar, términos | `POST /auth/registro` (`acepta_terminos` pendiente en el backend, ver HU-B-322) | HU-F-313 |
 | Mi cuenta: datos personales | nombre, apellido | `PATCH /me` | HU-F-403 |
 | Mi cuenta: confirmar identidad | contraseña actual, código | `POST /me/reautenticacion`, `/me/reautenticacion/confirmar` | HU-F-403 |
 | Mi cuenta: contraseña nueva / correo nuevo | contraseña, confirmar / correo, código | `PATCH /me/contrasena`, `POST /me/correo`, `/me/correo/confirmar` | HU-F-403 |

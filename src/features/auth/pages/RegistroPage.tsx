@@ -23,18 +23,30 @@ export default function RegistroPage() {
       <p className="mt-2 text-muted">Después podrás empezar con tu primera lección.</p>
 
       <form onSubmit={enviar} noValidate className="mt-8 flex flex-col gap-5">
-        <Field etiqueta="Nombre" error={errors.nombre?.message}>
-          {(control) => (
-            <Input
-              {...control}
-              {...register("nombre")}
-              autoComplete="name"
-              autoCapitalize="words"
-              maxLength={LIMITES.nombrePersona.max}
-              placeholder="Nombre completo"
-            />
-          )}
-        </Field>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field etiqueta="Nombre" error={errors.nombre?.message}>
+            {(control) => (
+              <Input
+                {...control}
+                {...register("nombre")}
+                autoComplete="given-name"
+                autoCapitalize="words"
+                maxLength={LIMITES.nombrePersona.max}
+              />
+            )}
+          </Field>
+          <Field etiqueta="Apellido" error={errors.apellido?.message}>
+            {(control) => (
+              <Input
+                {...control}
+                {...register("apellido")}
+                autoComplete="family-name"
+                autoCapitalize="words"
+                maxLength={LIMITES.nombrePersona.max}
+              />
+            )}
+          </Field>
+        </div>
 
         <Field etiqueta="Correo electrónico" error={errors.email?.message}>
           {(control) => (
