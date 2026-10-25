@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { fechaRelativa } from "@/shared/lib/formato";
 import { useBusquedaDiferida } from "@/shared/hooks/useBusquedaDiferida";
 import { cn } from "@/shared/lib/cn.js";
 import { EstadoVacio, Input, MensajeError, Paginacion, Skeleton } from "@/shared/ui";
@@ -8,6 +7,8 @@ import { useBandeja } from "../hooks";
 import type { HiloDeBandeja } from "../tipos";
 import { FILTROS, conBusqueda, useFiltrosBandeja, useRutasMensajes } from "../useFiltrosBandeja";
 import { nombreDe, rolDe } from "../utils";
+import { horaCorta } from "../utilsChat";
+import { Iniciales } from "./Iniciales";
 import type { ReactNode } from "react";
 
 interface BandejaProps {
@@ -34,33 +35,43 @@ function FilaHilo({
         to={destino}
         aria-current={activo ? "page" : undefined}
         className={cn(
-          "flex flex-col gap-1 border-l-2 px-3 py-3 transition-colors duration-rapida hover:bg-surface",
+          "flex items-center gap-3 border-l-2 px-3 py-3 transition-colors duration-rapida hover:bg-surface",
           activo ? "border-accent bg-surface" : "border-transparent",
         )}
       >
-        <span className="flex items-baseline justify-between gap-3">
-          <span
-            className={cn("truncate text-sm", sinLeer ? "font-semibold text-paper" : "text-paper")}
-          >
-            {propio ? "Tú" : nombreDe(remitente)}
-            {!propio && remitente && (
-              <span className="font-normal text-muted"> · {rolDe(remitente)}</span>
+        <Iniciales persona={remitente} />
+        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span className="flex items-baseline justify-between gap-3">
+            <span
+              className={cn(
+                "truncate text-sm",
+                sinLeer ? "font-semibold text-paper" : "text-paper",
+              )}
+            >
+              {propio ? "Tú" : nombreDe(remitente)}
+              {!propio && remitente && (
+                <span className="font-normal text-muted"> · {rolDe(remitente)}</span>
+              )}
+            </span>
+            <time dateTime={creado_en} className="shrink-0 font-mono text-xs text-muted">
+              {horaCorta(creado_en)}
+            </time>
+          </span>
+          <span className={cn("truncate text-sm", sinLeer ? "text-paper" : "text-muted")}>
+            {hilo.asunto}
+          </span>
+          <span className="flex items-center justify-between gap-3">
+            <span className="truncate text-xs text-muted">{extracto}</span>
+            {sinLeer && (
+              <span className="shrink-0 rounded-full bg-accent px-2 font-mono text-xs text-ink">
+                {hilo.no_leidos}
+                <span className="sr-only">
+                  {hilo.no_leidos === 1 ? " mensaje sin leer" : " mensajes sin leer"}
+                </span>
+              </span>
             )}
           </span>
-          <span className="shrink-0 font-mono text-xs text-muted">{fechaRelativa(creado_en)}</span>
         </span>
-        <span
-          className={cn("truncate text-sm", sinLeer ? "font-semibold text-paper" : "text-muted")}
-        >
-          {hilo.asunto}
-        </span>
-        <span className="truncate text-xs text-muted">{extracto}</span>
-        {sinLeer && (
-          <span className="flex items-center gap-1.5 text-xs text-paper">
-            <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />
-            Sin leer
-          </span>
-        )}
       </Link>
     </li>
   );

@@ -58,9 +58,11 @@ function Paneles({ ancha, hiloId, bandeja, hilo }: PanelesProps) {
   const { busqueda } = useFiltrosBandeja();
   if (ancha) {
     return (
-      <div className="grid grid-cols-[360px_1fr] gap-8">
-        <section aria-label="Bandeja">{bandeja}</section>
-        <section aria-label="Conversación" className="min-w-0">
+      <div className="grid h-[calc(100dvh-14rem)] min-h-[28rem] grid-cols-[360px_1fr] gap-6">
+        <section aria-label="Bandeja" className="min-h-0 overflow-y-auto">
+          {bandeja}
+        </section>
+        <section aria-label="Conversación" className="min-h-0 min-w-0">
           {hilo}
         </section>
       </div>
@@ -68,7 +70,10 @@ function Paneles({ ancha, hiloId, bandeja, hilo }: PanelesProps) {
   }
   if (!hiloId) return <section aria-label="Bandeja">{bandeja}</section>;
   return (
-    <section aria-label="Conversación" className="flex flex-col gap-4">
+    <section
+      aria-label="Conversación"
+      className="flex h-[calc(100dvh-12rem)] min-h-[24rem] flex-col gap-3"
+    >
       <Link
         to={conBusqueda(rutas.bandeja, busqueda)}
         className="w-fit text-sm text-accent hover:underline"

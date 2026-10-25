@@ -12,6 +12,8 @@ function useRegistrar(registrar) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: progresoKeys.todo });
       queryClient.invalidateQueries({ queryKey: rutaKeys.todas });
+      // Clave de features/ejercicios (ejerciciosKeys.todos): "mi progreso" de cada tarjeta cambia.
+      queryClient.invalidateQueries({ queryKey: ["ejercicios"] });
     },
   });
 }

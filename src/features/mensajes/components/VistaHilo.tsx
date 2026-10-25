@@ -1,98 +1,13 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { formatearFecha } from "@/shared/lib/formato";
-import { Button, Field, MensajeError, Skeleton, Textarea, useAviso } from "@/shared/ui";
-import { LIMITES } from "@/shared/validacion";
-import { useEditarHilo, useEnviarMensaje, useHilo } from "../hooks";
-import { esquemaRespuesta, type DatosRespuesta } from "../schemas";
-import type { Hilo, MensajeDeHilo } from "../tipos";
+import { Button, MensajeError, Skeleton } from "@/shared/ui";
+import { useAvisarLectura, useEditarHilo, useHilo } from "../hooks";
+import type { Hilo } from "../tipos";
 import { conBusqueda, useFiltrosBandeja, useRutasMensajes } from "../useFiltrosBandeja";
-import { nombreDe, rolDe } from "../utils";
-
-const FECHA_HORA = new Intl.DateTimeFormat("es-CO", {
-  day: "numeric",
-  month: "short",
-  hour: "2-digit",
-  minute: "2-digit",
-});
-
-/** Un mensaje: bloque con borde, remitente y fecha arriba. Los propios dicen "Tú"; no se distinguen por color. */
-function Mensaje({ mensaje }: { mensaje: MensajeDeHilo }) {
-  return (
-    <article className="rounded-caja border border-linea p-4">
-      <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <p className="text-sm font-medium text-paper">
-          {mensaje.propio ? "Tú" : nombreDe(mensaje.remitente)}
-          {!mensaje.propio && mensaje.remitente && (
-            <span className="font-normal text-muted"> · {rolDe(mensaje.remitente)}</span>
-          )}
-          {mensaje.nuevo && <span className="ml-2 text-xs font-normal text-paper">Nuevo</span>}
-        </p>
-        <p className="font-mono text-xs text-muted">
-          {FECHA_HORA.format(new Date(mensaje.creado_en))}
-        </p>
-      </header>
-      {mensaje.curso && <p className="mt-1 text-xs text-muted">Curso: {mensaje.curso}</p>}
-      {/* Texto plano: React lo escapa y los saltos de línea se respetan con whitespace-pre-wrap. */}
-      <p className="mt-3 max-w-[68ch] whitespace-pre-wrap break-words text-paper">
-        {mensaje.cuerpo}
-      </p>
-    </article>
-  );
-}
-
-function Responder({ hilo }: { hilo: Hilo }) {
-  const enviar = useEnviarMensaje();
-  const { avisar } = useAviso();
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<DatosRespuesta>({
-    resolver: zodResolver(esquemaRespuesta),
-    mode: "onTouched",
-    defaultValues: { cuerpo: "" },
-  });
-
-  return (
-    <form
-      noValidate
-      onSubmit={handleSubmit((datos) =>
-        enviar.mutate(
-          { respuesta_a_id: hilo.responder_a ?? "", cuerpo: datos.cuerpo },
-          {
-            onSuccess: () => {
-              reset();
-              avisar({ mensaje: "Respuesta enviada." });
-            },
-          },
-        ),
-      )}
-      className="flex flex-col gap-3"
-    >
-      <Field etiqueta="Responder" error={errors.cuerpo?.message}>
-        {(campo) => (
-          <Textarea
-            {...campo}
-            {...register("cuerpo")}
-            rows={4}
-            maxLength={LIMITES.cuerpoMensaje.max}
-            contador
-          />
-        )}
-      </Field>
-      {/* El backend decide quién responde a quién: su mensaje (403, 429…) se muestra tal cual. */}
-      {enviar.error && <MensajeError mensaje={enviar.error.message} />}
-      <div>
-        <Button type="submit" cargando={enviar.isPending}>
-          Enviar respuesta
-        </Button>
-      </div>
-    </form>
-  );
-}
+import { subtituloDelChat } from "../utilsChat";
+import { Iniciales } from "./Iniciales";
+import { ListaDeMensajes } from "./ListaDeMensajes";
+import { EnviandoBurbuja, RedactorDeChat } from "./RedactorDeChat";
 
 function Acciones({ id, alIr }: { id: string; alIr: () => void }) {
   const editar = useEditarHilo();
@@ -100,7 +15,7 @@ function Acciones({ id, alIr }: { id: string; alIr: () => void }) {
   const { filtros } = useFiltrosBandeja();
   const archivado = filtros.filtro === "archivados";
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex shrink-0 flex-wrap gap-2">
       <Button
         variante="secundario"
         tamano="sm"
@@ -117,37 +32,75 @@ function Acciones({ id, alIr }: { id: string; alIr: () => void }) {
       >
         Marcar como no leído
       </Button>
-      {editar.error && <MensajeError mensaje={editar.error.message} />}
     </div>
   );
 }
 
-/** El hilo abierto: mensajes en orden, acciones y, si el backend lo permite, "Responder". */
+function Encabezado({ hilo, alIr }: { hilo: Hilo; alIr: () => void }) {
+  const ajeno = hilo.mensajes.find((m) => !m.propio && m.remitente)?.remitente ?? null;
+  return (
+    <header className="flex flex-wrap items-center justify-between gap-3 border-b border-linea px-4 py-3">
+      <div className="flex min-w-0 items-center gap-3">
+        <Iniciales persona={ajeno} />
+        <div className="min-w-0">
+          <h2 className="truncate font-display text-lg font-semibold text-paper">{hilo.asunto}</h2>
+          <p className="truncate text-xs text-muted">{subtituloDelChat(hilo)}</p>
+        </div>
+      </div>
+      <Acciones id={hilo.hilo_id} alIr={alIr} />
+    </header>
+  );
+}
+
+/** La conversación abierta como chat: encabezado, mensajes con scroll y campo de respuesta. */
 export function VistaHilo({ hiloId }: { hiloId: string }) {
-  const { data, isPending, error, refetch } = useHilo(hiloId);
+  const { data, isPending, error, refetch, dataUpdatedAt } = useHilo(hiloId);
   const navigate = useNavigate();
   const rutas = useRutasMensajes();
   const { busqueda } = useFiltrosBandeja();
+  const avisarLectura = useAvisarLectura();
+  const [pendiente, setPendiente] = useState<{ texto: string; fallo: boolean } | null>(null);
+  const reintento = useRef<() => void>(() => undefined);
   const volver = () => navigate(conBusqueda(rutas.bandeja, busqueda));
 
+  // Abrir o recibir algo en un hilo cambia el contador y la bandeja.
+  useEffect(() => {
+    if (dataUpdatedAt) avisarLectura();
+  }, [dataUpdatedAt, avisarLectura]);
+
   if (isPending) return <Skeleton lineas={5} className="h-16 w-full" />;
-  if (error) return <MensajeError mensaje={error.message} onReintentar={() => refetch()} />;
+  if (error && !data)
+    return <MensajeError mensaje={error.message} onReintentar={() => refetch()} />;
+  if (!data) return null;
+  const puedeResponder = data.puede_responder && data.responder_a;
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3">
-        <h2 className="font-display text-xl font-semibold text-paper">{data.asunto}</h2>
-        <Acciones id={data.hilo_id} alIr={volver} />
-      </div>
-      <div className="flex flex-col gap-4">
-        {data.mensajes.map((m) => (
-          <Mensaje key={m.id} mensaje={m} />
-        ))}
-      </div>
-      {data.puede_responder && data.responder_a && <Responder hilo={data} />}
-      <p className="font-mono text-xs text-muted">
-        {data.mensajes.length} {data.mensajes.length === 1 ? "mensaje" : "mensajes"} · última
-        actividad {formatearFecha(data.mensajes.at(-1)?.creado_en)}
-      </p>
+    <div className="flex h-full min-h-[24rem] flex-col rounded-caja border border-linea">
+      <Encabezado hilo={data} alIr={volver} />
+      <ListaDeMensajes
+        mensajes={data.mensajes}
+        pendiente={
+          pendiente && (
+            <EnviandoBurbuja
+              texto={pendiente.texto}
+              fallo={pendiente.fallo}
+              onReintentar={() => reintento.current()}
+            />
+          )
+        }
+      />
+      {puedeResponder ? (
+        <RedactorDeChat
+          responderA={data.responder_a ?? ""}
+          onPendiente={(texto, fallo) => setPendiente(texto === null ? null : { texto, fallo })}
+          onReintento={(fn) => {
+            reintento.current = fn;
+          }}
+        />
+      ) : (
+        <p className="border-t border-linea px-4 py-3 text-sm text-muted">
+          Este aviso no admite respuestas.
+        </p>
+      )}
     </div>
   );
 }
