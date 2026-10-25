@@ -36,7 +36,7 @@ import { paths } from "@/shared/config/paths.js";
 import AuthLayout from "@/app/layouts/AuthLayout.jsx";
 import { EstudianteLayout } from "@/app/layouts/EstudianteLayout";
 import { LayoutDeCuenta } from "@/app/layouts/LayoutDeCuenta";
-import { ErrorDeRuta } from "./ErrorDeRuta.jsx";
+import { ErrorDeRuta, ErrorEnPagina } from "./ErrorDeRuta.jsx";
 import { NoEncontradoPage } from "./PaginasDeError";
 import { PaginaRaiz } from "./PaginaRaiz";
 import { RequireAuth } from "./RequireAuth.jsx";
@@ -62,27 +62,32 @@ export const router = createBrowserRouter([
       {
         element: <EstudianteLayout />,
         children: [
-          // Con sesión de estudiante, el inicio; si no, la ruta pública (HU-F-315).
-          { path: paths.inicio, element: <PaginaRaiz /> },
-          { path: paths.ruta, lazy: pagina(cargarRutaPage) },
-          { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
-          { path: paths.acordes, lazy: pagina(cargarAcordesPage) },
-          { path: paths.ejercicios, lazy: pagina(cargarEjerciciosPage) },
-          { path: paths.ejercicio(), lazy: pagina(cargarEjercicioDetallePage) },
-          { path: paths.terminos, lazy: pagina(cargarTerminosPage) },
           {
-            element: <RequireAuth />,
+            errorElement: <ErrorEnPagina />,
             children: [
-              { path: paths.progreso, lazy: pagina(cargarProgresoPage) },
-              { path: paths.cursos, lazy: pagina(cargarMisCursosPage) },
-              { path: paths.mensajes, lazy: pagina(cargarMensajesPage) },
-              { path: paths.mensaje(), lazy: pagina(cargarMensajesPage) },
-              { path: paths.evaluacion(), lazy: pagina(cargarEvaluacionPage) },
-              { path: paths.quiz(), lazy: pagina(cargarRedireccionQuizPage) },
+              // Con sesión de estudiante, el inicio; si no, la ruta pública (HU-F-315).
+              { path: paths.inicio, element: <PaginaRaiz /> },
+              { path: paths.ruta, lazy: pagina(cargarRutaPage) },
+              { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
+              { path: paths.acordes, lazy: pagina(cargarAcordesPage) },
+              { path: paths.ejercicios, lazy: pagina(cargarEjerciciosPage) },
+              { path: paths.ejercicio(), lazy: pagina(cargarEjercicioDetallePage) },
+              { path: paths.terminos, lazy: pagina(cargarTerminosPage) },
+              {
+                element: <RequireAuth />,
+                children: [
+                  { path: paths.progreso, lazy: pagina(cargarProgresoPage) },
+                  { path: paths.cursos, lazy: pagina(cargarMisCursosPage) },
+                  { path: paths.mensajes, lazy: pagina(cargarMensajesPage) },
+                  { path: paths.mensaje(), lazy: pagina(cargarMensajesPage) },
+                  { path: paths.evaluacion(), lazy: pagina(cargarEvaluacionPage) },
+                  { path: paths.quiz(), lazy: pagina(cargarRedireccionQuizPage) },
+                ],
+              },
+              ...rutasDeDesarrollo,
+              { path: "*", element: <NoEncontradoPage /> },
             ],
           },
-          ...rutasDeDesarrollo,
-          { path: "*", element: <NoEncontradoPage /> },
         ],
       },
       {
@@ -95,20 +100,28 @@ export const router = createBrowserRouter([
               {
                 lazy: cargarDocenteLayout,
                 children: [
-                  { path: paths.docente.inicio, lazy: pagina(cargarResumenPage) },
-                  { path: paths.docente.cursos, lazy: pagina(cargarCursosPage) },
-                  { path: paths.docente.curso(), lazy: pagina(cargarCursoDetallePage) },
-                  { path: paths.docente.progreso, lazy: pagina(cargarProgresoDocentePage) },
-                  { path: paths.docente.mensajes, lazy: pagina(cargarMensajesPage) },
-                  { path: paths.docente.mensaje(), lazy: pagina(cargarMensajesPage) },
-                  { path: paths.docente.contenido, lazy: pagina(cargarContenidoPage) },
-                  { path: paths.docente.leccion(), lazy: pagina(cargarEditorLeccionPage) },
-                  { path: paths.docente.ejercicio(), lazy: pagina(cargarEditorEjercicioPage) },
-                  { path: paths.docente.evaluaciones, lazy: pagina(cargarEvaluacionesPage) },
-                  { path: paths.docente.evaluacion(), lazy: pagina(cargarEditorEvaluacionPage) },
                   {
-                    path: paths.docente.resultados(),
-                    lazy: pagina(cargarResultadosEvaluacionPage),
+                    errorElement: <ErrorEnPagina />,
+                    children: [
+                      { path: paths.docente.inicio, lazy: pagina(cargarResumenPage) },
+                      { path: paths.docente.cursos, lazy: pagina(cargarCursosPage) },
+                      { path: paths.docente.curso(), lazy: pagina(cargarCursoDetallePage) },
+                      { path: paths.docente.progreso, lazy: pagina(cargarProgresoDocentePage) },
+                      { path: paths.docente.mensajes, lazy: pagina(cargarMensajesPage) },
+                      { path: paths.docente.mensaje(), lazy: pagina(cargarMensajesPage) },
+                      { path: paths.docente.contenido, lazy: pagina(cargarContenidoPage) },
+                      { path: paths.docente.leccion(), lazy: pagina(cargarEditorLeccionPage) },
+                      { path: paths.docente.ejercicio(), lazy: pagina(cargarEditorEjercicioPage) },
+                      { path: paths.docente.evaluaciones, lazy: pagina(cargarEvaluacionesPage) },
+                      {
+                        path: paths.docente.evaluacion(),
+                        lazy: pagina(cargarEditorEvaluacionPage),
+                      },
+                      {
+                        path: paths.docente.resultados(),
+                        lazy: pagina(cargarResultadosEvaluacionPage),
+                      },
+                    ],
                   },
                 ],
               },
@@ -126,9 +139,14 @@ export const router = createBrowserRouter([
               {
                 lazy: cargarDocenteLayout,
                 children: [
-                  { path: paths.admin.usuarios, lazy: pagina(cargarUsuariosPage) },
-                  { path: paths.admin.cursos, lazy: pagina(cargarCursosAdminPage) },
-                  { path: paths.admin.docentes, lazy: pagina(cargarDocentesPage) },
+                  {
+                    errorElement: <ErrorEnPagina />,
+                    children: [
+                      { path: paths.admin.usuarios, lazy: pagina(cargarUsuariosPage) },
+                      { path: paths.admin.cursos, lazy: pagina(cargarCursosAdminPage) },
+                      { path: paths.admin.docentes, lazy: pagina(cargarDocentesPage) },
+                    ],
+                  },
                 ],
               },
             ],
