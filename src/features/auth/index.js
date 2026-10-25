@@ -6,4 +6,8 @@ export const cargarRestablecerPage = () => import("./pages/RestablecerPage");
 export { AuthProvider } from "./context/AuthProvider.jsx";
 export { useSession } from "./hooks/useSession.js";
 export { usePerfil } from "./hooks/usePerfil.js";
+export { perfilKeys } from "./api/perfilApi.js";
+export { CampoCodigo } from "./components/CampoCodigo";
+export { CamposPassword } from "./components/CamposPassword";
+export { CampoPassword } from "./components/CampoPassword";
 export { ROL, ROLES_ADMIN, ROLES_ATRIL, puedeUsarAtril } from "./utils/roles.js";

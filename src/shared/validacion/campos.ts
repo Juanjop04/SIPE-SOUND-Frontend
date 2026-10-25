@@ -58,6 +58,18 @@ export const nombrePersona = () =>
         .refine(esNombreValido, "Usa solo letras, espacios, apóstrofo, punto o guion."),
     );
 
+/** Nombre de persona opcional: vacío → "" (no se envía); si no, las mismas reglas y mensajes. */
+export const nombrePersonaOpcional = () =>
+  z.string().transform((valor, ctx) => {
+    if (valor.trim() === "") return "";
+    const resultado = nombrePersona().safeParse(valor);
+    if (resultado.success) return resultado.data;
+    for (const problema of resultado.error.issues) {
+      ctx.issues.push({ code: "custom", message: problema.message, input: valor });
+    }
+    return z.NEVER;
+  });
+
 /** Correo: recorta, minúsculas, ≤ 254 y con forma usuario@dominio.tld. */
 export const email = () =>
   z

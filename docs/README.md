@@ -91,7 +91,7 @@ Cada HU se despliega **después** de su HU de backend.
 |---|---|---|---|---|
 | 1 | [HU-F-401 Verificar el correo con código](fase-4-cuentas-y-comunicacion/HU-F-401-verificacion-de-correo.md) | 5 | F-313, F-207, **B-402** | 🔍 |
 | 2 | [HU-F-402 Recuperar la contraseña](fase-4-cuentas-y-comunicacion/HU-F-402-recuperar-contrasena.md) | 3 | F-401, **B-403** | 🔍 |
-| 3 | [HU-F-403 Mi cuenta: nombre, correo y contraseña](fase-4-cuentas-y-comunicacion/HU-F-403-mi-cuenta.md) | 5 | F-402, **B-404**, **B-407** | ⬜ |
+| 3 | [HU-F-403 Mi cuenta: nombre, correo y contraseña](fase-4-cuentas-y-comunicacion/HU-F-403-mi-cuenta.md) | 5 | F-402, **B-404**, **B-407** | 🔍 |
 | 4 | [HU-F-404 Admin: usuarios](fase-4-cuentas-y-comunicacion/HU-F-404-admin-usuarios.md) | 8 | F-313, F-403, **B-405**, **B-407** | ⬜ |
 | 5 | [HU-F-405 Admin: docentes, cursos y accesos](fase-4-cuentas-y-comunicacion/HU-F-405-admin-docentes-y-cursos.md) | 5 | F-404, **B-406** | ⬜ |
 | 6 | [HU-F-406 Panel de progreso del docente](fase-4-cuentas-y-comunicacion/HU-F-406-panel-de-progreso-docente.md) | 5 | F-309, **B-408** | ⬜ |

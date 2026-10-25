@@ -81,8 +81,14 @@ function redirigirSiNoAutenticado(error) {
   throw error;
 }
 
+const relanzar = (error) => {
+  throw error;
+};
+
 // Adjunta el token si hay sesión. Ante 401: una renovación y un reintento; si vuelve a
 // fallar, se cierra la sesión local y se va a /login?volver=<ruta actual>.
+// Con `tolerarNoAutenticado`, un 401 que persiste tras una renovación EXITOSA no cierra la sesión:
+// la sesión es válida y el 401 es de negocio (p. ej. "La contraseña actual no coincide.").
 async function conSesion(metodo, ruta, opciones) {
   const sesion = await obtenerSesion();
   try {
@@ -92,7 +98,7 @@ async function conSesion(metodo, ruta, opciones) {
     const renovada = await renovarSesion();
     if (!renovada) return redirigirSiNoAutenticado(error);
     return enviar(metodo, ruta, { ...opciones, token: renovada.accessToken }).catch(
-      redirigirSiNoAutenticado,
+      opciones?.tolerarNoAutenticado ? relanzar : redirigirSiNoAutenticado,
     );
   }
 }
@@ -107,7 +113,13 @@ export const http = {
   put: (ruta, body = {}) => conSesion("PUT", ruta, { body }).then(soloData),
   patch: (ruta, body = {}) => conSesion("PATCH", ruta, { body }).then(soloData),
   delete: (ruta) => conSesion("DELETE", ruta).then(soloData),
-  /** Para mutaciones cuyo aviso usa el `message` del backend. */
-  conMensaje: (metodo, ruta, body) =>
-    conSesion(metodo, ruta, { body }).then(({ data, message }) => ({ data, message })),
+  /**
+   * Para mutaciones cuyo aviso usa el `message` del backend.
+   * `opciones.tolerarNoAutenticado`: ver conSesion (solo para 401 de negocio).
+   */
+  conMensaje: (metodo, ruta, body, opciones = {}) =>
+    conSesion(metodo, ruta, { body, ...opciones }).then(({ data, message }) => ({
+      data,
+      message,
+    })),
 };

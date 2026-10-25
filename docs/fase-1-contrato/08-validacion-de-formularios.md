@@ -39,6 +39,7 @@
 | Tipo de dato | Regla Zod | Atributos HTML |
 |---|---|---|
 | Nombre de persona | `trim`, colapsar espacios, 2–80, `/^[\p{L}]+(?:[ '.\-]+[\p{L}]+)*\.?$/u` → "Usa solo letras, espacios, apóstrofo, punto o guion." | `type="text"` `maxLength={80}` `autoComplete="name"` `autoCapitalize="words"` |
+| Apellido (HU-F-403) | Como el nombre de persona, pero **opcional**: vacío no se envía (cuentas anteriores a HU-B-407 lo tienen en `null`). Constructor `nombrePersonaOpcional` | `autoComplete="family-name"` `autoCapitalize="words"` |
 | Correo | `trim`, minúsculas, máx. 254, formato `usuario@dominio.tld` → "El correo no es válido." | `type="email"` `maxLength={254}` `autoComplete="email"` `inputMode="email"` `spellCheck={false}` `autoCapitalize="none"` |
 | Contraseña nueva | **sin** `trim`, 8–72, al menos una letra y un número → "La contraseña debe tener letras y números." | `type="password"` (con mostrar/ocultar) `maxLength={72}` `autoComplete="new-password"`; lista de requisitos visible que se marca al cumplirse |
 | Confirmar contraseña | igual a la anterior → "Las contraseñas no coinciden." (solo frontend) | igual que la anterior; no se envía al backend |
@@ -68,6 +69,9 @@ siguen la §7.2 del contrato del backend y se aplican en HU-F-310.
 |---|---|---|---|
 | Iniciar sesión | correo, contraseña | `POST /auth/sesion` | HU-F-313 |
 | Registro (estudiantes y docentes preautorizados) | nombre, correo, contraseña, confirmar, términos | `POST /auth/registro` (`acepta_terminos` pendiente en el backend, ver HU-B-322) | HU-F-313 |
+| Mi cuenta: datos personales | nombre, apellido | `PATCH /me` | HU-F-403 |
+| Mi cuenta: confirmar identidad | contraseña actual, código | `POST /me/reautenticacion`, `/me/reautenticacion/confirmar` | HU-F-403 |
+| Mi cuenta: contraseña nueva / correo nuevo | contraseña, confirmar / correo, código | `PATCH /me/contrasena`, `POST /me/correo`, `/me/correo/confirmar` | HU-F-403 |
 | Preautorizar docente (admin) | correo | `POST /admin/docentes/preautorizaciones` | HU-F-313 |
 | Metrónomo / avance de ejercicio | BPM | `PUT /progreso/ejercicios/{id}` (`mejor_bpm`) | HU-F-305 |
 | Curso nuevo / ajustes | nombre, descripción, nivel | `/docente/cursos` | HU-F-307 |

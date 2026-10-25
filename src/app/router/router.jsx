@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
+import { cargarCuentaPage } from "@/features/cuenta";
 import { cargarMisCursosPage } from "@/features/cursos";
 import { cargarDocentesPage } from "@/features/admin";
 import {
@@ -32,6 +33,7 @@ import { env } from "@/shared/config/env.js";
 import { paths } from "@/shared/config/paths.js";
 import AuthLayout from "@/app/layouts/AuthLayout.jsx";
 import { EstudianteLayout } from "@/app/layouts/EstudianteLayout";
+import { LayoutDeCuenta } from "@/app/layouts/LayoutDeCuenta";
 import { ErrorDeRuta } from "./ErrorDeRuta.jsx";
 import { NoEncontradoPage } from "./PaginasDeError";
 import { PaginaRaiz } from "./PaginaRaiz";
@@ -104,6 +106,11 @@ export const router = createBrowserRouter([
                 ],
               },
             ],
+          },
+          {
+            // Mi cuenta (HU-F-403): cualquier rol, con el layout de su rol.
+            element: <LayoutDeCuenta />,
+            children: [{ path: paths.cuenta, lazy: pagina(cargarCuentaPage) }],
           },
           {
             // Administración: solo rol admin, dentro del mismo atril.

@@ -13,6 +13,8 @@ export const paths = Object.freeze({
   recuperar: "/recuperar",
   /** Destino del enlace del correo: `/restablecer#token=…` (el token va en el fragmento). */
   restablecer: "/restablecer",
+  /** Mi cuenta: nombre, correo y contraseña (HU-F-403). */
+  cuenta: "/cuenta",
   terminos: "/terminos",
   acordes: "/acordes",
   ejercicios: "/ejercicios",

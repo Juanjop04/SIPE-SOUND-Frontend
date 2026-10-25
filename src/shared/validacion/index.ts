@@ -3,6 +3,7 @@ export {
   texto,
   textoOpcional,
   nombrePersona,
+  nombrePersonaOpcional,
   email,
   password,
   passwordActual,

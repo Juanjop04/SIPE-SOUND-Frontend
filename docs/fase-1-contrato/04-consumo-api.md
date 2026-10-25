@@ -89,6 +89,10 @@ Responsabilidades:
    - `success: false` → lanza `ApiError` con `statusCode`, `status`, `message` y `errors`.
    - Cuerpo que no es JSON (proxy, caída) → `ApiError(0, "SIN_CONEXION", "No pudimos conectar…")`.
 5. Ante `401`: intentar **una** renovación; si falla, cerrar sesión local y redirigir a `/login?volver=<ruta>`.
+   Excepción: `POST /me/reautenticacion` responde 401 cuando la contraseña actual es incorrecta (error de
+   negocio, no de sesión). Se llama con `{ tolerarNoAutenticado: true }` (4.º parámetro de `conMensaje`):
+   si la renovación **funciona** y el 401 persiste, se lanza el `ApiError` sin cerrar la sesión; si la
+   renovación falla, se cierra la sesión como siempre.
 6. Timeout de 15 s con `AbortController` (conectividad baja).
 
 ```ts
@@ -166,6 +170,11 @@ Campos que cambiaron con HU-B-319: `duracion` (texto) ya no existe → usar
 | Confirmar el correo | `POST /auth/verificacion` | `{email, codigo}` (HU-F-401). El código (6 dígitos, 15 min, un solo uso) lo envía el backend al registrarse. Código errado, vencido o usado → 422 con el mismo texto. |
 | Pedir el enlace para otra contraseña | `POST /auth/contrasena/olvido` | `{email}` (HU-F-402); siempre 200 con el mismo texto. Un enlace cada 2 min por cuenta: el botón queda deshabilitado 120 s. |
 | Crear la contraseña nueva | `POST /auth/contrasena/restablecer` | `{token, password}`. El token (15 min, un solo uso) llega en el **fragmento** `/restablecer#token=…`: se lee una vez, se guarda solo en memoria y se borra de la URL; la página usa `referrer: no-referrer`. Token vencido o usado → 422 y "Pedir otro enlace". |
+| Cambiar nombre y apellido | `PATCH /me` | `{nombre?, apellido?}` (HU-F-403), solo lo que cambió. 403 si el admin no habilitó el permiso (`puede_editar_nombre`; los admins siempre pueden). Devuelve el perfil: se escribe en la caché de `GET /me`. |
+| Confirmar identidad, paso 1 | `POST /me/reautenticacion` | `{password_actual}`. Envía un código al correo actual y devuelve `{enviado_a: "a***@dominio"}`. Contraseña errada → 401 "La contraseña actual no coincide." (ver regla 5). 5 por hora. |
+| Confirmar identidad, paso 2 | `POST /me/reautenticacion/confirmar` | `{codigo}` → `{token_reautenticacion, expira_en}`: 5 min, un solo uso, atado a la sesión. Vive solo en el estado del diálogo. |
+| Cambiar la contraseña | `PATCH /me/contrasena` | `{token_reautenticacion, password_nueva}`. Cierra las demás sesiones; esta sigue abierta. Token vencido o usado → 422 "Vuelve a confirmar tu identidad." (el diálogo vuelve al paso 1). |
+| Cambiar el correo | `POST /me/correo` y `POST /me/correo/confirmar` | `{token_reautenticacion, email_nuevo}` envía un código al correo **nuevo**; `{codigo}` lo confirma y devuelve `{email}`. Correo ocupado → 409 en el campo. El token se gasta en el primer paso. |
 | Pedir otro código | `POST /auth/verificacion/reenviar` | `{email}`; siempre 200 con el mismo texto. El botón queda deshabilitado 60 s con cuenta regresiva. |
 
 Una cuenta sin verificar no inicia sesión: `POST /auth/sesion` responde 422 con `meta.requiere_verificacion: true`
