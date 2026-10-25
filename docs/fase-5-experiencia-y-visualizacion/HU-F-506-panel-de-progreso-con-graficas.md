@@ -18,7 +18,7 @@
 - HU-B-503 entrega las series: actividad por día, distribución del avance, estados y evaluaciones.
 - Habilitar o deshabilitar una evaluación es publicar o cerrarla: `PATCH /docente/evaluaciones/{id}/estado`
   (ya existe; decisiones fase 5 §2.5).
-- Los componentes de gráfico se reutilizan de HU-F-502 (`src/shared/ui/graficos/`).
+- Los componentes de gráfico (Recharts) vienen de la base de `src/shared/ui/graficos/` y de HU-F-502.
 
 ## Alcance
 **Incluye**
@@ -59,7 +59,7 @@
 ## Prompt de ejecución
 ```text
 Ejecuta HU-F-506 en SIPE-SOUND-FULLSTACK. Amplía /docente/progreso con filtros en la URL (curso,
-bloque, rango, grupo), línea de cifras y gráficas SVG de GET /docente/progreso/series (estados
+bloque, rango, grupo), línea de cifras y gráficas de Recharts (shared/ui/graficos) de GET /docente/progreso/series (estados
 apilados, distribución, actividad, aprobación por bloque, evaluaciones), reutilizando
 src/shared/ui/graficos. Agrega las evaluaciones del curso con un interruptor Abierta/Cerrada con
 confirmación al cerrar (PATCH /docente/evaluaciones/{id}/estado). Conserva la matriz y "Necesitan

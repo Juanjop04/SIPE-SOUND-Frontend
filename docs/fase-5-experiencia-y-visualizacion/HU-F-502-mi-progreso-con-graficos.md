@@ -35,9 +35,11 @@
 6. **Leyenda y lectura**: cada gráfico con título, unidad y una frase de lectura
    ("Llevas 40 % del bloque 3"). Tooltip al enfocar con teclado, no solo con el mouse.
 7. **Alternativa en tabla**: botón "Ver como tabla" por gráfico (`<table>` con los mismos datos).
-8. **Gráficos SVG propios**, sin dependencias nuevas (`package.json` sin cambios), en
-   `src/shared/ui/graficos/` (`BarrasHorizontales`, `BarrasPorDia`, `PuntosConLinea`),
-   reutilizables por HU-F-506.
+8. **Gráficos con Recharts** (decisión de fase 5 §2.3), ya instalada con su base en
+   `src/shared/ui/graficos/` (`BarrasHorizontales`, `BarrasPorDia`, `BarraApilada`, marco con
+   "Ver como tabla"): esta HU las usa y agrega `PuntosConLinea` (puntajes con la línea de
+   aprobación). Se importan solo desde páginas cargadas bajo demanda (Recharts no entra al
+   paquete inicial).
 
 **No incluye**
 - Comparar con otros estudiantes ni rankings.
@@ -54,15 +56,15 @@
 
 ## Prompt de ejecución
 ```text
-Ejecuta HU-F-502 en SIPE-SOUND-FULLSTACK. Rediseña /progreso con gráficos SVG propios (sin librerías
-nuevas) en src/shared/ui/graficos: barras por bloque con estado en texto, barras por curso con
+Ejecuta HU-F-502 en SIPE-SOUND-FULLSTACK. Rediseña /progreso con los gráficos de Recharts que ya
+están en src/shared/ui/graficos (no agregues otra librería): barras por bloque con estado en texto, barras por curso con
 estado, actividad por día y puntajes con línea de aprobación. Cada gráfico lleva título, unidad,
 frase de lectura y botón "Ver como tabla". Solo tokens; el estado nunca va solo por color. Antes
 de escribir JSX describe la composición y espera confirmación. Sin pruebas unitarias.
 ```
 
 ## Pasos
-1. Componentes de gráfico en `shared/ui/graficos` con su tabla alternativa.
+1. Usar la base de `shared/ui/graficos` y agregar `PuntosConLinea`.
 2. Composición de `/progreso` y frases de lectura (funciones puras).
 3. Interacción con teclado y tooltips; estados.
 4. Documentos (05 §4: gráficos; 04-consumo-api).
@@ -95,6 +97,6 @@ Escenario: Sin avances
 - Lector de pantalla recorriendo un gráfico; capturas en 1280 px y 375 px.
 
 ## Definición de hecho específica
-- [ ] `package.json` sin cambios.
+- [ ] Recharts solo en chunks de páginas con gráficos (el paquete inicial no crece), comprobado con `npm run build`.
 - [ ] Ningún gráfico sin título, unidad y tabla alternativa.
 - [ ] Revisé los anti-patrones de 05 §6: ninguno presente.

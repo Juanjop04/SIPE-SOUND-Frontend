@@ -126,4 +126,4 @@ Frontend: F507 ─ F504 ─ F502 ─ F503 ─ F501 ─ F505 ─ F506
 ```
 
 F-507 va primero porque cambia los layouts que usan las demás; F-502 antes de F-506 porque
-F-506 reutiliza sus gráficos.
+F-506 reutiliza sus gráficos. La base de gráficos (Recharts) ya está en la rama `feat/graficos-recharts`.
