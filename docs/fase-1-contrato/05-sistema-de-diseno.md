@@ -148,7 +148,8 @@ Reglas que se mantienen de HU-F-314:
 - **Evaluación**: una pregunta por pantalla en móvil, todas en escritorio; opciones como filas completas seleccionables; resultado con `Fretboard` vibrando si aprueba.
 
 ### Docente ("Atril")
-- Barra lateral fija con: Resumen · Cursos · Contenido · Evaluaciones.
+- Barra lateral fija con: Resumen · Cursos · Progreso · Contenido · Evaluaciones · Mensajes (y, en admin, Usuarios · Todos los cursos · Docentes), cada una con ícono. *(Enmienda HU-F-507.)* Solo navegación: el perfil, el tema y "Cerrar sesión" van en la **barra superior** (arriba a la derecha: tema, Mensajes con su contador y el menú de la cuenta con "Mi cuenta", "Ver como estudiante" y "Cerrar sesión").
+- **Menú contraíble** *(HU-F-507)*: 240 px expandido, 64 px contraído (solo íconos; el nombre aparece al enfocar o pasar el mouse y sigue disponible para lectores de pantalla). Botón de contraer y atajo `[`; la elección se recuerda (`sipe-menu`) y vale también para la barra lateral del estudiante. Debajo de 1024 px el menú es un `Drawer`. Transición de 150 ms, sin ella con `prefers-reduced-motion`.
 - **Resumen**: franja de cifras + "Estudiantes sin actividad en 14 días" como lista accionable.
 - **Tablas densas**: filas de 44 px, cabecera fija, orden por columna, `Cuerda` fina para el avance, filtros en la URL.
 - **Edición**: panel lateral (drawer) sobre la tabla, no páginas nuevas para editar campos simples.
