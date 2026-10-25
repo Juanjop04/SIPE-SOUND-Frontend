@@ -10,6 +10,38 @@ export function sinActividad(ultimoAvance: string | null, ahora: number = Date.n
   return ahora - new Date(ultimoAvance).getTime() > DIAS_SIN_ACTIVIDAD * DIA;
 }
 
+export type FiltroRapido = "todos" | "al_dia" | "sin_actividad" | "apoyo";
+
+export const FILTROS_RAPIDOS: { valor: FiltroRapido; etiqueta: string }[] = [
+  { valor: "todos", etiqueta: "Todos" },
+  { valor: "al_dia", etiqueta: "Al día" },
+  { valor: "sin_actividad", etiqueta: "Sin actividad" },
+  { valor: "apoyo", etiqueta: "Necesitan apoyo" },
+];
+
+export function filtroRapidoDe(valor: string | null): FiltroRapido {
+  return FILTROS_RAPIDOS.find((f) => f.valor === valor)?.valor ?? "todos";
+}
+
+const DIAS_AL_DIA = 7;
+
+/** "Al día": último avance en los últimos 7 días (igual que el resumen del backend). */
+export function alDia(ultimoAvance: string | null, ahora: number = Date.now()): boolean {
+  return ultimoAvance !== null && ahora - new Date(ultimoAvance).getTime() <= DIAS_AL_DIA * DIA;
+}
+
+export function cumpleFiltro(
+  e: EstudianteCurso,
+  filtro: FiltroRapido,
+  apoyo: ReadonlySet<string>,
+  ahora: number = Date.now(),
+): boolean {
+  if (filtro === "al_dia") return alDia(e.ultimo_avance, ahora);
+  if (filtro === "sin_actividad") return sinActividad(e.ultimo_avance, ahora);
+  if (filtro === "apoyo") return apoyo.has(e.estudiante_id);
+  return true;
+}
+
 export const ORDENES: { valor: OrdenEstudiantes; etiqueta: string }[] = [
   { valor: "nombre", etiqueta: "Nombre" },
   { valor: "-avance_pct", etiqueta: "Avance" },

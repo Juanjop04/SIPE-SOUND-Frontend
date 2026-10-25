@@ -16,6 +16,21 @@ interface TablaEstudiantesProps extends AccionesEstudiante {
   totalBloques: number | null;
   /** El curso archivado no admite comentarios ni retiros. */
   soloLectura: boolean;
+  /** Ids de quienes necesitan apoyo (del resumen del backend): llevan la marca en texto. */
+  apoyo?: ReadonlySet<string>;
+}
+
+function Nombre({ e, apoyo }: { e: EstudianteCurso; apoyo?: ReadonlySet<string> }) {
+  return (
+    <span className="flex flex-wrap items-baseline gap-x-2">
+      <span className="text-paper">{e.nombre}</span>
+      {apoyo?.has(e.estudiante_id) && (
+        <span className="text-xs text-danger">
+          <span aria-hidden="true">! </span>Necesita apoyo
+        </span>
+      )}
+    </span>
+  );
 }
 
 /** "hace 3 días" y, con más de 14 días o sin registros, "sin actividad" en texto (no solo color). */
@@ -95,13 +110,14 @@ export function TablaEstudiantes({
   filas,
   totalBloques,
   soloLectura,
+  apoyo,
   ...acciones
 }: TablaEstudiantesProps) {
   const columnas: ColumnaTabla<EstudianteCurso>[] = [
     {
       id: "nombre",
       encabezado: "Nombre",
-      celda: (e) => <span className="text-paper">{e.nombre}</span>,
+      celda: (e) => <Nombre e={e} apoyo={apoyo} />,
     },
     {
       id: "correo",
@@ -142,7 +158,7 @@ export function TablaEstudiantes({
             key={e.estudiante_id}
             className="flex flex-col gap-2 rounded-caja border border-linea bg-surface p-4"
           >
-            <p className="font-medium text-paper">{e.nombre}</p>
+            <Nombre e={e} apoyo={apoyo} />
             <Avance e={e} />
             <p className="text-sm">
               <span className="font-mono text-muted">bloques {aprobados(e, totalBloques)} · </span>
