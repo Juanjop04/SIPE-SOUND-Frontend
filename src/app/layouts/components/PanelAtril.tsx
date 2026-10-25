@@ -49,7 +49,11 @@ export function PanelAtril({
   const { usuario, perfil, rol, cerrarSesion } = useSession();
   const secciones =
     rol === ROL.admin
-      ? [...SECCIONES, { to: paths.admin.docentes, etiqueta: "Docentes", exacto: false }]
+      ? [
+          ...SECCIONES,
+          { to: paths.admin.usuarios, etiqueta: "Usuarios", exacto: false },
+          { to: paths.admin.docentes, etiqueta: "Docentes", exacto: false },
+        ]
       : SECCIONES;
   const navigate = useNavigate();
 

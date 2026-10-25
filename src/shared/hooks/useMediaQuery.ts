@@ -15,3 +15,6 @@ export function useMediaQuery(consulta: string): boolean {
 
 /** Mismo punto de corte que `lg` de Tailwind. */
 export const ESCRITORIO = "(min-width: 1024px)";
+
+/** Mismo punto de corte que `md` de Tailwind (768 px): tablas densas frente a listas apiladas. */
+export const ESCRITORIO_MEDIO = "(min-width: 768px)";
