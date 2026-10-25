@@ -6,6 +6,7 @@ export {
   email,
   password,
   passwordActual,
+  codigoVerificacion,
   codigoCurso,
   entero,
   lista,

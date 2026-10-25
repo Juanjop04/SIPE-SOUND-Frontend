@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   LIMITES,
   aceptaTerminos,
+  codigoVerificacion,
   email,
   nombrePersona,
   password,
@@ -29,6 +30,13 @@ export const esquemaRegistro = z
   });
 export type EntradaRegistro = z.input<typeof esquemaRegistro>;
 export type DatosRegistroFormulario = z.output<typeof esquemaRegistro>;
+
+export const esquemaVerificacion = z.object({
+  email: email(),
+  codigo: codigoVerificacion(),
+});
+export type EntradaVerificacion = z.input<typeof esquemaVerificacion>;
+export type DatosVerificacion = z.output<typeof esquemaVerificacion>;
 
 const { min: PASSWORD_MIN, max: PASSWORD_MAX } = LIMITES.password;
 

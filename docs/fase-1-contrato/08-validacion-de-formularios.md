@@ -42,6 +42,7 @@
 | Correo | `trim`, minúsculas, máx. 254, formato `usuario@dominio.tld` → "El correo no es válido." | `type="email"` `maxLength={254}` `autoComplete="email"` `inputMode="email"` `spellCheck={false}` `autoCapitalize="none"` |
 | Contraseña nueva | **sin** `trim`, 8–72, al menos una letra y un número → "La contraseña debe tener letras y números." | `type="password"` (con mostrar/ocultar) `maxLength={72}` `autoComplete="new-password"`; lista de requisitos visible que se marca al cumplirse |
 | Confirmar contraseña | igual a la anterior → "Las contraseñas no coinciden." (solo frontend) | igual que la anterior; no se envía al backend |
+| Código de verificación del correo | se quitan los espacios y deben ser 6 dígitos → "El código tiene 6 dígitos." | **un solo** `<input>` (no seis cajas): `type="text"` `inputMode="numeric"` `autoComplete="one-time-code"` `maxLength={6}`; al pegar se limpia ("482 913" → 482913) y al escribir solo entran dígitos; fuente mono con `tracking-widest` |
 | Contraseña al iniciar sesión | 1–72 (no se exige el mínimo: cuentas antiguas) | `autoComplete="current-password"` `maxLength={72}` |
 | Código de curso | `trim`, mayúsculas, exactamente 8 de `ABCDEFGHJKMNPQRSTUVWXYZ23456789` → "El código solo tiene letras y números (sin 0, O, 1, I ni L)." | `maxLength={8}` `autoComplete="off"` `autoCapitalize="characters"` `spellCheck={false}` fuente mono; se muestra en mayúsculas mientras se escribe |
 | Título / nombre de curso, bloque, lección, ejercicio | `trim`, 3–120 | `maxLength={120}` |

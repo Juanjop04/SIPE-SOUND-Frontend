@@ -84,6 +84,20 @@ export const passwordActual = () =>
     .min(1, "Escribe tu contraseña.")
     .max(LIMITES.password.max, maximo(LIMITES.password.max));
 
+/** Código de verificación del correo: se quitan los espacios ("482 913") y deben ser 6 dígitos. */
+export const codigoVerificacion = () =>
+  z
+    .string()
+    .transform((valor) => valor.replace(/\s+/g, ""))
+    .pipe(
+      z
+        .string()
+        .regex(
+          new RegExp(`^\\d{${LIMITES.codigoVerificacion.largo}}$`),
+          `El código tiene ${LIMITES.codigoVerificacion.largo} dígitos.`,
+        ),
+    );
+
 /** Código de curso: recorta, mayúsculas, 8 caracteres del alfabeto sin 0, O, 1, I ni L. */
 export const codigoCurso = () =>
   z

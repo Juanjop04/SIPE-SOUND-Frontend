@@ -54,7 +54,13 @@ export async function enviar(metodo, ruta, { params, body, token, conCredenciale
     throw new ApiError(res.status, SIN_CONEXION, MENSAJE_SIN_CONEXION);
   }
   if (!cuerpo.success) {
-    throw new ApiError(cuerpo.statusCode, cuerpo.status, cuerpo.message, cuerpo.errors);
+    throw new ApiError(
+      cuerpo.statusCode,
+      cuerpo.status,
+      cuerpo.message,
+      cuerpo.errors,
+      cuerpo.meta,
+    );
   }
   return cuerpo;
 }

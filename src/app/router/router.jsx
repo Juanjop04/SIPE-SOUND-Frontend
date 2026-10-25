@@ -2,7 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
 import { cargarMisCursosPage } from "@/features/cursos";
 import { cargarDocentesPage } from "@/features/admin";
-import { cargarLoginPage, cargarRegistroPage, ROLES_ADMIN, ROLES_ATRIL } from "@/features/auth";
+import {
+  cargarLoginPage,
+  cargarRegistroPage,
+  cargarVerificarPage,
+  ROLES_ADMIN,
+  ROLES_ATRIL,
+} from "@/features/auth";
 import {
   cargarContenidoPage,
   cargarCursoDetallePage,
@@ -128,6 +134,15 @@ export const router = createBrowserRouter([
               titulo: "Tocar guitarra está al alcance de tu mano",
               descripcion:
                 "Crea tu cuenta gratis: cada lección trae acordes, ejercicios con metrónomo y una evaluación al final del bloque.",
+            },
+          },
+          {
+            path: paths.verificar,
+            lazy: pagina(cargarVerificarPage),
+            handle: {
+              titulo: "Un paso más y empiezas a practicar",
+              descripcion:
+                "Confirmamos tu correo con un código para proteger tu cuenta. Solo toma un minuto.",
             },
           },
         ],

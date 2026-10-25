@@ -7,6 +7,8 @@ export const paths = Object.freeze({
   ruta: "/ruta",
   login: "/login",
   registro: "/registro",
+  /** Escribir el código de 6 dígitos que llegó al correo (HU-F-401). */
+  verificar: "/verificar",
   terminos: "/terminos",
   acordes: "/acordes",
   ejercicios: "/ejercicios",

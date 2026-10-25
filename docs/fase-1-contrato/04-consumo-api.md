@@ -163,6 +163,11 @@ Campos que cambiaron con HU-B-319: `duracion` (texto) ya no existe → usar
 | Iniciar sesión | `POST /auth/sesion` | Devuelve `access_token`, `expira_en` y `usuario`; el backend pone la cookie `sipe_refresh`. |
 | Recuperar sesión al cargar / token vencido | `POST /auth/sesion/renovar` | Cuerpo `{}`; usa y rota la cookie. 401 = no hay sesión. |
 | Cerrar sesión | `DELETE /auth/sesion` | Cuerpo `{}` y `Bearer`; borra la cookie. |
+| Confirmar el correo | `POST /auth/verificacion` | `{email, codigo}` (HU-F-401). El código (6 dígitos, 15 min, un solo uso) lo envía el backend al registrarse. Código errado, vencido o usado → 422 con el mismo texto. |
+| Pedir otro código | `POST /auth/verificacion/reenviar` | `{email}`; siempre 200 con el mismo texto. El botón queda deshabilitado 60 s con cuenta regresiva. |
+
+Una cuenta sin verificar no inicia sesión: `POST /auth/sesion` responde 422 con `meta.requiere_verificacion: true`
+(`ApiError.meta`) y el formulario ofrece "Escribir el código" (`/verificar`, con el correo precargado).
 
 - Todas con `credentials: "include"` y `Content-Type: application/json` (el backend exige JSON como defensa CSRF).
 - El access token vive **solo en memoria** (`shared/api/sesion`); nunca en `localStorage`.
