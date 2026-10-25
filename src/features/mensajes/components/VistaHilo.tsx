@@ -4,7 +4,7 @@ import { Button, MensajeError, Skeleton } from "@/shared/ui";
 import { useAvisarLectura, useEditarHilo, useHilo } from "../hooks";
 import type { Hilo } from "../tipos";
 import { conBusqueda, useFiltrosBandeja, useRutasMensajes } from "../useFiltrosBandeja";
-import { subtituloDelChat } from "../utilsChat";
+import { subtituloDelChat, tituloDelChat } from "../utilsChat";
 import { Iniciales } from "./Iniciales";
 import { ListaDeMensajes } from "./ListaDeMensajes";
 import { EnviandoBurbuja, RedactorDeChat } from "./RedactorDeChat";
@@ -38,13 +38,16 @@ function Acciones({ id, alIr }: { id: string; alIr: () => void }) {
 
 function Encabezado({ hilo, alIr }: { hilo: Hilo; alIr: () => void }) {
   const ajeno = hilo.mensajes.find((m) => !m.propio && m.remitente)?.remitente ?? null;
+  const subtitulo = subtituloDelChat(hilo);
   return (
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-linea px-4 py-3">
       <div className="flex min-w-0 items-center gap-3">
         <Iniciales persona={ajeno} />
         <div className="min-w-0">
-          <h2 className="truncate font-display text-lg font-semibold text-paper">{hilo.asunto}</h2>
-          <p className="truncate text-xs text-muted">{subtituloDelChat(hilo)}</p>
+          <h2 className="truncate font-display text-lg font-semibold text-paper">
+            {tituloDelChat(hilo)}
+          </h2>
+          {subtitulo && <p className="truncate text-xs text-muted">{subtitulo}</p>}
         </div>
       </div>
       <Acciones id={hilo.hilo_id} alIr={alIr} />

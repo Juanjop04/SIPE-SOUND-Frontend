@@ -1,9 +1,7 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
 import { TrasteDivider } from "@/shared/music";
 import { EstadoVacio, MensajeError, Skeleton, claseBoton } from "@/shared/ui";
-import { Redactor, type Destinatario } from "@/features/mensajes";
 import { BarraFiltros } from "../progreso/components/BarraFiltros";
 import { DrawerProgreso } from "../progreso/components/DrawerProgreso";
 import { EvaluacionesCurso } from "../progreso/components/EvaluacionesCurso";
@@ -35,12 +33,9 @@ function SinCursos() {
   );
 }
 
-const aDestinatario = (f: NecesitaApoyo): Destinatario => ({
-  tipo: "usuario",
-  id: f.estudiante_id,
-  etiqueta: nombreCompleto(f),
-  detalle: f.curso,
-});
+/** "Escribirle": abre el chat nuevo con la persona ya elegida (HU-F-508). */
+const rutaParaEscribir = (f: NecesitaApoyo) =>
+  `${paths.docente.mensaje("nuevo")}?${new URLSearchParams({ para: f.estudiante_id, nombre: nombreCompleto(f) })}`;
 
 function Seccion({
   id,
@@ -164,7 +159,7 @@ export default function ProgresoPage() {
   const todos = useResumenProgreso(null);
   const actual = useResumenProgreso(filtros.curso);
   const series = useSeries(filtrosSeries);
-  const [escribiendoA, setEscribiendoA] = useState<Destinatario | null>(null);
+  const navigate = useNavigate();
   const cursos = todos.data?.cursos ?? [];
   const elegido = cursos.find((c) => c.id === filtros.curso) ?? null;
   const nombres = Object.fromEntries(cursos.map((c) => [c.id, c.nombre]));
@@ -208,7 +203,7 @@ export default function ProgresoPage() {
               filtros={filtros}
               bloqueId={filtrosSeries.bloque}
               onCambiar={cambiar}
-              onEscribir={(fila) => setEscribiendoA(aDestinatario(fila))}
+              onEscribir={(fila) => navigate(rutaParaEscribir(fila))}
             />
           </div>
         </>
@@ -217,12 +212,6 @@ export default function ProgresoPage() {
         estudianteId={estudianteId}
         nombresDeCursos={nombres}
         onCerrar={() => cambiar({ estudiante: null })}
-      />
-      <Redactor
-        abierto={escribiendoA !== null}
-        onCerrar={() => setEscribiendoA(null)}
-        soloDocentes={false}
-        para={escribiendoA ?? undefined}
       />
     </main>
   );

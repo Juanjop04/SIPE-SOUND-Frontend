@@ -1,14 +1,15 @@
-import { useState, type ReactNode } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useMemo, type ReactNode } from "react";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { puedeUsarAtril, useSession } from "@/features/auth";
 import { paths } from "@/shared/config/paths.js";
 import { ESCRITORIO, useMediaQuery } from "@/shared/hooks/useMediaQuery";
 import { Button, EstadoVacio, claseBoton } from "@/shared/ui";
 import { Bandeja } from "../components/Bandeja";
-import { Redactor } from "../components/Redactor";
+import { NuevoMensajeChat } from "../components/NuevoMensajeChat";
 import { VistaHilo } from "../components/VistaHilo";
 import { useDestinatarios } from "../hooks";
-import { conBusqueda, useFiltrosBandeja, useRutasMensajes } from "../useFiltrosBandeja";
+import type { Destinatario } from "../tipos";
+import { HILO_NUEVO, conBusqueda, useFiltrosBandeja, useRutasMensajes } from "../useFiltrosBandeja";
 
 /** Lo que se ve con la bandeja vacía: depende de quién mira (contrato de HU-F-407, estados). */
 function Vacio({
@@ -85,47 +86,58 @@ function Paneles({ ancha, hiloId, bandeja, hilo }: PanelesProps) {
   );
 }
 
-/** Bandeja e hilos (HU-F-407): dos paneles en escritorio, dos pantallas en móvil. */
+/** Persona con la que se abre el chat nuevo: ?para=<id>&nombre=<nombre> ("Escribirle"). */
+function useParaDeLaUrl(): Destinatario | undefined {
+  const [parametros] = useSearchParams();
+  const id = parametros.get("para");
+  const nombre = parametros.get("nombre");
+  return useMemo(
+    () => (id && nombre ? { tipo: "usuario", id, etiqueta: nombre, detalle: null } : undefined),
+    [id, nombre],
+  );
+}
+
+/** Bandeja y conversaciones (HU-F-407, HU-F-508): dos paneles en escritorio, dos pantallas en móvil. */
 export default function MensajesPage() {
   const { hiloId } = useParams();
   const { rol } = useSession();
   const esEstudiante = !puedeUsarAtril(rol);
   const ancha = useMediaQuery(ESCRITORIO);
-  const [redactando, setRedactando] = useState(false);
+  const navigate = useNavigate();
+  const rutas = useRutasMensajes();
+  const para = useParaDeLaUrl();
+  const redactando = hiloId === HILO_NUEVO;
   // Un estudiante solo puede escribirle a los docentes de sus cursos: sin ellos, no hay a quién.
   const docentes = useDestinatarios(undefined, esEstudiante);
   const puedeEscribir = !esEstudiante || (docentes.data?.length ?? 0) > 0;
+  const redactar = () => navigate(rutas.nuevo);
 
   const bandeja = (
     <Bandeja
-      activo={hiloId}
+      activo={redactando ? undefined : hiloId}
       vacio={
-        <Vacio
-          esEstudiante={esEstudiante}
-          puedeEscribir={puedeEscribir}
-          onRedactar={() => setRedactando(true)}
-        />
+        <Vacio esEstudiante={esEstudiante} puedeEscribir={puedeEscribir} onRedactar={redactar} />
       }
     />
   );
-  const hilo = hiloId ? (
-    <VistaHilo key={hiloId} hiloId={hiloId} />
-  ) : (
+  let hilo: ReactNode = (
     <EstadoVacio titulo="Elige una conversación." descripcion="Su contenido aparece aquí." />
   );
+  if (redactando) {
+    hilo = (
+      <NuevoMensajeChat key={para?.id ?? HILO_NUEVO} soloDocentes={esEstudiante} para={para} />
+    );
+  } else if (hiloId) {
+    hilo = <VistaHilo key={hiloId} hiloId={hiloId} />;
+  }
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-3xl font-semibold text-paper">Mensajes</h1>
-        {puedeEscribir && <Button onClick={() => setRedactando(true)}>Nuevo mensaje</Button>}
+        {puedeEscribir && !redactando && <Button onClick={redactar}>Nuevo mensaje</Button>}
       </div>
       <Paneles ancha={ancha} hiloId={hiloId} bandeja={bandeja} hilo={hilo} />
-      <Redactor
-        abierto={redactando}
-        onCerrar={() => setRedactando(false)}
-        soloDocentes={esEstudiante}
-      />
     </main>
   );
 }

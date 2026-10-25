@@ -1,7 +1,7 @@
 // Funciones puras del chat (HU-F-501): agrupación por remitente, separadores de día, iniciales y
 // textos de los avisos. Sin React ni red.
 import type { Hilo, MensajeDeHilo, Persona } from "./tipos";
-import { nombreDe, rolDe } from "./utils";
+import { nombreDe } from "./utils";
 
 const DIA_MS = 86_400_000;
 const HORA = new Intl.DateTimeFormat("es-CO", {
@@ -69,7 +69,7 @@ export type ItemDelChat =
 const esAviso = (m: MensajeDeHilo) => m.alcance !== "usuario";
 
 function quienEscribe(m: MensajeDeHilo): string {
-  return m.propio ? "yo" : `${nombreDe(m.remitente)}|${rolDe(m.remitente)}`;
+  return m.propio ? "yo" : `${nombreDe(m.remitente)}|${m.remitente?.rol ?? ""}`;
 }
 
 function claveDeDia(iso: string): string {
@@ -126,13 +126,15 @@ export function textoDeAviso(m: MensajeDeHilo): string {
   return `Aviso a ${destinos[m.alcance] ?? "un grupo"}`;
 }
 
-/** Quién es la otra persona del chat (o a quién se avisó): el subtítulo del encabezado. */
-export function subtituloDelChat(hilo: Hilo): string {
+/** Título del chat: el nombre de la otra persona (sin rol ni curso); si no hay, el asunto. */
+export function tituloDelChat(hilo: Hilo): string {
   const ajeno = hilo.mensajes.find((m) => !m.propio && m.remitente);
-  if (ajeno) {
-    const curso = ajeno.curso ? ` · ${ajeno.curso}` : "";
-    return `${nombreDe(ajeno.remitente)} · ${rolDe(ajeno.remitente)}${curso}`;
-  }
+  return ajeno ? nombreDe(ajeno.remitente) : hilo.asunto;
+}
+
+/** Solo un aviso a un grupo dice a quiénes llegó; en una conversación de dos no hay subtítulo. */
+export function subtituloDelChat(hilo: Hilo): string {
+  if (hilo.mensajes.some((m) => !m.propio && m.remitente)) return "";
   const aviso = hilo.mensajes.find(esAviso);
-  return aviso ? textoDeAviso(aviso) : (hilo.mensajes[0]?.curso ?? "");
+  return aviso ? textoDeAviso(aviso) : "";
 }
