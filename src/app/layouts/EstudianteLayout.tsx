@@ -6,6 +6,7 @@ import { AtajoMensajes } from "@/features/mensajes";
 import { cn } from "@/shared/lib/cn.js";
 import { paths } from "@/shared/config/paths.js";
 import { useAtajoDelMenu, useMenuContraido } from "@/shared/hooks/useMenuContraido";
+import { AtajoAcordes } from "./components/AtajoAcordes";
 import { BotonContraerMenu } from "./components/BotonContraerMenu";
 import { Marca } from "./components/Marca";
 import { MenuCuenta } from "./components/MenuCuenta";
@@ -58,6 +59,7 @@ export function EstudianteLayout({ children }: { children?: ReactNode }) {
             <NavEstudiante />
             <div className="flex items-center gap-3">
               <SelectorTema compactoEnMovil />
+              <AtajoAcordes />
               <AtajoMensajes />
               <Cuenta />
             </div>

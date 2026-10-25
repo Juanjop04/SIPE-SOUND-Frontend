@@ -2,15 +2,32 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/features/auth";
 import { http } from "@/shared/api/httpClient.js";
 
-/** Fila de GET /cursos (HU-B-307): mis cursos activos con el docente y lo que no he leído. */
+export type EstadoDeCurso = "sin_iniciar" | "en_curso" | "finalizado";
+
+/** Avance en la ruta del curso (HU-B-502): el backend lo calcula, aquí solo se muestra. */
+export interface AvanceDeCurso {
+  /** 0 a 100: lecciones completadas de la ruta del curso. */
+  pct: number;
+  lecciones: { completadas: number; total: number };
+  ejercicios: { completados: number; total: number };
+  bloques_aprobados: number;
+  bloques_total: number;
+}
+
+/** Fila de GET /cursos (HU-B-307, HU-B-502): mis cursos activos con docente, avance y estado. */
 export interface MiCurso {
   id: number;
   nombre: string;
   descripcion: string | null;
   nivel: string;
   docente_nombre: string;
+  docente: { nombre: string; apellido: string | null };
   inscrito_en: string;
   retroalimentaciones_sin_leer: number;
+  avance: AvanceDeCurso;
+  estado: EstadoDeCurso;
+  /** En la ruta de este curso; null si aún no registra nada. */
+  ultimo_avance: string | null;
 }
 
 /** GET /cursos/{id}/retroalimentaciones (HU-B-312): al consultarlas quedan leídas. */
@@ -23,12 +40,13 @@ export interface Comentario {
   nueva: boolean;
 }
 
-/** Bloque de GET /ruta?curso_id= (solo lo que necesita el mini-mástil). */
+/** Bloque de GET /ruta?curso_id= (lo que necesita "Continuar": la primera lección pendiente). */
 export interface BloqueDeCurso {
   id: number;
   numero: number;
   titulo: string;
   estado: "bloqueado" | "disponible" | "aprobado";
+  lecciones: { id: number; numero: number; completado: boolean }[];
 }
 
 export const cursosApi = {

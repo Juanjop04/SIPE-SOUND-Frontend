@@ -1,8 +1,9 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { SelectorRuta, useRutaDeCurso } from "@/features/cursos";
 import { useSession } from "@/features/auth";
 import { ESCRITORIO, useMediaQuery } from "@/shared/hooks/useMediaQuery";
-import { EstadoVacio, MensajeError } from "@/shared/ui";
+import { paths } from "@/shared/config/paths.js";
+import { ENLACE_EN_TEXTO, EstadoVacio, MensajeError } from "@/shared/ui";
 import { DetalleBloque } from "../components/DetalleBloque";
 import { EsqueletoRuta } from "../components/EsqueletoRuta";
 import { Mastil } from "../components/Mastil";
@@ -64,6 +65,8 @@ export default function RutaPage() {
     refetch,
   } = useRuta(cursoId ? { curso_id: cursoId } : undefined);
 
+  const nombreDelCurso = cursos.find((c) => c.id === cursoId)?.nombre;
+
   function contenido() {
     if (isPending) return <EsqueletoRuta />;
     if (error) return <MensajeError mensaje={error.message} onReintentar={() => refetch()} />;
@@ -81,7 +84,19 @@ export default function RutaPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
       <h1 className="sr-only">Ruta de aprendizaje</h1>
-      <div className="mb-6 flex justify-end">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted">
+          {nombreDelCurso ? (
+            <>
+              Ruta del curso <span className="font-medium text-paper">{nombreDelCurso}</span> ·{" "}
+              <Link to={paths.cursos} className={ENLACE_EN_TEXTO}>
+                Ver mis cursos
+              </Link>
+            </>
+          ) : (
+            "Ruta general"
+          )}
+        </p>
         <SelectorRuta cursoId={cursoId} cursos={cursos} onElegir={elegir} />
       </div>
       {contenido()}

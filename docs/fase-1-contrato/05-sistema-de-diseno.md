@@ -141,7 +141,8 @@ Reglas que se mantienen de HU-F-314:
 ## 5. Patrones de pantalla
 
 ### Estudiante *(enmienda: maqueta aprobada, HU-F-315 y HU-F-318)*
-- **Barra lateral** en `ink-2` (escritorio): Inicio · Ruta · Ejercicios · Acordes · Mi progreso; ítem activo con fondo `primary`. En móvil, barra inferior con los mismos destinos.
+- **Barra lateral** en `ink-2` (escritorio): Inicio · Ruta · Mis cursos · Ejercicios · Acordes · Mi progreso · Mensajes; ítem activo con fondo `primary`. *(Enmienda HU-F-504.)* En móvil, barra inferior con 5 destinos —Inicio · Ruta · Mis cursos · Ejercicios · Mi progreso— y Acordes y Mensajes como íconos en el encabezado; un visitante ve Ruta · Ejercicios · Acordes.
+- **Mis cursos** *(HU-F-504)*: tarjetas con la `Cuerda` de avance y el porcentaje en mono, el estado con símbolo y texto (○ Sin iniciar · ◐ En curso · ● Finalizado), "Lecciones 12/18 · Bloques 2/4", el último avance y una sola acción principal (Empezar, Continuar, Repasar) más "Ver ruta del curso"; pestañas por estado con su conteo y orden. La última tarjeta es "Unirme con un código".
 - **Inicio** (`/` con sesión): encabezado con saludo, nivel y foto de guitarra (texto nunca encima de la foto sin un fondo que garantice 4.5:1) junto a la `Boca` del avance global; fila de `TarjetaCifra` (lecciones, bloques, días con avance); "Continuar aprendiendo" con el siguiente paso y su único botón primario; progreso por bloques; evolución por día; bloques de la ruta con su estado; actividad reciente. Solo datos reales; si falta un dato, estado vacío.
 - **Ruta** (`/ruta`; sin sesión también en `/`): mástil vertical con el bloque seleccionado al lado; en móvil, tira horizontal desplazable arriba.
 - **Lección**: lectura editorial (una columna ≤ 68 caracteres), acordes en teselas, `Tablatura` con duración y nivel, acción "Marcar como practicada" al final.

@@ -1,5 +1,14 @@
 import { NavLink } from "react-router-dom";
-import { Activity, House, Mail, Map, Music, Timer, type LucideIcon } from "lucide-react";
+import {
+  Activity,
+  GraduationCap,
+  House,
+  Mail,
+  Map,
+  Music,
+  Timer,
+  type LucideIcon,
+} from "lucide-react";
 import { useSession } from "@/features/auth";
 import { ContadorNoLeidos } from "@/features/mensajes";
 import { cn } from "@/shared/lib/cn.js";
@@ -18,14 +27,18 @@ interface Destino {
   contador?: boolean;
   /** La barra inferior móvil ya tiene 5 destinos: este va como ícono en el encabezado. */
   fueraDeBarraInferior?: boolean;
+  /** Con sesión sale de la barra inferior (pasa al encabezado); un visitante sí lo ve ahí. */
+  fueraDeBarraConSesion?: boolean;
 }
 
-// Orden de HU-F-318: Inicio · Ruta · Ejercicios · Acordes · Mi progreso.
+// Orden de HU-F-318 y HU-F-504: Inicio · Ruta · Mis cursos · Ejercicios · Acordes · Mi progreso.
+// La barra inferior móvil (5 destinos con sesión): Inicio · Ruta · Mis cursos · Ejercicios · Mi progreso.
 const DESTINOS: Destino[] = [
   { to: paths.inicio, etiqueta: "Inicio", Icono: House, exacto: true, conSesion: true },
   { to: paths.ruta, etiqueta: "Ruta", Icono: Map },
+  { to: paths.cursos, etiqueta: "Mis cursos", Icono: GraduationCap, conSesion: true },
   { to: paths.ejercicios, etiqueta: "Ejercicios", Icono: Timer },
-  { to: paths.acordes, etiqueta: "Acordes", Icono: Music },
+  { to: paths.acordes, etiqueta: "Acordes", Icono: Music, fueraDeBarraConSesion: true },
   { to: paths.progreso, etiqueta: "Mi progreso", Icono: Activity, conSesion: true },
   {
     to: paths.mensajes,
@@ -146,7 +159,10 @@ export function NavEstudiante() {
 
 /** Móvil: barra inferior fija con ícono y etiqueta (objetivo de 64 px) sobre la zona segura. */
 export function BarraInferior() {
-  const destinos = useDestinos().filter((d) => !d.fueraDeBarraInferior);
+  const { usuario } = useSession();
+  const destinos = useDestinos().filter(
+    (d) => !d.fueraDeBarraInferior && !(usuario && d.fueraDeBarraConSesion),
+  );
   return (
     <nav
       aria-label="Principal"
