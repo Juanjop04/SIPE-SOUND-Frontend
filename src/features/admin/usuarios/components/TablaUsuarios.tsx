@@ -74,7 +74,7 @@ function columnasDe({
     },
     {
       id: "nombre",
-      encabezado: "Nombre",
+      encabezado: "Nombre y correo",
       celda: (u) => (
         <div className="flex flex-col">
           <button
@@ -84,14 +84,10 @@ function columnasDe({
           >
             {nombreCompleto(u)}
           </button>
+          <span className="whitespace-nowrap font-mono text-xs">{u.email}</span>
           <span className="text-xs text-muted">{ETIQUETA_ROL[u.rol]}</span>
         </div>
       ),
-    },
-    {
-      id: "correo",
-      encabezado: "Correo",
-      celda: (u) => <span className="whitespace-nowrap font-mono text-xs">{u.email}</span>,
     },
     { id: "estado", encabezado: "Estado", celda: (u) => <PildoraEstado estado={u.estado} /> },
     {

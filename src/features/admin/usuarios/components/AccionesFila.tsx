@@ -93,20 +93,24 @@ export function AccionesFila({ usuario, onAccion }: AccionesFilaProps) {
           </BotonIcono>
         </>
       )}
-      <Interruptor
-        activo={!suspendida}
-        etiqueta={`Cuenta de ${nombre}`}
-        titulo={tituloCuenta(usuario)}
-        disabled={esAdmin}
-        onCambiar={() => onAccion(suspendida ? "reactivar" : "suspender", usuario)}
-      />
-      <Interruptor
-        activo={esAdmin || usuario.puede_editar_nombre}
-        etiqueta={`Cambio de nombre de ${nombre}`}
-        titulo={tituloNombre(usuario)}
-        disabled={esAdmin}
-        onCambiar={() => onAccion(usuario.puede_editar_nombre ? "bloquear" : "permitir", usuario)}
-      />
+      <div className="flex flex-col gap-1">
+        <Interruptor
+          activo={!suspendida}
+          etiqueta={`Cuenta de ${nombre}`}
+          texto={suspendida ? "Cuenta suspendida" : "Cuenta activa"}
+          titulo={tituloCuenta(usuario)}
+          disabled={esAdmin}
+          onCambiar={() => onAccion(suspendida ? "reactivar" : "suspender", usuario)}
+        />
+        <Interruptor
+          activo={esAdmin || usuario.puede_editar_nombre}
+          etiqueta={`Cambio de nombre de ${nombre}`}
+          texto={esAdmin || usuario.puede_editar_nombre ? "Nombre editable" : "Nombre bloqueado"}
+          titulo={tituloNombre(usuario)}
+          disabled={esAdmin}
+          onCambiar={() => onAccion(usuario.puede_editar_nombre ? "bloquear" : "permitir", usuario)}
+        />
+      </div>
       {!esAdmin && (
         <BotonIcono
           etiqueta={`Eliminar a ${nombre}`}
