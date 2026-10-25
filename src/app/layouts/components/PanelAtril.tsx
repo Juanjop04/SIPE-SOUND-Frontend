@@ -52,6 +52,7 @@ export function PanelAtril({
       ? [
           ...SECCIONES,
           { to: paths.admin.usuarios, etiqueta: "Usuarios", exacto: false },
+          { to: paths.admin.cursos, etiqueta: "Todos los cursos", exacto: false },
           { to: paths.admin.docentes, etiqueta: "Docentes", exacto: false },
         ]
       : SECCIONES;

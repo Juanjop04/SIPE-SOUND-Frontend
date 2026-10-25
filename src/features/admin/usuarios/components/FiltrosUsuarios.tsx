@@ -1,7 +1,7 @@
 import { Button, Field, Input, Select } from "@/shared/ui";
 import { LIMITES } from "@/shared/validacion";
 import type { FiltrosUsuarios as Filtros } from "../tipos";
-import { useBusquedaDiferida } from "../useBusquedaDiferida";
+import { useBusquedaDiferida } from "@/shared/hooks/useBusquedaDiferida";
 
 interface FiltrosUsuariosProps {
   filtros: Filtros;

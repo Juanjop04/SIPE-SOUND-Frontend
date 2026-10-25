@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
 import { TrasteDivider } from "@/shared/music";
+import { AccionesCursosDeUsuario } from "../cursos/components/AccionesCursosDeUsuario";
+import { nombreCompleto } from "../usuarios/utils";
 import { BarraLote } from "../usuarios/components/BarraLote";
 import { DetalleUsuario } from "../usuarios/components/DetalleUsuario";
 import { DialogosUsuarios } from "../usuarios/components/DialogosUsuarios";
@@ -75,7 +77,20 @@ export default function UsuariosPage() {
           onLimpiar={limpiar}
         />
       )}
-      <DetalleUsuario usuarioId={usuarioId} onCerrar={cerrarDetalle} />
+      <DetalleUsuario
+        usuarioId={usuarioId}
+        onCerrar={cerrarDetalle}
+        accionesCursos={(cuenta) => (
+          <AccionesCursosDeUsuario
+            usuario={{
+              id: cuenta.id,
+              nombre: nombreCompleto(cuenta),
+              rol: cuenta.rol,
+              inscripciones: cuenta.inscripciones.length,
+            }}
+          />
+        )}
+      />
       <DialogosUsuarios pendiente={acciones.pendiente} onCerrar={acciones.cerrarDialogo} />
     </main>
   );

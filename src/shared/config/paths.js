@@ -53,6 +53,8 @@ export const paths = Object.freeze({
     docentes: "/admin/docentes",
     /** Cuentas: estado, verificación, suspensión y permisos (HU-F-404). */
     usuarios: "/admin/usuarios",
+    /** Todos los cursos y sus estudiantes inscritos (HU-F-405). */
+    cursos: "/admin/cursos",
   }),
 });
 

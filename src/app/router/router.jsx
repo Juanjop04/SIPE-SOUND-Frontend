@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
 import { cargarCuentaPage } from "@/features/cuenta";
 import { cargarMisCursosPage } from "@/features/cursos";
-import { cargarDocentesPage, cargarUsuariosPage } from "@/features/admin";
+import { cargarCursosAdminPage, cargarDocentesPage, cargarUsuariosPage } from "@/features/admin";
 import {
   cargarLoginPage,
   cargarRecuperarPage,
@@ -120,6 +120,7 @@ export const router = createBrowserRouter([
                 lazy: cargarDocenteLayout,
                 children: [
                   { path: paths.admin.usuarios, lazy: pagina(cargarUsuariosPage) },
+                  { path: paths.admin.cursos, lazy: pagina(cargarCursosAdminPage) },
                   { path: paths.admin.docentes, lazy: pagina(cargarDocentesPage) },
                 ],
               },
