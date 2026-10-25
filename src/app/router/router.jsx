@@ -4,7 +4,9 @@ import { cargarMisCursosPage } from "@/features/cursos";
 import { cargarDocentesPage } from "@/features/admin";
 import {
   cargarLoginPage,
+  cargarRecuperarPage,
   cargarRegistroPage,
+  cargarRestablecerPage,
   cargarVerificarPage,
   ROLES_ADMIN,
   ROLES_ATRIL,
@@ -134,6 +136,24 @@ export const router = createBrowserRouter([
               titulo: "Tocar guitarra está al alcance de tu mano",
               descripcion:
                 "Crea tu cuenta gratis: cada lección trae acordes, ejercicios con metrónomo y una evaluación al final del bloque.",
+            },
+          },
+          {
+            path: paths.recuperar,
+            lazy: pagina(cargarRecuperarPage),
+            handle: {
+              titulo: "Todos olvidamos algo alguna vez",
+              descripcion:
+                "Te enviamos un enlace para elegir otra contraseña. Tus lecciones y tu progreso siguen intactos.",
+            },
+          },
+          {
+            path: paths.restablecer,
+            lazy: pagina(cargarRestablecerPage),
+            handle: {
+              titulo: "Casi listo para volver a tocar",
+              descripcion:
+                "Elige una contraseña nueva. Al guardarla, cerramos tus sesiones abiertas en otros equipos.",
             },
           },
           {

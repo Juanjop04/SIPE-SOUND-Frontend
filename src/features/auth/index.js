@@ -1,6 +1,8 @@
 export const cargarLoginPage = () => import("./pages/LoginPage");
 export const cargarRegistroPage = () => import("./pages/RegistroPage");
 export const cargarVerificarPage = () => import("./pages/VerificarPage");
+export const cargarRecuperarPage = () => import("./pages/RecuperarPage");
+export const cargarRestablecerPage = () => import("./pages/RestablecerPage");
 export { AuthProvider } from "./context/AuthProvider.jsx";
 export { useSession } from "./hooks/useSession.js";
 export { usePerfil } from "./hooks/usePerfil.js";

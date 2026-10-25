@@ -9,6 +9,10 @@ export const paths = Object.freeze({
   registro: "/registro",
   /** Escribir el código de 6 dígitos que llegó al correo (HU-F-401). */
   verificar: "/verificar",
+  /** Pedir el enlace para crear otra contraseña (HU-F-402). */
+  recuperar: "/recuperar",
+  /** Destino del enlace del correo: `/restablecer#token=…` (el token va en el fragmento). */
+  restablecer: "/restablecer",
   terminos: "/terminos",
   acordes: "/acordes",
   ejercicios: "/ejercicios",

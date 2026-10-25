@@ -37,4 +37,26 @@ export function reenviarCodigo(email: string): Promise<{ data: unknown; message:
   return http.conMensaje("POST", "/auth/verificacion/reenviar", { email });
 }
 
+/**
+ * POST /auth/contrasena/olvido (HU-B-403): siempre 200 con el mismo texto, exista o no la cuenta.
+ * Solo se envía a cuentas con el correo verificado; un enlace cada 2 minutos por cuenta.
+ */
+export function pedirRecuperacion(email: string): Promise<{ data: unknown; message: string }> {
+  return http.conMensaje("POST", "/auth/contrasena/olvido", { email });
+}
+
+/**
+ * POST /auth/contrasena/restablecer: fija la contraseña con el token del enlace (15 min, un solo
+ * uso) y cierra todas las sesiones. Token vencido, usado o inexistente → 422 con el mismo texto.
+ */
+export function restablecerContrasena(datos: {
+  token: string;
+  password: string;
+}): Promise<{ data: unknown; message: string }> {
+  return http.conMensaje("POST", "/auth/contrasena/restablecer", {
+    token: datos.token,
+    password: datos.password,
+  });
+}
+
 export { iniciarSesion, cerrarSesion };

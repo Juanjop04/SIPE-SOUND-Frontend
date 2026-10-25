@@ -38,6 +38,24 @@ export const esquemaVerificacion = z.object({
 export type EntradaVerificacion = z.input<typeof esquemaVerificacion>;
 export type DatosVerificacion = z.output<typeof esquemaVerificacion>;
 
+export const esquemaRecuperacion = z.object({ email: email() });
+export type EntradaRecuperacion = z.input<typeof esquemaRecuperacion>;
+export type DatosRecuperacion = z.output<typeof esquemaRecuperacion>;
+
+// El token no es un campo del formulario: viene del enlace del correo.
+export const esquemaRestablecer = z
+  .object({
+    password: password(),
+    // Solo en el frontend: no se envía al backend.
+    confirmar: z.string(),
+  })
+  .refine((datos) => datos.confirmar === datos.password, {
+    path: ["confirmar"],
+    message: "Las contraseñas no coinciden.",
+  });
+export type EntradaRestablecer = z.input<typeof esquemaRestablecer>;
+export type DatosRestablecer = z.output<typeof esquemaRestablecer>;
+
 const { min: PASSWORD_MIN, max: PASSWORD_MAX } = LIMITES.password;
 
 /** Requisitos visibles de la contraseña nueva (se marcan al cumplirse). */

@@ -44,6 +44,11 @@ export default function LoginPage() {
             />
           )}
         </Field>
+        <p className="-mt-2 text-sm">
+          <Link to={paths.recuperar} className={ENLACE_EN_TEXTO}>
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </p>
 
         {errorGeneral && <MensajeError mensaje={errorGeneral} />}
         {correoSinVerificar && (

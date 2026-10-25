@@ -164,6 +164,8 @@ Campos que cambiaron con HU-B-319: `duracion` (texto) ya no existe → usar
 | Recuperar sesión al cargar / token vencido | `POST /auth/sesion/renovar` | Cuerpo `{}`; usa y rota la cookie. 401 = no hay sesión. |
 | Cerrar sesión | `DELETE /auth/sesion` | Cuerpo `{}` y `Bearer`; borra la cookie. |
 | Confirmar el correo | `POST /auth/verificacion` | `{email, codigo}` (HU-F-401). El código (6 dígitos, 15 min, un solo uso) lo envía el backend al registrarse. Código errado, vencido o usado → 422 con el mismo texto. |
+| Pedir el enlace para otra contraseña | `POST /auth/contrasena/olvido` | `{email}` (HU-F-402); siempre 200 con el mismo texto. Un enlace cada 2 min por cuenta: el botón queda deshabilitado 120 s. |
+| Crear la contraseña nueva | `POST /auth/contrasena/restablecer` | `{token, password}`. El token (15 min, un solo uso) llega en el **fragmento** `/restablecer#token=…`: se lee una vez, se guarda solo en memoria y se borra de la URL; la página usa `referrer: no-referrer`. Token vencido o usado → 422 y "Pedir otro enlace". |
 | Pedir otro código | `POST /auth/verificacion/reenviar` | `{email}`; siempre 200 con el mismo texto. El botón queda deshabilitado 60 s con cuenta regresiva. |
 
 Una cuenta sin verificar no inicia sesión: `POST /auth/sesion` responde 422 con `meta.requiere_verificacion: true`
