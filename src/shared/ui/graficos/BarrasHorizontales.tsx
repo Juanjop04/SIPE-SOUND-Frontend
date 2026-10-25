@@ -33,6 +33,10 @@ export interface BarrasHorizontalesProps {
    * con teclado (Recharts no da Enter a cada barra).
    */
   hrefDe?: (id: string | number) => string;
+  /** Encabezado de la columna del valor en la tabla alternativa. */
+  etiquetaValor?: string;
+  /** Texto propio de un estado cuando "En curso" no dice lo que mide ("Parcial"). */
+  textos?: Partial<Record<EstadoGrafico, string>>;
 }
 
 const ALTO_FILA = 44;
@@ -56,6 +60,7 @@ function NombreEje(props: { x?: number; y?: number; payload?: { value: string } 
 
 interface EtiquetaProps {
   datos: BarraHorizontal[];
+  textoDe: (estado: EstadoGrafico) => string;
   x?: number | string;
   y?: number | string;
   width?: number | string;
@@ -64,7 +69,7 @@ interface EtiquetaProps {
 }
 
 /** Porcentaje y estado escritos al final de la barra. */
-function EtiquetaBarra({ datos, x, y, width, height, index }: EtiquetaProps) {
+function EtiquetaBarra({ datos, textoDe, x, y, width, height, index }: EtiquetaProps) {
   const d = datos[Number(index)];
   if (!d) return null;
   return (
@@ -78,7 +83,7 @@ function EtiquetaBarra({ datos, x, y, width, height, index }: EtiquetaProps) {
       <tspan fill={colorToken("paper")} fontFamily="var(--font-mono, monospace)">
         {d.valor} %
       </tspan>
-      <tspan dx={6}>{ESTADO_GRAFICO[d.estado].texto}</tspan>
+      <tspan dx={6}>{textoDe(d.estado)}</tspan>
     </text>
   );
 }
@@ -94,12 +99,15 @@ export function BarrasHorizontales({
   datos,
   onElegir,
   hrefDe,
+  etiquetaValor = "Avance (%)",
+  textos,
 }: BarrasHorizontalesProps) {
-  const columnas = ["Nombre", "Avance (%)", "Estado"];
+  const textoDe = (estado: EstadoGrafico) => textos?.[estado] ?? ESTADO_GRAFICO[estado].texto;
+  const columnas = ["Nombre", etiquetaValor, "Estado"];
   const tabla = {
     columnas: hrefDe ? [...columnas, "Ir a"] : columnas,
     filas: datos.map((d) => {
-      const fila = [d.nombre, d.valor, ESTADO_GRAFICO[d.estado].texto];
+      const fila = [d.nombre, d.valor, textoDe(d.estado)];
       if (!hrefDe) return fila;
       return [
         ...fila,
@@ -134,7 +142,7 @@ export function BarrasHorizontales({
                 <TooltipGrafico
                   texto={(d) => ({
                     titulo: String(d.nombre),
-                    detalle: `${d.valor} % · ${ESTADO_GRAFICO[d.estado as EstadoGrafico].texto}`,
+                    detalle: `${d.valor} % · ${textoDe(d.estado as EstadoGrafico)}`,
                   })}
                 />
               }
@@ -154,7 +162,7 @@ export function BarrasHorizontales({
               <LabelList
                 dataKey="valor"
                 position="right"
-                content={<EtiquetaBarra datos={datos} />}
+                content={<EtiquetaBarra datos={datos} textoDe={textoDe} />}
               />
             </Bar>
           </BarChart>

@@ -7,6 +7,9 @@ export function FranjaProgreso({ cifras }: { cifras: Cifras }) {
     { etiqueta: "Avance promedio", valor: `${cifras.avancePromedio} %` },
     { etiqueta: "Al día (7 días)", valor: cifras.alDia },
     { etiqueta: "Sin actividad (14 días)", valor: cifras.sinActividad },
+    ...(cifras.evaluacionesAbiertas === undefined
+      ? []
+      : [{ etiqueta: "Evaluaciones abiertas", valor: cifras.evaluacionesAbiertas }]),
   ];
   return (
     <dl className="flex flex-wrap gap-x-8 gap-y-3">

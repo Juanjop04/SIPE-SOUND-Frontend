@@ -101,3 +101,57 @@ export interface FiltrosProgreso {
   orden: OrdenMatriz;
   pagina: number;
 }
+
+export type GrupoEstudiantes = "al_dia" | "sin_actividad" | "en_riesgo";
+export type RangoDias = 7 | 28 | 90;
+export const RANGOS: RangoDias[] = [7, 28, 90];
+export const RANGO_POR_DEFECTO: RangoDias = 28;
+
+/** Filtros de las gráficas (HU-F-506): viven en la URL junto con el curso. */
+export interface FiltrosSeries {
+  curso: number | null;
+  bloque: number | null;
+  dias: RangoDias;
+  grupo: GrupoEstudiantes | null;
+}
+
+// Forma de /docente/progreso/series (HU-B-503). Sin correos ni respuestas correctas.
+export interface DiaDeActividad {
+  /** AAAA-MM-DD. */
+  fecha: string;
+  estudiantes_activos: number;
+  registros: number;
+}
+
+export interface TramoDeAvance {
+  desde: number;
+  hasta: number;
+  estudiantes: number;
+}
+
+export interface EstadosDelGrupo {
+  sin_iniciar: number;
+  en_curso: number;
+  finalizado: number;
+}
+
+export type EstadoDeEvaluacion = "borrador" | "publicada" | "cerrada";
+
+export interface EvaluacionDelPanel {
+  evaluacion_id: number;
+  titulo: string;
+  estado: EstadoDeEvaluacion;
+  bloque_id: number | null;
+  curso_id: number | null;
+  intentos: number;
+  /** Estudiantes distintos que aprobaron. */
+  aprobados: number;
+  promedio_puntaje: number | null;
+}
+
+export interface SeriesProgreso {
+  actividad_por_dia: DiaDeActividad[];
+  distribucion_avance: TramoDeAvance[];
+  estados: EstadosDelGrupo;
+  evaluaciones: EvaluacionDelPanel[];
+}
