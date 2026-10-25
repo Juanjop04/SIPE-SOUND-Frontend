@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLecciones } from "@/features/lecciones";
 import { paths } from "@/shared/config/paths.js";
 import { ChordDiagram, Tablatura } from "@/shared/music";
-import { Drawer, Skeleton } from "@/shared/ui";
+import { ROL, useSession } from "@/features/auth";
+import { Button, Drawer, Skeleton, VideoGuia } from "@/shared/ui";
+import { EditorVideoAcorde } from "./EditorVideoAcorde";
 import type { Acorde } from "../types";
 
 interface PanelAcordeProps {
@@ -35,6 +38,8 @@ function LeccionesDelAcorde({ nombre }: { nombre: string }) {
 
 /** Panel lateral del acorde seleccionado: diagrama, descripción y lecciones donde aparece. */
 export function PanelAcorde({ acorde, onCerrar }: PanelAcordeProps) {
+  const { rol } = useSession();
+  const [editando, setEditando] = useState(false);
   return (
     <Drawer abierto={acorde !== null} onCerrar={onCerrar} titulo={acorde?.nombre ?? ""}>
       {acorde && (
@@ -47,6 +52,18 @@ export function PanelAcorde({ acorde, onCerrar }: PanelAcordeProps) {
               { clave: "tipo", valor: acorde.tipo },
               { clave: "dificultad", valor: acorde.dificultad },
             ]}
+          />
+          {acorde.video && <VideoGuia video={acorde.video} titulo={"Acorde " + acorde.nombre} />}
+          {rol === ROL.admin && (
+            <div>
+              <Button variante="secundario" tamano="sm" onClick={() => setEditando(true)}>
+                Video guía
+              </Button>
+            </div>
+          )}
+          <EditorVideoAcorde
+            acorde={editando ? acorde : null}
+            onCerrar={() => setEditando(false)}
           />
           {acorde.descripcion && <p className="leading-relaxed text-muted">{acorde.descripcion}</p>}
           <section aria-labelledby="lecciones-acorde">

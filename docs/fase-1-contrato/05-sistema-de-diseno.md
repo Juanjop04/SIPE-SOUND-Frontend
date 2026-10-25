@@ -134,6 +134,7 @@ Reglas que se mantienen de HU-F-314:
 | `Boca` | Anillo de progreso con la forma de la **boca de la guitarra** (HU-F-315): pista `ink-2`, arco `primary` (verde al 100 %), cifra en mono al centro. Uno por pantalla, solo para el avance global. |
 | `TarjetaCifra` *(enmienda)* | Tarjeta de una cifra real: ícono lucide en un recuadro `ink-2` (decorativo, `aria-hidden`), etiqueta, cifra en mono `hecho / total` y `Cuerda`. Máximo 4 por fila; **nunca** una cifra inventada ni un dato que la API no da. |
 | `TeselaAcorde` | Acorde como objeto: `surface` con borde `linea`, sin sombra. |
+| `VideoGuia` *(enmienda HU-F-408)* | Video de YouTube con **fachada**: mismo marco que `TeselaAcorde` (16:9, `surface`, borde `linea`, sin sombra). No carga nada de YouTube hasta pulsar "Reproducir video"; entonces monta `youtube-nocookie.com` y ofrece "Pantalla completa". |
 | Ilustraciones (`shared/music/ilustraciones/`) | SVG propios: guitarra, mano en acorde, atril, estuche (HU-F-316). |
 | Fotografías (`src/assets/fotos/`) *(enmienda)* | Fotos de guitarra locales con licencia registrada (HU-F-321). |
 
@@ -167,6 +168,7 @@ Reglas que se mantienen de HU-F-314:
 | Sombras grandes en todo, `rounded-2xl/3xl` en todo | Una sombra, dos radios. |
 | Animación de entrada (fade-up) en cada elemento | Movimiento solo con significado (cuerda que suena). |
 | Píldoras "Nuevo" / "Pro" decorativas | Píldoras de estado solo con estado real (Completado, En curso, Pendiente), con texto. |
+| Miniaturas de YouTube o cualquier recurso externo cargado al abrir la página | Los videos guía (HU-F-408) son contenido de YouTube embebido con fachada: no hay miniatura ni se carga nada hasta pulsar. No son fotos de *stock*. |
 | Fotos de *stock* sin licencia, por URL externa o que simulen el contenido de una lección concreta | Fotos locales con licencia registrada (HU-F-321), por tipo de contenido. |
 | Gráficos decorativos o con datos de ejemplo | Un gráfico solo con datos reales, con alternativa en tabla; sin datos, estado vacío (HU-F-317). |
 | Enlaces a funciones que no existen (Logros) | Se agregan cuando exista su HU. "Mi cuenta" (HU-F-403) y "Mensajes" (HU-F-407) ya existen (2026-10-25). |

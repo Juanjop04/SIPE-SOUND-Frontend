@@ -1,4 +1,5 @@
 import { Tablatura, TrasteDivider, type DatoTablatura } from "@/shared/music";
+import { VideoGuia } from "@/shared/ui";
 import type { BloqueRuta } from "../types";
 import { AccionBloque } from "./AccionBloque";
 import { ListaLecciones } from "./ListaLecciones";
@@ -34,6 +35,10 @@ export function DetalleBloque({ bloque, anterior, conSesion }: DetalleBloqueProp
       <Tablatura datos={datosDelBloque(bloque)} className="mt-3" />
       {bloque.descripcion && (
         <p className="mt-4 max-w-prose leading-relaxed text-muted">{bloque.descripcion}</p>
+      )}
+
+      {bloque.video && (
+        <VideoGuia video={bloque.video} titulo={bloque.titulo} className="mt-6 max-w-prose" />
       )}
 
       <TrasteDivider className="my-6" />

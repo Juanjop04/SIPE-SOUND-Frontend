@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useSession } from "@/features/auth";
 import { paths } from "@/shared/config/paths.js";
 import { TrasteDivider } from "@/shared/music";
-import { ENLACE_EN_TEXTO, MensajeError, Migas, Skeleton } from "@/shared/ui";
+import { ENLACE_EN_TEXTO, MensajeError, Migas, Skeleton, VideoGuia } from "@/shared/ui";
 import { EncabezadoEjercicio } from "../components/EncabezadoEjercicio";
 import { FormularioMejorBpm } from "../components/FormularioMejorBpm";
 import { Metronomo } from "../components/Metronomo";
@@ -41,6 +41,9 @@ function Practica({ ejercicio }: { ejercicio: Ejercicio }) {
       <TrasteDivider className="my-8" />
       <div className="flex flex-col gap-10 lg:grid lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-7">
+          {ejercicio.video && (
+            <VideoGuia video={ejercicio.video} titulo={ejercicio.nombre} className="mb-8" />
+          )}
           <PasosEjercicio pasos={ejercicio.pasos ?? []} />
         </div>
         <div className="flex flex-col gap-8 lg:col-span-5">

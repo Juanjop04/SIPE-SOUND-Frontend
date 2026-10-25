@@ -1,3 +1,4 @@
+import type { VideoGuiaDatos } from "@/shared/lib/youtube";
 import type { NivelCurso } from "../types";
 
 export type TipoContenido = "lecciones" | "ejercicios";
@@ -12,6 +13,8 @@ interface Base {
   estado: EstadoContenido;
   autor_id: string | null;
   actualizado_en: string;
+  /** Video guía de YouTube (HU-B-410); null o ausente si no tiene. */
+  video?: VideoGuiaDatos | null;
 }
 
 /** GET /docente/lecciones y /docente/lecciones/{id} (HU-B-309). */
