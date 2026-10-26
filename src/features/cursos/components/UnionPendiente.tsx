@@ -23,7 +23,7 @@ export function UnionPendiente() {
       .catch(() =>
         avisar({
           tipo: "error",
-          mensaje: "No pudimos unirte con el enlace. Escribe el código en Mis cursos.",
+          mensaje: "No pudimos unirte con el enlace. Escribe el código en Cursos disponibles.",
         }),
       );
   }, [sesion, rol, mutateAsync, avisar]);
