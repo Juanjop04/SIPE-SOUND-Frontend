@@ -9,6 +9,7 @@ import {
   Library,
   Mail,
   ScrollText,
+  UserPlus,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -30,6 +31,7 @@ const SECCIONES: Seccion[] = [
   { to: paths.docente.inicio, etiqueta: "Resumen", Icono: House, exacto: true },
   { to: paths.docente.cursos, etiqueta: "Cursos", Icono: BookOpen },
   { to: paths.docente.progreso, etiqueta: "Progreso", Icono: Activity },
+  { to: paths.docente.solicitudes, etiqueta: "Solicitudes", Icono: UserPlus },
   { to: paths.docente.contenido, etiqueta: "Contenido", Icono: FileText },
   { to: paths.docente.evaluaciones, etiqueta: "Evaluaciones", Icono: ClipboardCheck },
   { to: paths.docente.mensajes, etiqueta: "Mensajes", Icono: Mail, contador: true },

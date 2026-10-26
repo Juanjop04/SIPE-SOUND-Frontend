@@ -43,6 +43,8 @@ export const paths = Object.freeze({
   docente: Object.freeze({
     inicio: "/docente",
     cursos: "/docente/cursos",
+    /** Solicitudes de inscripción a mis cursos: pendientes y aceptadas (HU-F-514). */
+    solicitudes: "/docente/solicitudes",
     /** @param {string | number} [id] */
     curso: (id = ":id") => `/docente/cursos/${id}`,
     /** Estudiantes × bloques del curso y quién necesita apoyo (HU-F-406). */
