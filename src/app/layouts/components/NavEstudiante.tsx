@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import {
   Activity,
+  Compass,
   GraduationCap,
   House,
   Mail,
@@ -36,7 +37,14 @@ interface Destino {
 const DESTINOS: Destino[] = [
   { to: paths.inicio, etiqueta: "Inicio", Icono: House, exacto: true, conSesion: true },
   { to: paths.ruta, etiqueta: "Ruta", Icono: Map },
-  { to: paths.cursos, etiqueta: "Mis cursos", Icono: GraduationCap, conSesion: true },
+  { to: paths.cursos, etiqueta: "Mis cursos", Icono: GraduationCap, exacto: true, conSesion: true },
+  {
+    to: paths.cursosDisponibles,
+    etiqueta: "Cursos disponibles",
+    Icono: Compass,
+    conSesion: true,
+    fueraDeBarraInferior: true,
+  },
   { to: paths.ejercicios, etiqueta: "Ejercicios", Icono: Timer },
   { to: paths.acordes, etiqueta: "Acordes", Icono: Music, fueraDeBarraConSesion: true },
   { to: paths.progreso, etiqueta: "Mi progreso", Icono: Activity, conSesion: true },

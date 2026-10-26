@@ -84,7 +84,9 @@ export function TarjetaCurso({ curso }: { curso: MiCurso }) {
       <div>
         <h2 className="font-display text-xl font-semibold text-paper">{curso.nombre}</h2>
         <p className="text-sm text-muted">
-          {[curso.docente.nombre, curso.docente.apellido].filter(Boolean).join(" ")} · {curso.nivel}
+          {[curso.docente.nombre, curso.docente.apellido].filter(Boolean).join(" ") ||
+            "Sin docente asignado"}{" "}
+          · {curso.nivel}
         </p>
       </div>
 

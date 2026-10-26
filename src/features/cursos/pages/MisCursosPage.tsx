@@ -1,6 +1,7 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { paths } from "@/shared/config/paths.js";
 import { cn } from "@/shared/lib/cn.js";
-import { EstadoVacio, MensajeError, Select, Skeleton } from "@/shared/ui";
+import { EstadoVacio, MensajeError, Select, Skeleton, claseBoton } from "@/shared/ui";
 import { useMisCursos, type MiCurso } from "../api";
 import { FormularioUnirse } from "../components/FormularioUnirse";
 import { TarjetaCurso } from "../components/TarjetaCurso";
@@ -100,11 +101,16 @@ export default function MisCursosPage() {
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6">
-      <header>
-        <h1 className="font-display text-3xl font-semibold text-paper">Mis cursos</h1>
-        <p className="mt-2 text-sm text-muted">
-          Cuánto llevas en cada curso y por dónde seguir. Cada curso tiene su propia ruta.
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl font-semibold text-paper">Mis cursos</h1>
+          <p className="mt-2 text-sm text-muted">
+            Cuánto llevas en cada curso y por dónde seguir. Cada curso tiene su propia ruta.
+          </p>
+        </div>
+        <Link to={paths.cursosDisponibles} className={claseBoton({ variante: "secundario" })}>
+          Ver cursos disponibles
+        </Link>
       </header>
       {isPending && <Skeleton lineas={3} className="h-40 w-full" />}
       {error && <MensajeError mensaje={error.message} onReintentar={() => refetch()} />}
@@ -112,7 +118,7 @@ export default function MisCursosPage() {
       {data && data.length === 0 && (
         <EstadoVacio
           titulo="Aún no estás en ningún curso."
-          descripcion="Escribe abajo el código que te dio tu docente: tu curso aparecerá aquí con su ruta."
+          descripcion="Pide entrar a uno desde «Ver cursos disponibles», o escribe abajo el código que te dio tu docente: tu curso aparecerá aquí con su ruta."
         />
       )}
       {data && data.length > 0 && visibles.length === 0 && (

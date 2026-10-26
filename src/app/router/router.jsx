@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
 import { cargarCuentaPage } from "@/features/cuenta";
-import { cargarMisCursosPage } from "@/features/cursos";
+import { cargarCatalogoPage, cargarMisCursosPage, GuardiaCurso } from "@/features/cursos";
 import {
   cargarCursosAdminPage,
   cargarDocentesPage,
@@ -78,17 +78,24 @@ export const router = createBrowserRouter([
             children: [
               // Con sesión de estudiante, el inicio; si no, la ruta pública (HU-F-315).
               { path: paths.inicio, element: <PaginaRaiz /> },
-              { path: paths.ruta, lazy: pagina(cargarRutaPage) },
-              { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
               { path: paths.acordes, lazy: pagina(cargarAcordesPage) },
-              { path: paths.ejercicios, lazy: pagina(cargarEjerciciosPage) },
-              { path: paths.ejercicio(), lazy: pagina(cargarEjercicioDetallePage) },
+              {
+                // Solo con un curso aceptado (HU-F-513): sin él, el camino es el catálogo.
+                element: <GuardiaCurso />,
+                children: [
+                  { path: paths.ruta, lazy: pagina(cargarRutaPage) },
+                  { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
+                  { path: paths.ejercicios, lazy: pagina(cargarEjerciciosPage) },
+                  { path: paths.ejercicio(), lazy: pagina(cargarEjercicioDetallePage) },
+                ],
+              },
               { path: paths.terminos, lazy: pagina(cargarTerminosPage) },
               {
                 element: <RequireAuth />,
                 children: [
                   { path: paths.progreso, lazy: pagina(cargarProgresoPage) },
                   { path: paths.cursos, lazy: pagina(cargarMisCursosPage) },
+                  { path: paths.cursosDisponibles, lazy: pagina(cargarCatalogoPage) },
                   { path: paths.mensajes, lazy: pagina(cargarMensajesPage) },
                   { path: paths.mensaje(), lazy: pagina(cargarMensajesPage) },
                   { path: paths.evaluacion(), lazy: pagina(cargarEvaluacionPage) },

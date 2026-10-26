@@ -20,8 +20,9 @@ export interface MiCurso {
   nombre: string;
   descripcion: string | null;
   nivel: string;
-  docente_nombre: string;
-  docente: { nombre: string; apellido: string | null };
+  /** null si el curso quedó sin docente (HU-B-413). */
+  docente_nombre: string | null;
+  docente: { nombre: string | null; apellido: string | null };
   inscrito_en: string;
   retroalimentaciones_sin_leer: number;
   avance: AvanceDeCurso;
@@ -49,7 +50,27 @@ export interface BloqueDeCurso {
   lecciones: { id: number; numero: number; completado: boolean }[];
 }
 
+/** Relación del estudiante con un curso del catálogo (HU-B-414). */
+export type EstadoDeSolicitud = "inscrito" | "pendiente" | "rechazada" | null;
+
+/** Fila de GET /cursos/catalogo: todos los cursos activos para pedir inscripción. */
+export interface CursoDelCatalogo {
+  id: number;
+  nombre: string;
+  descripcion: string | null;
+  nivel: string;
+  docente_nombre: string | null;
+  docente_apellido: string | null;
+  estudiantes: number;
+  bloques_en_ruta: number;
+  mi_estado: EstadoDeSolicitud;
+}
+
 export const cursosApi = {
+  catalogo: (): Promise<CursoDelCatalogo[]> => http.get("/cursos/catalogo"),
+  solicitar: (cursoId: number) => http.conMensaje("POST", `/cursos/${cursoId}/solicitudes`),
+  cancelarSolicitud: (cursoId: number) =>
+    http.conMensaje("DELETE", `/cursos/${cursoId}/solicitudes`),
   misCursos: (): Promise<MiCurso[]> => http.get("/cursos"),
   unirse: (codigo: string): Promise<MiCurso> => http.post("/cursos/unirse", { codigo }),
   comentarios: (cursoId: number): Promise<Comentario[]> =>
@@ -60,6 +81,7 @@ export const cursosApi = {
 export const cursosKeys = {
   todo: ["mis-cursos"] as const,
   lista: () => [...cursosKeys.todo, "lista"] as const,
+  catalogo: () => [...cursosKeys.todo, "catalogo"] as const,
   comentarios: (id: number) => [...cursosKeys.todo, "comentarios", id] as const,
   ruta: (id: number) => [...cursosKeys.todo, "ruta", id] as const,
 };
@@ -107,4 +129,23 @@ export function useComentarios(cursoId: number | null, { refrescarLista = true }
 
 export function useRutaDeUnCurso(cursoId: number) {
   return useQuery({ queryKey: cursosKeys.ruta(cursoId), queryFn: () => cursosApi.ruta(cursoId) });
+}
+
+/** Todos los cursos activos con mi estado en cada uno (inscrito, pendiente, rechazada). */
+export function useCatalogo() {
+  const { sesion } = useSession();
+  return useQuery({
+    queryKey: cursosKeys.catalogo(),
+    queryFn: cursosApi.catalogo,
+    enabled: Boolean(sesion),
+  });
+}
+
+/** Pedir o retirar una solicitud: el catálogo cambia el estado de esa tarjeta. */
+export function useSolicitudDeInscripcion() {
+  const queryClient = useQueryClient();
+  const refrescar = () => queryClient.invalidateQueries({ queryKey: cursosKeys.catalogo() });
+  const solicitar = useMutation({ mutationFn: cursosApi.solicitar, onSuccess: refrescar });
+  const cancelar = useMutation({ mutationFn: cursosApi.cancelarSolicitud, onSuccess: refrescar });
+  return { solicitar, cancelar };
 }
