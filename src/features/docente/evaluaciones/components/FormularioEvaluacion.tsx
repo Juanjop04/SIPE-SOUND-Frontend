@@ -10,7 +10,7 @@ import {
   type EntradaEvaluacion,
 } from "../schemas";
 import type { DetalleEvaluacionDocente } from "../tipos";
-import { useEditorEvaluacion } from "../useEditorEvaluacion";
+import { useEditorEvaluacion, type CambiosEvaluacion } from "../useEditorEvaluacion";
 import { AccionesEvaluacion } from "./AccionesEvaluacion";
 import { DatosGenerales } from "./DatosGenerales";
 import { SeccionPreguntas } from "./SeccionPreguntas";
@@ -46,6 +46,15 @@ interface FormularioEvaluacionProps {
 }
 
 /** Datos generales + preguntas (o su versión de solo lectura si ya hay intentos). */
+/** Qué parte de la evaluación cambió: los datos generales, las preguntas o ambos. */
+function cambiosDe(sucios: object): CambiosEvaluacion {
+  const campos = Object.keys(sucios);
+  return {
+    generales: campos.some((campo) => campo !== "preguntas"),
+    preguntas: campos.includes("preguntas"),
+  };
+}
+
 export function FormularioEvaluacion({ inicial, cursoId }: FormularioEvaluacionProps) {
   const editor = useEditorEvaluacion(inicial);
   const [vista, setVista] = useState(false);
@@ -73,7 +82,7 @@ export function FormularioEvaluacion({ inicial, cursoId }: FormularioEvaluacionP
         return setErrorGeneral("Agrega al menos una pregunta antes de publicar.");
       }
       try {
-        await editor.guardarDatos(datos, publicar);
+        await editor.guardarDatos(datos, publicar, cambiosDe(formState.dirtyFields));
         reset(getValues());
       } catch (error) {
         setErrorGeneral(aplicarErroresServidor(error, setError, CAMPOS));
@@ -101,6 +110,7 @@ export function FormularioEvaluacion({ inicial, cursoId }: FormularioEvaluacionP
         id={inicial?.id ?? null}
         estado={inicial?.estado ?? null}
         ocupado={editor.ocupado}
+        hayCambios={creando || formState.isDirty}
         tieneIntentos={inicial?.tiene_intentos ?? false}
         onPublicar={() => enviar(true)()}
         onCerrar={() =>

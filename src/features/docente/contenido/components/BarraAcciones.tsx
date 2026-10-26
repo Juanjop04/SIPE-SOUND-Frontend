@@ -6,6 +6,8 @@ interface BarraAccionesProps {
   /** null = todavía no se ha guardado (nuevo). */
   estado: EstadoContenido | null;
   ocupado: boolean;
+  /** Hay algo distinto de lo guardado: sin cambios no se puede guardar (ni se llama al backend). */
+  hayCambios: boolean;
   /** Botón submit: guarda sin cambiar el estado. */
   onPublicar: () => void;
   onCambiarEstado: (estado: EstadoContenido) => void;
@@ -15,9 +17,12 @@ interface BarraAccionesProps {
 export function BarraAcciones({
   estado,
   ocupado,
+  hayCambios,
   onPublicar,
   onCambiarEstado,
 }: BarraAccionesProps) {
+  // Contenido nuevo (estado nulo): guardar crea; ya guardado: solo si algo cambió.
+  const sinCambios = estado !== null && !hayCambios;
   const enBorrador = estado === null || estado === "borrador";
   return (
     <div
@@ -30,7 +35,7 @@ export function BarraAcciones({
       <div className="flex flex-wrap gap-3">
         {enBorrador && (
           <>
-            <Button type="submit" variante="secundario" cargando={ocupado}>
+            <Button type="submit" variante="secundario" cargando={ocupado} disabled={sinCambios}>
               Guardar borrador
             </Button>
             <Button disabled={ocupado} onClick={onPublicar}>
@@ -47,7 +52,7 @@ export function BarraAcciones({
             >
               Archivar
             </Button>
-            <Button type="submit" cargando={ocupado}>
+            <Button type="submit" cargando={ocupado} disabled={sinCambios}>
               Guardar cambios
             </Button>
           </>
@@ -61,7 +66,7 @@ export function BarraAcciones({
             >
               Volver a borrador
             </Button>
-            <Button type="submit" cargando={ocupado}>
+            <Button type="submit" cargando={ocupado} disabled={sinCambios}>
               Guardar cambios
             </Button>
           </>

@@ -37,7 +37,7 @@ export function useFormularioContenido<E extends FieldValues, D extends object>(
   async function enviar(datos: D, publicar: boolean) {
     setErrorGeneral(null);
     try {
-      await editor.guardarDatos(datos, publicar);
+      await editor.guardarDatos(datos, publicar, id === null || formulario.formState.isDirty);
       // Lo guardado pasa a ser el nuevo punto de partida: ya no hay cambios pendientes.
       formulario.reset(formulario.getValues());
     } catch (error) {

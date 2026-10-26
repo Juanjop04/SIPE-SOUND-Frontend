@@ -32,6 +32,7 @@ export function PieEditor({
       <BarraAcciones
         estado={estado}
         ocupado={editor.ocupado}
+        hayCambios={hayCambios}
         onPublicar={onPublicar}
         onCambiarEstado={(nuevo) => editor.cambiarEstado(nuevo).catch(() => null)}
       />
