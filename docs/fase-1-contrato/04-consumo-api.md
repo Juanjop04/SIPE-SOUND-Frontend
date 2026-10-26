@@ -1,0 +1,232 @@
+# 04 · Consumo de la API
+
+> **Fuente de verdad:** `SIPE-SOUND-BACKEND/docs/fase-1-contrato/04-contrato-api.md`.
+> Este documento define *cómo* el frontend consume ese contrato. Si un endpoint
+> no está allí, no existe: no se inventa.
+
+## 1. Variables de entorno
+
+```dotenv
+VITE_API_URL=http://localhost:5000/api/v1
+```
+
+`src/shared/config/env.ts` las lee **una sola vez**, valida que existan y
+que `VITE_API_URL` termine en `/api/v1`, y exporta un objeto congelado.
+Ningún otro archivo usa `import.meta.env`.
+
+> La API existe **solo** bajo `/api/v1` (HU-B-319). `/api/...` sin versión
+> responde 404: el frontend actual (`src/lib/api.js`) deja de funcionar hasta HU-F-203.
+
+## 2. Respuesta estándar del backend
+
+**Todas** las respuestas, de éxito y de error, tienen la misma forma y el mismo
+orden de claves (HU-B-317):
+
+```json
+{
+  "statusCode": 200,
+  "status": "OK",
+  "data": { "id": 3, "titulo": "Acordes mayores C y G" },
+  "success": true,
+  "message": "Operación exitosa.",
+  "errors": [],
+  "timestamp": "2026-10-22T06:00:13.562Z",
+  "meta": {}
+}
+```
+
+```json
+{
+  "statusCode": 400,
+  "status": "VALIDACION",
+  "data": null,
+  "success": false,
+  "message": "Hay campos con errores.",
+  "errors": ["nombre: Debe tener al menos 2 caracteres.", "password: La contraseña debe tener letras y números."],
+  "timestamp": "2026-10-22T06:00:13.562Z",
+  "meta": {}
+}
+```
+
+| Clave | Tipo | Uso en el frontend |
+|---|---|---|
+| `statusCode` | `number` | Igual al estado HTTP. |
+| `status` | `string` | Éxito: `OK`, `CREATED`. Error: código de §5 (`VALIDACION`, `NO_ENCONTRADO`…). Se usa para decidir qué mostrar. |
+| `data` | `T \| null` | El recurso o la lista. `null` en errores. |
+| `success` | `boolean` | `true` si `statusCode < 400`. |
+| `message` | `string` | Texto en español **listo para mostrar** (aviso de éxito o error general). |
+| `errors` | `string[]` | Detalle. En validación cada texto es `"campo: mensaje"`; el campo puede ir anidado (`"bloques.0.orden: …"`). Vacío si no hay. |
+| `timestamp` | `string` | ISO-8601 UTC. No se muestra; sirve para soporte y registros. |
+| `meta` | `object` | Paginación `{ pagina, por_pagina, total }` u otros datos; `{}` si no hay. |
+
+Tipos de referencia (`src/shared/api/tipos.ts`):
+
+```ts
+export interface RespuestaApi<T> {
+  statusCode: number;
+  status: string;
+  data: T | null;
+  success: boolean;
+  message: string;
+  errors: string[];
+  timestamp: string;
+  meta: Record<string, unknown>;
+}
+
+export interface MetaPaginacion { pagina: number; por_pagina: number; total: number }
+```
+
+## 3. Cliente HTTP único
+
+`src/shared/api/httpClient.ts` es el **único** lugar con `fetch`.
+
+Responsabilidades:
+1. Construir la URL con `env.apiUrl`.
+2. Adjuntar `Authorization: Bearer <token>` si hay sesión (`obtenerToken()` de `shared/api/sesion`, que renueva el token con `POST /auth/sesion/renovar` cuando vence).
+3. Serializar JSON y fijar `Content-Type`.
+4. Leer **siempre** el cuerpo como `RespuestaApi<T>`:
+   - `success: true` → devuelve `data` (`get`, `post`…), o `{ data, meta, message }` con `getPaginado` / `conMensaje`.
+   - `success: false` → lanza `ApiError` con `statusCode`, `status`, `message` y `errors`.
+   - Cuerpo que no es JSON (proxy, caída) → `ApiError(0, "SIN_CONEXION", "No pudimos conectar…")`.
+5. Ante `401`: intentar **una** renovación; si falla, cerrar sesión local y redirigir a `/login?volver=<ruta>`.
+   Excepción: `POST /me/reautenticacion` responde 401 cuando la contraseña actual es incorrecta (error de
+   negocio, no de sesión). Se llama con `{ tolerarNoAutenticado: true }` (4.º parámetro de `conMensaje`):
+   si la renovación **funciona** y el 401 persiste, se lanza el `ApiError` sin cerrar la sesión; si la
+   renovación falla, se cierra la sesión como siempre.
+6. Timeout de 15 s con `AbortController` (conectividad baja).
+
+```ts
+// forma de referencia
+export class ApiError extends Error {
+  constructor(
+    public statusCode: number,
+    public status: string,            // VALIDACION, NO_ENCONTRADO, …
+    message: string,                  // ya en español
+    public errors: string[] = [],
+  ) { super(message); }
+
+  /** "nombre: Debe tener…" → { nombre: "Debe tener…" }. Los textos sin campo quedan en `general`. */
+  get porCampo(): Record<string, string> {
+    return Object.fromEntries(
+      this.errors.map((texto) => {
+        const i = texto.indexOf(": ");
+        return i > 0 ? [texto.slice(0, i), texto.slice(i + 2)] : ["general", texto];
+      }),
+    );
+  }
+}
+
+export const http = {
+  get:         <T>(ruta: string, params?: Record<string, unknown>) => request<T>("GET", ruta, { params }),
+  getPaginado: <T>(ruta: string, params?: Record<string, unknown>) => requestPaginado<T>(ruta, params),
+  post:        <T>(ruta: string, body?: unknown) => request<T>("POST", ruta, { body }),
+  put:         <T>(ruta: string, body?: unknown) => request<T>("PUT", ruta, { body }),
+  patch:       <T>(ruta: string, body?: unknown) => request<T>("PATCH", ruta, { body }),
+  delete:      (ruta: string) => request<void>("DELETE", ruta),
+};
+```
+
+## 4. Servicios por feature
+
+```ts
+// src/features/lecciones/api/leccionesApi.ts
+import { http } from "@/shared/api/httpClient";
+import type { Leccion } from "../types";
+
+export const leccionesApi = {
+  listar: (filtros?: { bloque_id?: number }) => http.get<Leccion[]>("/lecciones", filtros),
+  obtener: (id: number) => http.get<Leccion>(`/lecciones/${id}`),
+};
+```
+
+```ts
+// src/features/lecciones/api/keys.ts
+export const leccionesKeys = {
+  todas: ["lecciones"] as const,
+  lista: (f?: object) => [...leccionesKeys.todas, "lista", f] as const,
+  detalle: (id: number) => [...leccionesKeys.todas, "detalle", id] as const,
+};
+```
+
+```ts
+// src/features/lecciones/hooks/useLeccion.ts
+export function useLeccion(id: number) {
+  return useQuery({ queryKey: leccionesKeys.detalle(id), queryFn: () => leccionesApi.obtener(id) });
+}
+```
+
+Campos que cambiaron con HU-B-319: `duracion` (texto) ya no existe → usar
+`duracion_min` (entero, minutos). `GET/POST /progreso` no existen → `PUT
+/progreso/lecciones/{id}`, `PUT /progreso/ejercicios/{id}` y `GET /progreso/resumen`.
+
+## 4.1 Sesión (HU-F-207, contrato del backend §4.1.1)
+
+| Acción | Endpoint | Detalle |
+|---|---|---|
+| Registrarse | `POST /auth/registro` | `{nombre, apellido, email, password, acepta_terminos}`; misma respuesta exista o no el correo. |
+| Iniciar sesión | `POST /auth/sesion` | Devuelve `access_token`, `expira_en` y `usuario`; el backend pone la cookie `sipe_refresh`. |
+| Recuperar sesión al cargar / token vencido | `POST /auth/sesion/renovar` | Cuerpo `{}`; usa y rota la cookie. 401 = no hay sesión. |
+| Cerrar sesión | `DELETE /auth/sesion` | Cuerpo `{}` y `Bearer`; borra la cookie. |
+| Confirmar el correo | `POST /auth/verificacion` | `{email, codigo}` (HU-F-401). El código (6 dígitos, 15 min, un solo uso) lo envía el backend al registrarse. Código errado, vencido o usado → 422 con el mismo texto. |
+| Pedir el enlace para otra contraseña | `POST /auth/contrasena/olvido` | `{email}` (HU-F-402); siempre 200 con el mismo texto. Un enlace cada 2 min por cuenta: el botón queda deshabilitado 120 s. |
+| Crear la contraseña nueva | `POST /auth/contrasena/restablecer` | `{token, password}`. El token (15 min, un solo uso) llega en el **fragmento** `/restablecer#token=…`: se lee una vez, se guarda solo en memoria y se borra de la URL; la página usa `referrer: no-referrer`. Token vencido o usado → 422 y "Pedir otro enlace". |
+| Cambiar nombre y apellido | `PATCH /me` | `{nombre?, apellido?}` (HU-F-403), solo lo que cambió. 403 si el admin no habilitó el permiso (`puede_editar_nombre`; los admins siempre pueden). Devuelve el perfil: se escribe en la caché de `GET /me`. |
+| Pedir que habiliten el cambio de nombre | `POST /me/solicitud-nombre` | `{cuerpo}` (HU-F-403, 10–500 en el formulario). Aviso con asunto fijo a **todos** los administradores; es la única vía por la que un estudiante o docente les escribe. 5 por hora. Los administradores no la necesitan (siempre pueden cambiar su nombre). |
+| Confirmar identidad, paso 1 | `POST /me/reautenticacion` | `{password_actual}`. Envía un código al correo actual y devuelve `{enviado_a: "a***@dominio"}`. Contraseña errada → 401 "La contraseña actual no coincide." (ver regla 5). 5 por hora. |
+| Confirmar identidad, paso 2 | `POST /me/reautenticacion/confirmar` | `{codigo}` → `{token_reautenticacion, expira_en}`: 5 min, un solo uso, atado a la sesión. Vive solo en el estado del diálogo. |
+| Cambiar la contraseña | `PATCH /me/contrasena` | `{token_reautenticacion, password_nueva}`. Cierra las demás sesiones; esta sigue abierta. Token vencido o usado → 422 "Vuelve a confirmar tu identidad." (el diálogo vuelve al paso 1). |
+| Cambiar el correo | `POST /me/correo` y `POST /me/correo/confirmar` | `{token_reautenticacion, email_nuevo}` envía un código al correo **nuevo**; `{codigo}` lo confirma y devuelve `{email}`. Correo ocupado → 409 en el campo. El token se gasta en el primer paso. |
+| Listar cuentas (admin) | `GET /admin/usuarios` | Paginado (HU-F-404, 20 por página). Filtros `estado`, `rol`, `puede_editar_nombre`, `q` (máx. 80) y `orden` (`nombre`, `-creado_en`, `-ultimo_acceso`); todos viven en la URL de la página. `meta.totales` alimenta la franja de cifras por estado. |
+| Docentes y sus cursos (admin) | `GET /admin/docentes`, `GET /admin/docentes/{id}/cursos` | HU-F-405: pestaña "Docentes" de `/admin/docentes` (`?tab=`), 20 por página con `?q=`. Los cursos de un docente van en un Drawer, activos primero. |
+| Todos los cursos (admin) | `GET /admin/cursos`, `GET /admin/cursos/{id}/estudiantes` | `/admin/cursos` con `?docente=&estado=&q=&pagina=` en la URL; estudiantes con correo completo. |
+| Reasignar y retirar (admin) | `PATCH /admin/cursos/{id}/docente`, `DELETE /admin/cursos/{id}/estudiantes/{eid}`, `DELETE /admin/usuarios/{id}/cursos` | Reasignar `{docente_id}` solo a docentes con la cuenta activa; los estudiantes y evaluaciones se mantienen. Retirar borra la inscripción, no el progreso; el `message` del backend (sugiere regenerar el código) va tal cual en el aviso. Cada éxito invalida `["admin"]`. |
+| Cursos del docente en tarjetas | `GET /docente/cursos`, `GET /docente/progreso` | HU-F-505: cada tarjeta une el curso (código, nivel) con su fila de `/docente/progreso` (estudiantes, avance promedio, al día, sin actividad) y con `necesitan_apoyo` del mismo curso (los 3 primeros, motivo en texto). Nada se recalcula en el frontend. Los archivados se piden solo al desplegarlos. La pestaña Estudiantes pide `/docente/progreso?curso_id=` para marcar "Necesita apoyo"; los filtros rápidos (`?estado=al_dia\|sin_actividad\|apoyo`) piden el curso completo (`por_pagina=100`) y filtran en el cliente porque `/docente/cursos/{id}/estudiantes` no filtra por estado; si el curso pasa de 100 se avisa. |
+| Panel de progreso (docente) | `GET /docente/progreso`, `GET /docente/progreso/matriz`, `GET /docente/progreso/estudiantes/{id}` | HU-F-406, solo lectura. `?curso_id=` limita el resumen; la matriz exige `curso_id` (`?q=&orden=&pagina=&por_pagina=`, 50 por página) y trae el encabezado de bloques en `meta.bloques`. `motivos` llegan como códigos (`sin_actividad`, `reprobo_bloque`): el texto lo arma el frontend. Ningún correo. |
+| Mensajes (todos los roles) | `GET /mensajes`, `GET /mensajes/hilos/{id}`, `PATCH /mensajes/hilos/{id}`, `POST /mensajes` | HU-F-407. Bandeja de **hilos** con `?filtro=&q=&pagina=` en la URL. Abrir un hilo lo marca como leído (se vuelve a pedir el contador y la bandeja). *(HU-F-501)* El hilo abierto se vuelve a consultar **cada 15 s** con la pestaña visible y con conexión (`refetchInterval`, `refetchIntervalInBackground: false`, `networkMode: "online"`); lo nuevo baja solo si se leía al final y, si no, sale "Mensajes nuevos ↓". Responder muestra el mensaje enseguida como "Enviando…" y, si falla, "No se envió. Reintentar" con el `message` del backend. Responder envía solo `{respuesta_a_id, cuerpo}`; el backend decide quién responde a quién y su mensaje (403, 429) se muestra tal cual. Archivar y "marcar como no leído" son `PATCH`. El cuerpo es texto plano: nunca `dangerouslySetInnerHTML`. |
+| Contador y destinatarios | `GET /mensajes/no-leidos`, `GET /mensajes/destinatarios` | `no-leidos` se consulta cada 60 s (`refetchInterval`), sin pedir con la pestaña oculta ni sin conexión (`networkMode: "online"`). `destinatarios` (`?q=` ≥ 2 letras, solo nombres) trae personas, cursos y grupos; el estudiante recibe solo sus docentes. Enviar a un curso o grupo pide confirmación antes. |
+| Video guía (HU-F-408) | Lecturas de `/lecciones`, `/ejercicios`, `/ruta`, `/acordes` (campo `video`); `POST`/`PATCH /docente/lecciones` y `/docente/ejercicios` (`video_url`, `video_inicio_seg`); `PUT`/`DELETE /admin/acordes/{id}/video` | Las lecturas traen `video: {youtube_id, inicio_seg} \| null`. Se escribe `video_url` (enlace de YouTube; `null` lo quita) y `video_inicio_seg` (si viene, manda sobre el `t=` del enlace). El editor valida con `src/shared/lib/youtube.ts`, que espeja `app/core/youtube.py`. Los acordes solo los edita el admin. |
+| Mis cursos con avance (estudiante) | `GET /cursos` | HU-F-504 / HU-B-502. Cada curso trae `docente`, `avance` (`pct`, lecciones, ejercicios, bloques), `estado` (`sin_iniciar` · `en_curso` · `finalizado`) y `ultimo_avance`, **calculados por el backend** sobre la ruta de ese curso; el frontend no recalcula nada. Las pestañas por estado y el orden se aplican en el cliente sobre la lista completa (así el conteo de cada pestaña es exacto) y viven en la URL (`?estado=&orden=`). "Continuar" usa `GET /ruta?curso_id=` de cada curso. |
+| Ejercicios con mi avance | `GET /ejercicios` | HU-F-503 / HU-B-501. Con sesión cada ejercicio trae `mi_progreso` (`estado` `sin_iniciar` · `en_curso` · `finalizado`, `mejor_bpm`, `ultimo_registro`), calculado por el backend. Se pide el catálogo completo una vez y las pestañas por estado (con su conteo), el nivel, la lección, el acorde, la búsqueda y el orden se aplican en el cliente y viven en la URL. Guardar el avance de un ejercicio invalida `["ejercicios"]` para que la tarjeta se actualice. Sin sesión no hay `mi_progreso` ni pestañas de estado. |
+| Detalle y acciones sobre una cuenta | `GET /admin/usuarios/{id}`, `POST …/verificacion/reenviar`, `POST …/verificacion`, `PATCH …/estado`, `PATCH …/permisos`, `POST /admin/usuarios/permisos`, `DELETE /admin/usuarios/{id}` | Las acciones de cada fila son iconos visibles; "Cuenta" y "Cambio de nombre" son interruptores: apagar (suspender, bloquear) pide confirmación, encender no. Verificar a mano y suspender piden `motivo` (10–300). Eliminar envía `{confirmacion: <correo>}` (`conMensaje("DELETE", ruta, body)`); un 409 de docente con cursos se muestra con un enlace a reasignar. Permiso en lote: hasta 100 ids. Cada éxito invalida `["admin","usuarios"]`. |
+| Pedir otro código | `POST /auth/verificacion/reenviar` | `{email}`; siempre 200 con el mismo texto. El botón queda deshabilitado 60 s con cuenta regresiva. |
+
+Una cuenta sin verificar no inicia sesión: `POST /auth/sesion` responde 422 con `meta.requiere_verificacion: true`
+(`ApiError.meta`) y el formulario ofrece "Escribir el código" (`/verificar`, con el correo precargado).
+
+- Todas con `credentials: "include"` y `Content-Type: application/json` (el backend exige JSON como defensa CSRF).
+- El access token vive **solo en memoria** (`shared/api/sesion`); nunca en `localStorage`.
+- El rol se pide con `GET /me`; no se deduce del token.
+- En local, frontend y backend con el mismo host (`localhost`): con `127.0.0.1` la cookie no viaja.
+
+## 5. Manejo de errores en la interfaz
+
+| `ApiError.status` | HTTP | Qué ve el usuario |
+|---|---|---|
+| `VALIDACION` | 400 | Cada texto de `errors` junto a su campo (`porCampo`); los que no corresponden a un campo visible, en el resumen del formulario. |
+| `NO_AUTENTICADO` | 401 | Redirección a login (automática). |
+| `SIN_PERMISO` | 403 | Pantalla "No tienes acceso a esta sección" con enlace al inicio. |
+| `NO_ENCONTRADO` | 404 | Pantalla 404 propia, con enlace de regreso. |
+| `CONFLICTO` | 409 | El `message` en línea (p. ej. "Ese correo ya tiene una cuenta.") o diálogo si sugiere archivar. |
+| `REGLA_NEGOCIO` | 422 | Mensaje en línea con el `message`. |
+| `DEMASIADAS_SOLICITUDES` | 429 | El `message` y el botón de enviar deshabilitado 60 s. Sin reintento automático. |
+| `ERROR_INTERNO` | 500 | "Ocurrió un error inesperado…" (`message`) + botón Reintentar. |
+| `SERVICIO_NO_DISPONIBLE` | 503 | El `message` + botón Reintentar. |
+| `SIN_CONEXION` | — | "No pudimos conectar. Revisa tu conexión e inténtalo de nuevo." + Reintentar. |
+
+Los mensajes del backend ya están en español; el frontend **no** muestra
+`status`, `statusCode` ni `timestamp` al usuario. Tras una mutación exitosa, el
+aviso (toast) usa el `message` del backend (p. ej. "Te enviamos un correo para
+confirmar tu cuenta.").
+
+## 6. Validación de formularios
+
+Todo dato que escribe una persona se valida **antes** de enviarse con los mismos
+límites que la API y la base: ver [08-validacion-de-formularios.md](08-validacion-de-formularios.md).
+La validación del frontend es comodidad para la persona; la del backend es la que protege.
+
+## 7. Versiones
+
+| Desde | `VITE_API_URL` | Respuesta |
+|---|---|---|
+| HU-B-319 (ya en el backend) | `.../api/v1` (única) | Estructura estándar de §2 |
+| `/api` sin versión | — | 404 |

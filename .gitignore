@@ -1,14 +1,12 @@
-# Backend Python
-backend/.venv/
-backend/__pycache__/
-backend/.env
-*.pyc
-
-# Sistema
-.DS_Store
-Thumbs.db
-
-# Editor
-.vscode/
-
 node_modules/
+dist/
+.scannerwork/
+
+# Variables de entorno: solo la plantilla va al repositorio.
+.env
+.env.*
+!.env.example
+
+# Editor: solo las extensiones recomendadas se comparten.
+.vscode/*
+!.vscode/extensions.json
