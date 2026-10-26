@@ -62,6 +62,14 @@ function Estudiantes({ curso }: { curso: CursoAdmin }) {
 }
 
 /** Estudiantes inscritos en un curso (correo completo) con "Retirar del curso". */
+/** "Marta Ríos · código K7M2Q9XA"; sin docente lo dice (HU-B-413). */
+function descripcionDe(curso: CursoAdmin): string {
+  const docente = curso.docente
+    ? nombreDe({ nombre: curso.docente, apellido: curso.docente_apellido })
+    : "Sin docente";
+  return `${docente} · código ${curso.codigo_invitacion}`;
+}
+
 export function DetalleCurso({ curso, onCerrar }: DetalleCursoProps) {
   return (
     <Drawer
@@ -69,11 +77,7 @@ export function DetalleCurso({ curso, onCerrar }: DetalleCursoProps) {
       abierto={curso !== null}
       onCerrar={onCerrar}
       titulo={curso ? curso.nombre : "Curso"}
-      descripcion={
-        curso
-          ? `${nombreDe({ nombre: curso.docente, apellido: curso.docente_apellido })} · código ${curso.codigo_invitacion}`
-          : undefined
-      }
+      descripcion={curso ? descripcionDe(curso) : undefined}
     >
       {curso && <Estudiantes key={curso.id} curso={curso} />}
     </Drawer>

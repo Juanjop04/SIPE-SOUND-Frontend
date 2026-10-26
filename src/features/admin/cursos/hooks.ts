@@ -84,3 +84,17 @@ export function useRetirarDeTodosLosCursos() {
     (_, respuesta) => respuesta.message,
   );
 }
+
+/** Crear un curso (con o sin docente): cambian la lista de cursos y los cursos disponibles. */
+export function useCrearCursoAdmin() {
+  const queryClient = useQueryClient();
+  const { avisar } = useAviso();
+  return useMutation({
+    mutationFn: cursosAdminApi.crear,
+    onSuccess: ({ message }) => {
+      avisar({ mensaje: message });
+      void queryClient.invalidateQueries({ queryKey: ["admin"] });
+      void queryClient.invalidateQueries({ queryKey: ["docente"] });
+    },
+  });
+}

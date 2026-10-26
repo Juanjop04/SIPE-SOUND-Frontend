@@ -10,6 +10,7 @@ import {
   type ColumnaTabla,
 } from "@/shared/ui";
 import { DetalleCurso } from "../cursos/components/DetalleCurso";
+import { DrawerNuevoCurso } from "../cursos/components/DrawerNuevoCurso";
 import { FiltrosCursos } from "../cursos/components/FiltrosCursos";
 import { useCursos } from "../cursos/hooks";
 import type { CursoAdmin } from "../cursos/tipos";
@@ -20,7 +21,7 @@ const COLUMNAS: ColumnaTabla<CursoAdmin>[] = [
   {
     id: "docente",
     encabezado: "Docente",
-    celda: (c) => [c.docente, c.docente_apellido].filter(Boolean).join(" "),
+    celda: (c) => [c.docente, c.docente_apellido].filter(Boolean).join(" ") || "Sin docente",
   },
   {
     id: "estado",
@@ -40,16 +41,22 @@ const COLUMNAS: ColumnaTabla<CursoAdmin>[] = [
 export default function CursosPage() {
   const { filtros, cambiar, hayFiltros } = useFiltrosCursos();
   const [abierto, setAbierto] = useState<CursoAdmin | null>(null);
+  const [creando, setCreando] = useState(false);
   const quitar = useCallback(() => cambiar({ docente: null, estado: null, q: null }), [cambiar]);
   const { data, isPending, error, refetch } = useCursos(filtros);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-8">
-      <h1 className="font-display text-3xl font-semibold text-paper">Cursos</h1>
-      <p className="mt-2 max-w-prose text-sm text-muted">
-        Todos los cursos de la plataforma, con sus estudiantes inscritos. Aquí retiras el acceso de
-        una persona a un curso sin tocar su progreso.
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl font-semibold text-paper">Cursos</h1>
+          <p className="mt-2 max-w-prose text-sm text-muted">
+            Todos los cursos de la plataforma, con sus estudiantes inscritos. Aquí retiras el acceso
+            de una persona a un curso sin tocar su progreso, y creas cursos con o sin docente.
+          </p>
+        </div>
+        <Button onClick={() => setCreando(true)}>Nuevo curso</Button>
+      </div>
       <TrasteDivider className="my-6" />
       <div className="flex flex-col gap-6">
         <FiltrosCursos
@@ -93,6 +100,7 @@ export default function CursosPage() {
         )}
       </div>
       <DetalleCurso curso={abierto} onCerrar={() => setAbierto(null)} />
+      <DrawerNuevoCurso abierto={creando} onCerrar={() => setCreando(false)} />
     </main>
   );
 }

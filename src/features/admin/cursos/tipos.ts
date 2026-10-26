@@ -33,8 +33,9 @@ export interface CursoAdmin {
   codigo_invitacion: string;
   creado_en: string;
   archivado_en: string | null;
-  docente_id: string;
-  docente: string;
+  /** null: el curso está disponible, sin docente (HU-B-413). */
+  docente_id: string | null;
+  docente: string | null;
   docente_apellido: string | null;
   estado: "activo" | "archivado";
   estudiantes: number;
