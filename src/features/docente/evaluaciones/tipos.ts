@@ -11,6 +11,10 @@ export interface EvaluacionDocente {
   intentos_max: number | null;
   fecha_limite: string | null;
   estado: EstadoEvaluacion;
+  autor_id?: string | null;
+  /** Nombres de quien la creó y de quien la modificó por última vez (HU-B-412). */
+  autor?: string | null;
+  modificado_por?: string | null;
   creado_en: string;
   actualizado_en: string;
   preguntas: number;

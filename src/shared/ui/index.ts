@@ -21,6 +21,7 @@ export {
   type DireccionOrden,
 } from "./Table";
 export { Dialog, type DialogProps } from "./Dialog";
+export { VideoGuia, type VideoGuiaProps } from "./VideoGuia";
 export { Drawer, type DrawerProps } from "./Drawer";
 export { Tabs, type TabsProps, type Pestana } from "./Tabs";
 export {
@@ -38,3 +39,5 @@ export { Migas, type MigasProps, type PasoMiga } from "./Migas";
 export { SelectorTema, type SelectorTemaProps } from "./SelectorTema";
 export { AvisoSinConexion } from "./AvisoSinConexion";
 export { Paginacion, type MetaPaginacion, type PaginacionProps } from "./Paginacion";
+export { Interruptor } from "./Interruptor";
+export { Markdown, type MarkdownProps } from "./Markdown";

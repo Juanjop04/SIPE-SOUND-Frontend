@@ -8,3 +8,5 @@ export type {
   DatosCurso,
   NivelCurso,
 } from "../types";
+export type { CursoProgreso, NecesitaApoyo } from "../progreso/tipos";
+export { nombreCompleto, textoMotivos } from "../progreso/utils";

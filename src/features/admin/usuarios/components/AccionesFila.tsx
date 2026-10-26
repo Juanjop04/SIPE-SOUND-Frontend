@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { BadgeCheck, Eye, Mail, Trash2 } from "lucide-react";
 import type { Usuario } from "../tipos";
 import { nombreCompleto } from "../utils";
-import { Interruptor } from "./Interruptor";
+import { Interruptor } from "@/shared/ui";
 
 export type AccionUsuario =
   | "detalle"

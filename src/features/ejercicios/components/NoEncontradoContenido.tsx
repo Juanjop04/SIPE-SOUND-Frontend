@@ -9,7 +9,10 @@ export function NoEncontradoContenido({ que, volverA }: { que: string; volverA: 
         No encontramos este {que}.
       </h1>
       <p className="mt-2 text-muted">Puede que ya no esté publicado.</p>
-      <Link to={volverA} className="mt-6 inline-block text-sm text-accent hover:underline">
+      <Link
+        to={volverA}
+        className="mt-6 inline-block text-sm text-accent underline underline-offset-2 hover:decoration-2"
+      >
         Volver al listado
       </Link>
     </div>

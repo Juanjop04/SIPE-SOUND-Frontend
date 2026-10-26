@@ -1,3 +1,4 @@
+import type { VideoGuiaDatos } from "@/shared/lib/youtube";
 import type { EstadoBloque } from "@/shared/music";
 
 /** Lección dentro de un bloque de GET /ruta (HU-B-308). */
@@ -23,5 +24,7 @@ export interface BloqueRuta {
   mejor_puntaje: number | null;
   /** Acordes distintos de sus lecciones, máx. 6 (HU-B-324). Ausente si el backend es anterior. */
   acordes?: string[];
+  /** Video guía de YouTube del bloque (HU-B-410); null o ausente si no tiene. */
+  video?: VideoGuiaDatos | null;
   lecciones: LeccionRuta[];
 }

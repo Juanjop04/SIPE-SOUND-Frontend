@@ -46,6 +46,10 @@
 | Código de verificación del correo | se quitan los espacios y deben ser 6 dígitos → "El código tiene 6 dígitos." | **un solo** `<input>` (no seis cajas): `type="text"` `inputMode="numeric"` `autoComplete="one-time-code"` `maxLength={6}`; al pegar se limpia ("482 913" → 482913) y al escribir solo entran dígitos; fuente mono con `tracking-widest` |
 | Contraseña al iniciar sesión | 1–72 (no se exige el mínimo: cuentas antiguas) | `autoComplete="current-password"` `maxLength={72}` |
 | Código de curso | `trim`, mayúsculas, exactamente 8 de `ABCDEFGHJKMNPQRSTUVWXYZ23456789` → "El código solo tiene letras y números (sin 0, O, 1, I ni L)." | `maxLength={8}` `autoComplete="off"` `autoCapitalize="characters"` `spellCheck={false}` fuente mono; se muestra en mayúsculas mientras se escribe |
+| Video guía (HU-F-408), opcional | `trim`, máx. 300; solo YouTube (`watch?v=`, `youtu.be/`, `/embed/`, `/shorts/`, `/live/`, `m.` y `music.youtube.com`, `youtube-nocookie.com`) → "Pega el enlace de un video de YouTube (por ejemplo, https://youtu.be/…)." Constructor `videoYoutube` | `type="url"` `maxLength={300}` `spellCheck={false}` |
+| "Empieza en" del video, opcional | `m:ss` (o `h:mm:ss`) hasta 12 h → "Escríbelo como m:ss, por ejemplo 1:30." Constructor `inicioDeVideo` | `inputMode="numeric"` `maxLength={8}` |
+| Asunto del mensaje (HU-F-407) | `trim`, 3–120 | `maxLength={120}` |
+| Cuerpo del mensaje | `trim`, 1–4000, contador desde el 80 %; texto plano | `Textarea` `maxLength={4000}` |
 | Título / nombre de curso, bloque, lección, ejercicio | `trim`, 3–120 | `maxLength={120}` |
 | Descripción | `trim`, máx. 2000, opcional (vacío → `null`) | `<textarea maxLength={2000}>` + contador |
 | Contenido de lección | máx. 20000 | `<textarea maxLength={20000}>` + contador |
@@ -92,6 +96,8 @@ export const LIMITES = {
   descripcion: { max: 2000 },
   contenidoLeccion: { max: 20000 },
   mensajeRetroalimentacion: { min: 1, max: 1000 },
+  asunto: { min: 3, max: 120 },
+  cuerpoMensaje: { min: 1, max: 4000 },
   nombreAcorde: { min: 1, max: 20 },
   descripcionAcorde: { max: 500 },
   bpm: { min: 20, max: 300 },

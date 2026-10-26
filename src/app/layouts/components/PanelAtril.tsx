@@ -1,15 +1,49 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import {
+  Activity,
+  BookOpen,
+  ClipboardCheck,
+  FileText,
+  GraduationCap,
+  House,
+  Library,
+  Mail,
+  ScrollText,
+  UserCog,
+  UserPlus,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { ROL, useSession } from "@/features/auth";
+import { ContadorNoLeidos } from "@/features/mensajes";
 import { cn } from "@/shared/lib/cn.js";
 import { paths } from "@/shared/config/paths.js";
-import { Button, SelectorTema } from "@/shared/ui";
+import { EtiquetaFlotante } from "./EtiquetaFlotante";
 
-const SECCIONES = [
-  { to: paths.docente.inicio, etiqueta: "Resumen", exacto: true },
-  { to: paths.docente.cursos, etiqueta: "Cursos" },
-  { to: paths.docente.progreso, etiqueta: "Progreso" },
-  { to: paths.docente.contenido, etiqueta: "Contenido" },
-  { to: paths.docente.evaluaciones, etiqueta: "Evaluaciones" },
+interface Seccion {
+  to: string;
+  etiqueta: string;
+  Icono: LucideIcon;
+  exacto?: boolean;
+  contador?: boolean;
+}
+
+const SECCIONES: Seccion[] = [
+  { to: paths.docente.inicio, etiqueta: "Resumen", Icono: House, exacto: true },
+  { to: paths.docente.cursos, etiqueta: "Cursos", Icono: BookOpen },
+  { to: paths.docente.progreso, etiqueta: "Progreso", Icono: Activity },
+  { to: paths.docente.solicitudes, etiqueta: "Solicitudes", Icono: UserPlus },
+  { to: paths.docente.contenido, etiqueta: "Contenido", Icono: FileText },
+  { to: paths.docente.evaluaciones, etiqueta: "Evaluaciones", Icono: ClipboardCheck },
+  { to: paths.docente.mensajes, etiqueta: "Mensajes", Icono: Mail, contador: true },
+];
+
+const SECCIONES_ADMIN: Seccion[] = [
+  { to: paths.admin.usuarios, etiqueta: "Usuarios", Icono: Users },
+  { to: paths.admin.cursos, etiqueta: "Todos los cursos", Icono: Library },
+  { to: paths.admin.docentes, etiqueta: "Docentes", Icono: GraduationCap },
+  { to: paths.admin.solicitudesNombre, etiqueta: "Cambios de nombre", Icono: UserCog },
+  { to: paths.admin.terminos, etiqueta: "Términos", Icono: ScrollText },
 ];
 
 // Colores sobre la barra morada (escritorio) o sobre una superficie (Drawer en móvil).
@@ -17,96 +51,83 @@ const TONOS = {
   barra: {
     activo: "border-barra-texto text-barra-texto",
     inactivo: "border-transparent text-barra-texto-2 hover:text-barra-texto",
-    secundario: "text-barra-texto-2",
-    boton: "text-barra-texto-2 hover:bg-barra-hover hover:text-barra-texto",
   },
   superficie: {
     activo: "border-accent text-paper",
     inactivo: "border-transparent text-muted hover:text-paper",
-    secundario: "text-muted",
-    boton: "",
   },
 };
 type Tono = (typeof TONOS)["barra"];
 
 // Selección actual: texto + marca de 2 px a la izquierda (sin fondo relleno).
-function claseEnlace(tono: Tono) {
+function claseEnlace(tono: Tono, contraido: boolean) {
   return ({ isActive }: { isActive: boolean }) =>
     cn(
-      "block border-l-2 px-3 py-2 text-sm transition-colors duration-rapida",
+      "relative flex items-center gap-3 border-l-2 py-2 text-sm transition-colors duration-rapida",
+      contraido ? "justify-center px-0" : "px-3",
       isActive ? tono.activo : tono.inactivo,
     );
 }
 
-/** Contenido de la barra lateral del atril; en móvil se muestra dentro de un Drawer. */
-export function PanelAtril({
-  alNavegar,
-  enBarra = false,
-}: {
+interface PanelAtrilProps {
   alNavegar?: () => void;
   enBarra?: boolean;
-}) {
-  const tono = enBarra ? TONOS.barra : TONOS.superficie;
-  const { usuario, perfil, rol, cerrarSesion } = useSession();
-  const secciones =
-    rol === ROL.admin
-      ? [
-          ...SECCIONES,
-          { to: paths.admin.usuarios, etiqueta: "Usuarios", exacto: false },
-          { to: paths.admin.cursos, etiqueta: "Todos los cursos", exacto: false },
-          { to: paths.admin.docentes, etiqueta: "Docentes", exacto: false },
-        ]
-      : SECCIONES;
-  const navigate = useNavigate();
+  /** Solo íconos (escritorio, menú contraído). En el Drawer móvil siempre va expandido. */
+  contraido?: boolean;
+}
 
-  async function handleCerrarSesion() {
-    alNavegar?.();
-    await cerrarSesion();
-    navigate(paths.inicio);
-  }
+function Enlace({
+  seccion,
+  tono,
+  contraido,
+  alNavegar,
+}: {
+  seccion: Seccion;
+  tono: Tono;
+  contraido: boolean;
+  alNavegar?: () => void;
+}) {
+  const { to, etiqueta, Icono, exacto, contador } = seccion;
+  const enlace = (
+    <NavLink
+      to={to}
+      end={exacto}
+      onClick={alNavegar}
+      title={contraido ? etiqueta : undefined}
+      className={claseEnlace(tono, contraido)}
+    >
+      <Icono size={18} aria-hidden="true" className="shrink-0" />
+      <span className={cn("flex flex-1 items-center", contraido && "sr-only")}>{etiqueta}</span>
+      {contador && (
+        <span
+          className={cn("flex items-center", contraido && "absolute right-1 top-0.5 text-[10px]")}
+        >
+          <ContadorNoLeidos />
+        </span>
+      )}
+    </NavLink>
+  );
+  return contraido ? <EtiquetaFlotante texto={etiqueta}>{enlace}</EtiquetaFlotante> : enlace;
+}
+
+/**
+ * Navegación del atril. Solo secciones: el perfil, el tema y "Cerrar sesión" viven en la barra
+ * superior (HU-F-507). En móvil se muestra dentro de un Drawer.
+ */
+export function PanelAtril({ alNavegar, enBarra = false, contraido = false }: PanelAtrilProps) {
+  const tono = enBarra ? TONOS.barra : TONOS.superficie;
+  const { rol } = useSession();
+  const secciones = rol === ROL.admin ? [...SECCIONES, ...SECCIONES_ADMIN] : SECCIONES;
 
   return (
-    <div className="flex h-full flex-col justify-between gap-8">
-      <nav aria-label="Atril">
-        <ul className="flex flex-col gap-1">
-          {secciones.map(({ to, etiqueta, exacto }) => (
-            <li key={to}>
-              <NavLink to={to} end={exacto} className={claseEnlace(tono)} onClick={alNavegar}>
-                {etiqueta}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <div className="flex flex-col gap-3 border-t border-linea pt-4">
-        <NavLink
-          to={paths.inicio}
-          onClick={alNavegar}
-          className={cn(
-            "px-3 text-sm hover:underline",
-            enBarra ? "text-barra-texto" : "text-accent",
-          )}
-        >
-          Ver como estudiante
-        </NavLink>
-        <SelectorTema enBarra={enBarra} className="px-2" />
-        <NavLink
-          to={paths.cuenta}
-          onClick={alNavegar}
-          className={cn("truncate px-3 text-sm hover:underline", tono.secundario)}
-        >
-          {perfil?.nombre ?? usuario?.email}
-          <span className="block text-xs">Mi cuenta</span>
-        </NavLink>
-        <Button
-          variante="fantasma"
-          tamano="sm"
-          className={cn("justify-start", tono.boton)}
-          onClick={handleCerrarSesion}
-        >
-          Cerrar sesión
-        </Button>
-      </div>
-    </div>
+    <nav aria-label="Atril">
+      <ul className="flex flex-col gap-1">
+        {secciones.map((seccion) => (
+          <li key={seccion.to}>
+            <Enlace seccion={seccion} tono={tono} contraido={contraido} alNavegar={alNavegar} />
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

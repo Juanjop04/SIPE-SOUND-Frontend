@@ -1,6 +1,7 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { MensajeError, Skeleton } from "@/shared/ui";
 import { PaginaAtril } from "../components/PaginaAtril";
+import { textoDeAutoria } from "../autoria";
 import { useEvaluacionDocente } from "../evaluaciones/api";
 import { FormularioEvaluacion } from "../evaluaciones/components/FormularioEvaluacion";
 
@@ -29,7 +30,18 @@ export default function EditorEvaluacionPage() {
     <PaginaAtril
       titulo={data?.titulo ?? "Evaluación"}
       descripcion={
-        data ? `Estado: ${ESTADOS[data.estado]} · ${data.preguntas.length} preguntas` : ""
+        data
+          ? [
+              `Estado: ${ESTADOS[data.estado]} · ${data.preguntas.length} preguntas`,
+              textoDeAutoria({
+                autor: data.autor ?? null,
+                modificado_por: data.modificado_por ?? null,
+                actualizado_en: data.actualizado_en,
+              }),
+            ]
+              .filter(Boolean)
+              .join(" · ")
+          : ""
       }
     >
       {isPending && <Skeleton lineas={6} className="h-12 w-full" />}

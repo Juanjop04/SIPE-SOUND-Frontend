@@ -27,7 +27,10 @@ export function Migas({ pasos, className }: MigasProps) {
             )}
             <li className="min-w-0">
               {paso.a ? (
-                <Link to={paso.a} className="hover:text-accent">
+                <Link
+                  to={paso.a}
+                  className="text-accent underline underline-offset-2 hover:decoration-2"
+                >
                   {paso.etiqueta}
                 </Link>
               ) : (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { Monitor, Moon, Sun, type LucideIcon } from "lucide-react";
 import { cn } from "@/shared/lib/cn.js";
 import {
@@ -6,6 +6,7 @@ import {
   CONSULTA_CLARO,
   guardarPreferencia,
   leerPreferencia,
+  suscribirPreferencia,
   type PreferenciaTema,
 } from "@/shared/lib/tema";
 
@@ -54,7 +55,12 @@ export function SelectorTema({
   compactoEnMovil = false,
   className,
 }: SelectorTemaProps) {
-  const [preferencia, setPreferencia] = useState<PreferenciaTema>(leerPreferencia);
+  // Una sola preferencia para todos los selectores de la página (y de otras pestañas).
+  const preferencia = useSyncExternalStore<PreferenciaTema>(
+    suscribirPreferencia,
+    leerPreferencia,
+    () => "sistema",
+  );
 
   // Con "sistema", el tema sigue los cambios de la preferencia del dispositivo.
   useEffect(() => {
@@ -68,7 +74,6 @@ export function SelectorTema({
 
   function elegir(valor: PreferenciaTema) {
     guardarPreferencia(valor);
-    setPreferencia(valor);
   }
 
   return (

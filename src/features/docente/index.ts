@@ -1,10 +1,12 @@
 export const cargarResumenPage = () => import("./pages/ResumenPage");
 export const cargarCursosPage = () => import("./pages/CursosPage");
+export const cargarSolicitudesPage = () => import("./pages/SolicitudesPage");
 export const cargarCursoDetallePage = () => import("./pages/CursoDetallePage");
 export const cargarProgresoDocentePage = () => import("./pages/ProgresoPage");
 export const cargarContenidoPage = () => import("./pages/ContenidoPage");
 export const cargarEvaluacionesPage = () => import("./pages/EvaluacionesPage");
 export { PaginaAtril } from "./components/PaginaAtril";
+export { FormularioCurso } from "./cursos/components/FormularioCurso";
 export const cargarEditorLeccionPage = () => import("./pages/EditorLeccionPage");
 export const cargarEditorEjercicioPage = () => import("./pages/EditorEjercicioPage");
 export const cargarEditorEvaluacionPage = () => import("./pages/EditorEvaluacionPage");

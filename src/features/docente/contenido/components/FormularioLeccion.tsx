@@ -4,6 +4,7 @@ import {
   type Control,
   type FieldErrors,
   type UseFormRegister,
+  type UseFormSetValue,
 } from "react-hook-form";
 import { ContenidoLeccion } from "@/features/lecciones";
 import { Field, ListaEditable, Select, Textarea } from "@/shared/ui";
@@ -19,6 +20,8 @@ import {
   CampoNivel,
   CampoTitulo,
 } from "./CamposComunes";
+import { CampoVideo, valoresDeVideo, videoDeCampos } from "./CampoVideo";
+import { textoDeAutoria } from "../externos";
 import { MarcoEditor } from "./MarcoEditor";
 import { PieEditor } from "./PieEditor";
 import { SelectorAcordes } from "./SelectorAcordes";
@@ -33,6 +36,8 @@ const CAMPOS = [
   "duracion_min",
   "acordes",
   "temas",
+  "video_url",
+  "video_inicio",
 ] as const;
 
 function valoresDe(l: LeccionDocente | null): EntradaLeccion {
@@ -46,6 +51,7 @@ function valoresDe(l: LeccionDocente | null): EntradaLeccion {
     duracion_min: l?.duracion_min ? String(l.duracion_min) : "",
     acordes: l?.acordes ?? [],
     temas: l?.temas ?? [],
+    ...valoresDeVideo(l?.video),
   };
 }
 
@@ -53,9 +59,24 @@ interface CamposProps {
   register: UseFormRegister<EntradaLeccion>;
   control: Control<EntradaLeccion, unknown, DatosLeccion>;
   errors: FieldErrors<EntradaLeccion>;
+  setValue: UseFormSetValue<EntradaLeccion>;
 }
 
-function CamposLeccion({ register, control, errors }: CamposProps) {
+/** El título de la vista previa del video es el de la lección que se está escribiendo. */
+function VideoDeLeccion({ register, control, errors, setValue }: CamposProps) {
+  const titulo = useWatch({ control, name: "titulo" });
+  return (
+    <CampoVideo
+      register={register}
+      control={control}
+      errors={errors}
+      setValue={setValue}
+      titulo={titulo}
+    />
+  );
+}
+
+function CamposLeccion({ register, control, errors, setValue }: CamposProps) {
   const bloques = useBloques();
   return (
     <>
@@ -127,6 +148,7 @@ function CamposLeccion({ register, control, errors }: CamposProps) {
           />
         )}
       />
+      <VideoDeLeccion register={register} control={control} errors={errors} setValue={setValue} />
     </>
   );
 }
@@ -144,6 +166,7 @@ function PreviaLeccion({ control }: { control: Control<EntradaLeccion, unknown, 
         temas: (v.temas ?? []).filter((t): t is string => Boolean(t?.trim())),
         descripcion: v.descripcion || null,
         contenido: v.contenido || null,
+        video: videoDeCampos(v.video_url, v.video_inicio),
       }}
     />
   );
@@ -160,21 +183,36 @@ export function FormularioLeccion({ inicial }: { inicial: LeccionDocente | null 
     valoresIniciales: valoresDe(inicial),
     campos: CAMPOS,
   });
-  const { register, control, formState } = formulario;
+  const { register, control, formState, setValue } = formulario;
 
   return (
     <MarcoEditor
       titulo={inicial ? "Editar lección" : "Nueva lección"}
+      autoria={
+        inicial
+          ? textoDeAutoria({
+              autor: inicial.autor ?? null,
+              modificado_por: inicial.modificado_por ?? null,
+              actualizado_en: inicial.actualizado_en,
+            })
+          : undefined
+      }
       previa={<PreviaLeccion control={control} />}
       formulario={
         <form onSubmit={guardar} noValidate className="flex flex-col gap-5">
-          <CamposLeccion register={register} control={control} errors={formState.errors} />
+          <CamposLeccion
+            register={register}
+            control={control}
+            errors={formState.errors}
+            setValue={setValue}
+          />
           <PieEditor
             editor={editor}
             estado={inicial?.estado ?? null}
             errorGeneral={errorGeneral}
             hayCambios={formState.isDirty}
             onPublicar={publicar}
+            autorId={inicial?.autor_id}
           />
         </form>
       }

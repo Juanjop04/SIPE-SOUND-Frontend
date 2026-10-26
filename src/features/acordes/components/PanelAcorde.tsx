@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLecciones } from "@/features/lecciones";
 import { paths } from "@/shared/config/paths.js";
 import { ChordDiagram, Tablatura } from "@/shared/music";
-import { Drawer, Skeleton } from "@/shared/ui";
+import { ROL, useSession } from "@/features/auth";
+import { Button, Drawer, Skeleton, VideoGuia } from "@/shared/ui";
+import { EditorVideoAcorde } from "./EditorVideoAcorde";
 import type { Acorde } from "../types";
 
 interface PanelAcordeProps {
@@ -21,7 +24,10 @@ function LeccionesDelAcorde({ nombre }: { nombre: string }) {
     <ul className="flex flex-col">
       {lecciones.map((leccion) => (
         <li key={leccion.id} className="border-b border-linea py-2">
-          <Link to={paths.leccion(leccion.id)} className="text-paper hover:text-accent">
+          <Link
+            to={paths.leccion(leccion.id)}
+            className="text-paper underline decoration-linea-fuerte underline-offset-4 hover:text-accent hover:decoration-accent"
+          >
             <span className="font-mono text-sm text-muted">
               {String(leccion.numero).padStart(2, "0")}
             </span>{" "}
@@ -35,6 +41,8 @@ function LeccionesDelAcorde({ nombre }: { nombre: string }) {
 
 /** Panel lateral del acorde seleccionado: diagrama, descripción y lecciones donde aparece. */
 export function PanelAcorde({ acorde, onCerrar }: PanelAcordeProps) {
+  const { rol } = useSession();
+  const [editando, setEditando] = useState(false);
   return (
     <Drawer abierto={acorde !== null} onCerrar={onCerrar} titulo={acorde?.nombre ?? ""}>
       {acorde && (
@@ -47,6 +55,18 @@ export function PanelAcorde({ acorde, onCerrar }: PanelAcordeProps) {
               { clave: "tipo", valor: acorde.tipo },
               { clave: "dificultad", valor: acorde.dificultad },
             ]}
+          />
+          {acorde.video && <VideoGuia video={acorde.video} titulo={"Acorde " + acorde.nombre} />}
+          {rol === ROL.admin && (
+            <div>
+              <Button variante="secundario" tamano="sm" onClick={() => setEditando(true)}>
+                Video guía
+              </Button>
+            </div>
+          )}
+          <EditorVideoAcorde
+            acorde={editando ? acorde : null}
+            onCerrar={() => setEditando(false)}
           />
           {acorde.descripcion && <p className="leading-relaxed text-muted">{acorde.descripcion}</p>}
           <section aria-labelledby="lecciones-acorde">

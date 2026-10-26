@@ -134,20 +134,27 @@ Reglas que se mantienen de HU-F-314:
 | `Boca` | Anillo de progreso con la forma de la **boca de la guitarra** (HU-F-315): pista `ink-2`, arco `primary` (verde al 100 %), cifra en mono al centro. Uno por pantalla, solo para el avance global. |
 | `TarjetaCifra` *(enmienda)* | Tarjeta de una cifra real: ícono lucide en un recuadro `ink-2` (decorativo, `aria-hidden`), etiqueta, cifra en mono `hecho / total` y `Cuerda`. Máximo 4 por fila; **nunca** una cifra inventada ni un dato que la API no da. |
 | `TeselaAcorde` | Acorde como objeto: `surface` con borde `linea`, sin sombra. |
+| Chat de mensajes `features/mensajes` *(enmienda HU-F-501)* | Conversación como chat: **burbujas** de texto plano con `rounded-caja` (esquina inferior del lado de quien escribe en recto, `rounded-bl-none` / `rounded-br-none`). Recibidas a la izquierda en `surface` con borde `linea` y `paper`; propias a la derecha en `primary` con `sobre-primary`. Nombre, rol y hora solo en el primer mensaje de cada racha; separadores de día ("Hoy", "Ayer", "12 oct") y "Mensajes nuevos" en `accent`. Los avisos a un curso o grupo son **tarjetas** centradas (`ink-2`, borde `linea-fuerte`), no burbujas. Iniciales en círculo `surface` (no hay fotos). Contador de no leídos: píldora `accent` con la cifra en mono y texto para lector. Nunca solo color: lo propio se distingue por posición y por "Tú" (para lector de pantalla). |
+| Gráficos `shared/ui/graficos` *(enmienda HU-F-502)* | Barras de avance, barras por día, puntos con línea de aprobación y barra apilada, con **Recharts** (SVG). Siempre con título, unidad, frase de lectura y "Ver como tabla" (con enlaces para teclado); el estado se escribe además de colorearse y los puntos se distinguen por forma (● / ○). Colores solo con `rgb(var(--color-x))`. Se importan únicamente desde páginas cargadas bajo demanda: Recharts no entra al paquete inicial. |
+| `VideoGuia` *(enmienda HU-F-408)* | Video de YouTube con **fachada**: mismo marco que `TeselaAcorde` (16:9, `surface`, borde `linea`, sin sombra). No carga nada de YouTube hasta pulsar "Reproducir video"; entonces monta `youtube-nocookie.com` y ofrece "Pantalla completa". |
 | Ilustraciones (`shared/music/ilustraciones/`) | SVG propios: guitarra, mano en acorde, atril, estuche (HU-F-316). |
 | Fotografías (`src/assets/fotos/`) *(enmienda)* | Fotos de guitarra locales con licencia registrada (HU-F-321). |
 
 ## 5. Patrones de pantalla
 
 ### Estudiante *(enmienda: maqueta aprobada, HU-F-315 y HU-F-318)*
-- **Barra lateral** en `ink-2` (escritorio): Inicio · Ruta · Ejercicios · Acordes · Mi progreso; ítem activo con fondo `primary`. En móvil, barra inferior con los mismos destinos.
+- **Barra lateral** en `ink-2` (escritorio): Inicio · Ruta · Mis cursos · Ejercicios · Acordes · Mi progreso · Mensajes; ítem activo con fondo `primary`. *(Enmienda HU-F-504.)* En móvil, barra inferior con 5 destinos —Inicio · Ruta · Mis cursos · Ejercicios · Mi progreso— y Acordes y Mensajes como íconos en el encabezado; un visitante ve Ruta · Ejercicios · Acordes.
+- **Ejercicios** *(HU-F-503)*: rejilla de tarjetas (1/2/3 columnas) con el BPM recomendado como dato principal (mono grande), compás, duración, acordes como fichas, el estado con símbolo y texto (○ Sin iniciar · ◐ En curso · ● Finalizado), "Tu mejor: 84 BPM" y una `Cuerda` fina del tempo logrado frente al recomendado. Borde izquierdo de 2 px por estado; los finalizados con capa más hundida (`ink-2`), no con transparencia; los "en curso" primero con "Continúa aquí". Pestañas por estado con conteo y filtros de nivel, lección, acorde, nombre y orden, todos en la URL. Toda la tarjeta es un solo enlace.
+- **Mis cursos** *(HU-F-504)*: tarjetas con la `Cuerda` de avance y el porcentaje en mono, el estado con símbolo y texto (○ Sin iniciar · ◐ En curso · ● Finalizado), "Lecciones 12/18 · Bloques 2/4", el último avance y una sola acción principal (Empezar, Continuar, Repasar) más "Ver ruta del curso"; pestañas por estado con su conteo y orden. La última tarjeta es "Unirme con un código".
 - **Inicio** (`/` con sesión): encabezado con saludo, nivel y foto de guitarra (texto nunca encima de la foto sin un fondo que garantice 4.5:1) junto a la `Boca` del avance global; fila de `TarjetaCifra` (lecciones, bloques, días con avance); "Continuar aprendiendo" con el siguiente paso y su único botón primario; progreso por bloques; evolución por día; bloques de la ruta con su estado; actividad reciente. Solo datos reales; si falta un dato, estado vacío.
 - **Ruta** (`/ruta`; sin sesión también en `/`): mástil vertical con el bloque seleccionado al lado; en móvil, tira horizontal desplazable arriba.
 - **Lección**: lectura editorial (una columna ≤ 68 caracteres), acordes en teselas, `Tablatura` con duración y nivel, acción "Marcar como practicada" al final.
 - **Evaluación**: una pregunta por pantalla en móvil, todas en escritorio; opciones como filas completas seleccionables; resultado con `Fretboard` vibrando si aprueba.
 
 ### Docente ("Atril")
-- Barra lateral fija con: Resumen · Cursos · Contenido · Evaluaciones.
+- Barra lateral fija con: Resumen · Cursos · Progreso · Contenido · Evaluaciones · Mensajes (y, en admin, Usuarios · Todos los cursos · Docentes), cada una con ícono. *(Enmienda HU-F-507.)* Solo navegación: el perfil, el tema y "Cerrar sesión" van en la **barra superior** (arriba a la derecha: tema, Mensajes con su contador y el menú de la cuenta con "Mi cuenta", "Ver como estudiante" y "Cerrar sesión").
+- **Menú contraíble** *(HU-F-507)*: 240 px expandido, 64 px contraído (solo íconos; el nombre aparece al enfocar o pasar el mouse y sigue disponible para lectores de pantalla). Botón de contraer y atajo `[`; la elección se recuerda (`sipe-menu`) y vale también para la barra lateral del estudiante. Debajo de 1024 px el menú es un `Drawer`. Transición de 150 ms, sin ella con `prefers-reduced-motion`.
+- **Cursos** *(enmienda HU-F-505)*: tarjetas (1/2/3 columnas) con nombre, nivel, código en mono con "Copiar", cifra de estudiantes, `Cuerda` de avance promedio con su porcentaje en texto, "Al día · Sin actividad" y, abajo, hasta 3 estudiantes que necesitan apoyo (nombre enlazado a su progreso y motivo en texto, nunca solo color). Una acción primaria ("Estudiantes"); "Progreso" secundaria; "Ruta y evaluaciones" y "Ajustes" como enlaces. Archivados plegados. En la pestaña Estudiantes, filtros rápidos como botones con `aria-pressed` y la marca "! Necesita apoyo" en texto.
 - **Resumen**: franja de cifras + "Estudiantes sin actividad en 14 días" como lista accionable.
 - **Tablas densas**: filas de 44 px, cabecera fija, orden por columna, `Cuerda` fina para el avance, filtros en la URL.
 - **Edición**: panel lateral (drawer) sobre la tabla, no páginas nuevas para editar campos simples.
@@ -167,9 +174,10 @@ Reglas que se mantienen de HU-F-314:
 | Sombras grandes en todo, `rounded-2xl/3xl` en todo | Una sombra, dos radios. |
 | Animación de entrada (fade-up) en cada elemento | Movimiento solo con significado (cuerda que suena). |
 | Píldoras "Nuevo" / "Pro" decorativas | Píldoras de estado solo con estado real (Completado, En curso, Pendiente), con texto. |
+| Miniaturas de YouTube o cualquier recurso externo cargado al abrir la página | Los videos guía (HU-F-408) son contenido de YouTube embebido con fachada: no hay miniatura ni se carga nada hasta pulsar. No son fotos de *stock*. |
 | Fotos de *stock* sin licencia, por URL externa o que simulen el contenido de una lección concreta | Fotos locales con licencia registrada (HU-F-321), por tipo de contenido. |
 | Gráficos decorativos o con datos de ejemplo | Un gráfico solo con datos reales, con alternativa en tabla; sin datos, estado vacío (HU-F-317). |
-| Enlaces a funciones que no existen (Logros, Notificaciones) | Se agregan cuando exista su HU. "Mi cuenta" ya existe (HU-F-403, 2026-10-25). |
+| Enlaces a funciones que no existen (Logros) | Se agregan cuando exista su HU. "Mi cuenta" (HU-F-403) y "Mensajes" (HU-F-407) ya existen (2026-10-25). |
 | Tablero docente con 4 tarjetas KPI y gráfico de dona | Franja de cifras + lista accionable. |
 
 ## 7. Voz y microcopia

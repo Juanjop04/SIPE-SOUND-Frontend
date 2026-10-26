@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { progresoApi, progresoKeys } from "./datos";
-import type { FiltrosProgreso } from "./tipos";
+import type { FiltrosProgreso, FiltrosSeries } from "./tipos";
 
 export function useResumenProgreso(curso: number | null) {
   return useQuery({
@@ -25,5 +25,14 @@ export function useProgresoDeEstudiante(id: string | null) {
     queryKey: progresoKeys.estudiante(id ?? ""),
     queryFn: () => progresoApi.estudiante(id ?? ""),
     enabled: id !== null,
+  });
+}
+
+/** Series de las gráficas; al cambiar un filtro se conserva la anterior mientras llega la nueva. */
+export function useSeries(filtros: FiltrosSeries) {
+  return useQuery({
+    queryKey: progresoKeys.series(filtros),
+    queryFn: () => progresoApi.series(filtros),
+    placeholderData: keepPreviousData,
   });
 }

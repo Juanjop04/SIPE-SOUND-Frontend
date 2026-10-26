@@ -2,15 +2,33 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/features/auth";
 import { http } from "@/shared/api/httpClient.js";
 
-/** Fila de GET /cursos (HU-B-307): mis cursos activos con el docente y lo que no he leído. */
+export type EstadoDeCurso = "sin_iniciar" | "en_curso" | "finalizado";
+
+/** Avance en la ruta del curso (HU-B-502): el backend lo calcula, aquí solo se muestra. */
+export interface AvanceDeCurso {
+  /** 0 a 100: lecciones completadas de la ruta del curso. */
+  pct: number;
+  lecciones: { completadas: number; total: number };
+  ejercicios: { completados: number; total: number };
+  bloques_aprobados: number;
+  bloques_total: number;
+}
+
+/** Fila de GET /cursos (HU-B-307, HU-B-502): mis cursos activos con docente, avance y estado. */
 export interface MiCurso {
   id: number;
   nombre: string;
   descripcion: string | null;
   nivel: string;
-  docente_nombre: string;
+  /** null si el curso quedó sin docente (HU-B-413). */
+  docente_nombre: string | null;
+  docente: { nombre: string | null; apellido: string | null };
   inscrito_en: string;
   retroalimentaciones_sin_leer: number;
+  avance: AvanceDeCurso;
+  estado: EstadoDeCurso;
+  /** En la ruta de este curso; null si aún no registra nada. */
+  ultimo_avance: string | null;
 }
 
 /** GET /cursos/{id}/retroalimentaciones (HU-B-312): al consultarlas quedan leídas. */
@@ -23,15 +41,36 @@ export interface Comentario {
   nueva: boolean;
 }
 
-/** Bloque de GET /ruta?curso_id= (solo lo que necesita el mini-mástil). */
+/** Bloque de GET /ruta?curso_id= (lo que necesita "Continuar": la primera lección pendiente). */
 export interface BloqueDeCurso {
   id: number;
   numero: number;
   titulo: string;
   estado: "bloqueado" | "disponible" | "aprobado";
+  lecciones: { id: number; numero: number; completado: boolean }[];
+}
+
+/** Relación del estudiante con un curso del catálogo (HU-B-414). */
+export type EstadoDeSolicitud = "inscrito" | "pendiente" | "rechazada" | null;
+
+/** Fila de GET /cursos/catalogo: todos los cursos activos para pedir inscripción. */
+export interface CursoDelCatalogo {
+  id: number;
+  nombre: string;
+  descripcion: string | null;
+  nivel: string;
+  docente_nombre: string | null;
+  docente_apellido: string | null;
+  estudiantes: number;
+  bloques_en_ruta: number;
+  mi_estado: EstadoDeSolicitud;
 }
 
 export const cursosApi = {
+  catalogo: (): Promise<CursoDelCatalogo[]> => http.get("/cursos/catalogo"),
+  solicitar: (cursoId: number) => http.conMensaje("POST", `/cursos/${cursoId}/solicitudes`),
+  cancelarSolicitud: (cursoId: number) =>
+    http.conMensaje("DELETE", `/cursos/${cursoId}/solicitudes`),
   misCursos: (): Promise<MiCurso[]> => http.get("/cursos"),
   unirse: (codigo: string): Promise<MiCurso> => http.post("/cursos/unirse", { codigo }),
   comentarios: (cursoId: number): Promise<Comentario[]> =>
@@ -42,6 +81,7 @@ export const cursosApi = {
 export const cursosKeys = {
   todo: ["mis-cursos"] as const,
   lista: () => [...cursosKeys.todo, "lista"] as const,
+  catalogo: () => [...cursosKeys.todo, "catalogo"] as const,
   comentarios: (id: number) => [...cursosKeys.todo, "comentarios", id] as const,
   ruta: (id: number) => [...cursosKeys.todo, "ruta", id] as const,
 };
@@ -89,4 +129,23 @@ export function useComentarios(cursoId: number | null, { refrescarLista = true }
 
 export function useRutaDeUnCurso(cursoId: number) {
   return useQuery({ queryKey: cursosKeys.ruta(cursoId), queryFn: () => cursosApi.ruta(cursoId) });
+}
+
+/** Todos los cursos activos con mi estado en cada uno (inscrito, pendiente, rechazada). */
+export function useCatalogo() {
+  const { sesion } = useSession();
+  return useQuery({
+    queryKey: cursosKeys.catalogo(),
+    queryFn: cursosApi.catalogo,
+    enabled: Boolean(sesion),
+  });
+}
+
+/** Pedir o retirar una solicitud: el catálogo cambia el estado de esa tarjeta. */
+export function useSolicitudDeInscripcion() {
+  const queryClient = useQueryClient();
+  const refrescar = () => queryClient.invalidateQueries({ queryKey: cursosKeys.catalogo() });
+  const solicitar = useMutation({ mutationFn: cursosApi.solicitar, onSuccess: refrescar });
+  const cancelar = useMutation({ mutationFn: cursosApi.cancelarSolicitud, onSuccess: refrescar });
+  return { solicitar, cancelar };
 }

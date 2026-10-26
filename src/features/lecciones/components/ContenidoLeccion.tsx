@@ -1,4 +1,5 @@
 import { Tablatura, TrasteDivider, type DatoTablatura } from "@/shared/music";
+import { VideoGuia } from "@/shared/ui";
 import type { Leccion } from "../types";
 import { parrafos } from "../utils/ubicacion";
 import { AcordesLeccion } from "./AcordesLeccion";
@@ -6,7 +7,7 @@ import { AcordesLeccion } from "./AcordesLeccion";
 /** Lo que se ve de una lección. Lo usan la vista del estudiante y la vista previa del atril. */
 export type VistaLeccion = Pick<
   Leccion,
-  "titulo" | "nivel" | "duracion_min" | "acordes" | "temas" | "descripcion" | "contenido"
+  "titulo" | "nivel" | "duracion_min" | "acordes" | "temas" | "descripcion" | "contenido" | "video"
 >;
 
 function datos(leccion: VistaLeccion): DatoTablatura[] {
@@ -32,6 +33,15 @@ export function ContenidoLeccion({ leccion }: { leccion: VistaLeccion }) {
           <p key={parrafo.slice(0, 40)}>{parrafo}</p>
         ))}
       </div>
+
+      {leccion.video && (
+        <section aria-labelledby="video-leccion" className="mt-10">
+          <h2 id="video-leccion" className="mb-3 font-display text-xl font-semibold text-paper">
+            Mira cómo se toca
+          </h2>
+          <VideoGuia video={leccion.video} titulo={leccion.titulo} />
+        </section>
+      )}
 
       {temas.length > 0 && (
         <section aria-labelledby="temas-leccion" className="mt-10">

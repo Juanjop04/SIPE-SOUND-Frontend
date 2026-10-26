@@ -13,9 +13,15 @@ export const paths = Object.freeze({
   recuperar: "/recuperar",
   /** Destino del enlace del correo: `/restablecer#token=…` (el token va en el fragmento). */
   restablecer: "/restablecer",
+  /** Mensajes del estudiante (HU-F-407); el hilo abierto va en /mensajes/:hiloId. */
+  mensajes: "/mensajes",
+  /** @param {string} [hiloId] */
+  mensaje: (hiloId = ":hiloId") => `/mensajes/${hiloId}`,
   /** Mi cuenta: nombre, correo y contraseña (HU-F-403). */
   cuenta: "/cuenta",
   terminos: "/terminos",
+  /** Pantalla obligatoria cuando hay una versión nueva de los términos (HU-F-510). */
+  aceptarTerminos: "/aceptar-terminos",
   acordes: "/acordes",
   ejercicios: "/ejercicios",
   /** @param {string | number} [id] */
@@ -23,6 +29,8 @@ export const paths = Object.freeze({
   progreso: "/progreso",
   /** Mis cursos: unirme con código y leer comentarios (HU-F-311). */
   cursos: "/cursos",
+  /** Catálogo de todos los cursos para pedir inscripción (HU-F-513). */
+  cursosDisponibles: "/cursos/disponibles",
   /** @param {string | number} [id] */
   leccion: (id = ":id") => `/leccion/${id}`,
   /** @param {string | number} [id] */
@@ -35,10 +43,16 @@ export const paths = Object.freeze({
   docente: Object.freeze({
     inicio: "/docente",
     cursos: "/docente/cursos",
+    /** Solicitudes de inscripción a mis cursos: pendientes y aceptadas (HU-F-514). */
+    solicitudes: "/docente/solicitudes",
     /** @param {string | number} [id] */
     curso: (id = ":id") => `/docente/cursos/${id}`,
     /** Estudiantes × bloques del curso y quién necesita apoyo (HU-F-406). */
     progreso: "/docente/progreso",
+    /** Mensajes del docente y del admin (HU-F-407). */
+    mensajes: "/docente/mensajes",
+    /** @param {string} [hiloId] */
+    mensaje: (hiloId = ":hiloId") => `/docente/mensajes/${hiloId}`,
     contenido: "/docente/contenido",
     /** @param {string | number} [id] "nueva" para crear */
     leccion: (id = ":id") => `/docente/contenido/lecciones/${id}`,
@@ -57,6 +71,10 @@ export const paths = Object.freeze({
     usuarios: "/admin/usuarios",
     /** Todos los cursos y sus estudiantes inscritos (HU-F-405). */
     cursos: "/admin/cursos",
+    /** Editor Markdown de los términos y condiciones (HU-F-510). */
+    terminos: "/admin/terminos",
+    /** Solicitudes de cambio de nombre de estudiantes y docentes (HU-F-515). */
+    solicitudesNombre: "/admin/solicitudes-nombre",
   }),
 });
 

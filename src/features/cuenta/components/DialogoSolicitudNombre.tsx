@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEnfriamiento } from "@/shared/hooks/useEnfriamiento";
 import { Button, Dialog, Field, MensajeError, Textarea } from "@/shared/ui";
 import { aplicarErroresServidor, esDemasiadasSolicitudes } from "@/shared/validacion";
-import { solicitarCambioDeNombre } from "../api/cuentaApi";
+import { claveSolicitudDeNombre, solicitarCambioDeNombre } from "../api/cuentaApi";
 import { esquemaSolicitudNombre, type DatosSolicitudNombre } from "../schemas";
 
 const MAXIMO = 500;
@@ -13,6 +13,7 @@ const CAMPOS = ["cuerpo"] as const;
 
 function Formulario({ onCerrar }: { onCerrar: () => void }) {
   const { enfriando, iniciar } = useEnfriamiento();
+  const queryClient = useQueryClient();
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
   const [enviado, setEnviado] = useState<string | null>(null);
   const {
@@ -28,7 +29,11 @@ function Formulario({ onCerrar }: { onCerrar: () => void }) {
 
   const enviar = useMutation({
     mutationFn: solicitarCambioDeNombre,
-    onSuccess: ({ message }) => setEnviado(message),
+    onSuccess: ({ message }) => {
+      setEnviado(message);
+      // La cuenta pasa a mostrar "solicitud pendiente".
+      void queryClient.invalidateQueries({ queryKey: claveSolicitudDeNombre });
+    },
     onError: (error) => {
       if (esDemasiadasSolicitudes(error)) iniciar();
       setErrorGeneral(aplicarErroresServidor(error, setError, CAMPOS));

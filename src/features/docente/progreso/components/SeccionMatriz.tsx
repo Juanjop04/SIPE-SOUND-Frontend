@@ -21,6 +21,8 @@ interface SeccionMatrizProps {
   filtros: FiltrosProgreso;
   onCambiar: (cambios: Record<string, string | null>) => void;
   onVer: (estudianteId: string) => void;
+  /** Con un bloque elegido en los filtros, la matriz muestra solo esa columna. */
+  bloqueId?: number | null;
 }
 
 /** Curso sin estudiantes: el siguiente paso concreto es compartir el código. */
@@ -87,9 +89,10 @@ function Controles({
 }
 
 /** Matriz de un curso con búsqueda, orden y exportación (la vista visible, sin correos). */
-export function SeccionMatriz({ curso, filtros, onCambiar, onVer }: SeccionMatrizProps) {
+export function SeccionMatriz({ curso, filtros, onCambiar, onVer, bloqueId }: SeccionMatrizProps) {
   const { data, isPending, error, refetch } = useMatriz(filtros);
   if (curso.estudiantes === 0) return <SinEstudiantes cursoId={curso.id} />;
+  const columnas = (data?.meta.bloques ?? []).filter((c) => !bloqueId || c.bloque_id === bloqueId);
 
   return (
     <div className="flex flex-col gap-4">
@@ -98,8 +101,7 @@ export function SeccionMatriz({ curso, filtros, onCambiar, onVer }: SeccionMatri
         onCambiar={onCambiar}
         puedeExportar={Boolean(data && data.data.length > 0)}
         onExportar={() =>
-          data &&
-          descargar(`progreso-${curso.nombre}.csv`, matrizACsv(data.data, data.meta.bloques))
+          data && descargar(`progreso-${curso.nombre}.csv`, matrizACsv(data.data, columnas))
         }
       />
       {isPending && (
@@ -115,7 +117,7 @@ export function SeccionMatriz({ curso, filtros, onCambiar, onVer }: SeccionMatri
         <>
           <MatrizProgreso
             filas={data.data}
-            columnas={data.meta.bloques}
+            columnas={columnas}
             bloques={curso.bloques}
             estudiantesDelCurso={curso.estudiantes}
             onVer={onVer}

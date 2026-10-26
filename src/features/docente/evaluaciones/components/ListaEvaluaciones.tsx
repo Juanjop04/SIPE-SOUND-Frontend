@@ -11,6 +11,7 @@ import {
   Table,
   type ColumnaTabla,
 } from "@/shared/ui";
+import { Autoria } from "../externos";
 import { useEvaluacionesDocente } from "../api";
 import { useCursos, type Curso } from "../datos";
 import type { EstadoEvaluacion, EvaluacionDocente } from "../tipos";
@@ -54,13 +55,21 @@ function columnasDe(
       id: "titulo",
       encabezado: "Título",
       celda: (e) => (
-        <Link to={paths.docente.evaluacion(e.id)} className="text-paper hover:text-accent">
+        <Link
+          to={paths.docente.evaluacion(e.id)}
+          className="text-paper underline decoration-linea-fuerte underline-offset-4 hover:text-accent hover:decoration-accent"
+        >
           {e.titulo}
         </Link>
       ),
     },
     ...curso,
     { id: "preguntas", encabezado: "Preguntas", numerica: true, celda: (e) => e.preguntas },
+    {
+      id: "autoria",
+      encabezado: "Autoría",
+      celda: (e) => <Autoria autor={e.autor} modificadoPor={e.modificado_por} />,
+    },
     { id: "estado", encabezado: "Estado", celda: (e) => <Estado estado={e.estado} /> },
     {
       id: "limite",
@@ -82,11 +91,17 @@ function columnasDe(
       encabezado: "Acciones",
       celda: (e) => (
         <span className="flex gap-3 text-sm">
-          <Link to={paths.docente.evaluacion(e.id)} className="text-accent hover:underline">
+          <Link
+            to={paths.docente.evaluacion(e.id)}
+            className="text-accent underline underline-offset-2 hover:decoration-2"
+          >
             Editar
           </Link>
           {e.estado !== "borrador" && (
-            <Link to={paths.docente.resultados(e.id)} className="text-accent hover:underline">
+            <Link
+              to={paths.docente.resultados(e.id)}
+              className="text-accent underline underline-offset-2 hover:decoration-2"
+            >
               Resultados
             </Link>
           )}

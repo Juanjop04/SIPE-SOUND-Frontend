@@ -4,6 +4,7 @@ import { formatearFecha } from "@/shared/lib/formato";
 import { Paginacion, Table, type ColumnaTabla } from "@/shared/ui";
 import { useBloques } from "../api";
 import type { ContenidoDocente, EjercicioDocente, LeccionDocente, TipoContenido } from "../tipos";
+import { Autoria } from "../externos";
 import { EstadoPunto } from "./EstadoPunto";
 
 const esLeccion = (c: ContenidoDocente): c is LeccionDocente => "titulo" in c;
@@ -44,6 +45,11 @@ function columnasDe(
       valorOrden: (c) => c.estado,
     },
     {
+      id: "autoria",
+      encabezado: "Autoría",
+      celda: (c) => <Autoria autor={c.autor} modificadoPor={c.modificado_por} />,
+    },
+    {
       id: "actualizado",
       encabezado: "Actualizado",
       numerica: true,
@@ -54,7 +60,10 @@ function columnasDe(
       id: "acciones",
       encabezado: "Acciones",
       celda: (c) => (
-        <Link to={editor(c)} className="text-sm text-accent hover:underline">
+        <Link
+          to={editor(c)}
+          className="text-sm text-accent underline underline-offset-2 hover:decoration-2"
+        >
           Editar
         </Link>
       ),

@@ -32,7 +32,7 @@ export function EjerciciosLeccion({ leccionId }: { leccionId: number }) {
             </div>
             <Link
               to={paths.ejercicio(ejercicio.id)}
-              className="text-sm text-accent hover:underline"
+              className="text-sm text-accent underline underline-offset-2 hover:decoration-2"
             >
               Practicar
             </Link>

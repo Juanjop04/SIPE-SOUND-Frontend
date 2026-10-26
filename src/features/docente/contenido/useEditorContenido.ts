@@ -37,16 +37,29 @@ export function useEditorContenido(tipo: TipoContenido, id: number | null) {
   );
   const eliminar = useMutacionContenido(() => contenidoApi.eliminar(tipo, id ?? 0));
 
-  /** Guarda; con `publicar`, además pasa a publicado. Lanza el ApiError para los campos. */
-  async function guardarDatos(datos: object, publicar: boolean): Promise<ContenidoDocente> {
-    const { data, message } = await guardar.mutateAsync(datos);
-    if (publicar) {
-      const publicado = await estado.mutateAsync({ ident: data.id, nuevo: "publicado" });
+  /**
+   * Guarda; con `publicar`, además pasa a publicado. Lanza el ApiError para los campos.
+   * Con contenido ya guardado y sin cambios (`hayCambios` falso) no se pide nada al backend: solo
+   * se publica si se pidió (un cambio de estado, no de datos).
+   */
+  async function guardarDatos(
+    datos: object,
+    publicar: boolean,
+    hayCambios = true,
+  ): Promise<ContenidoDocente | null> {
+    let data: ContenidoDocente | null = null;
+    let message = "";
+    if (id === null || hayCambios) {
+      ({ data, message } = await guardar.mutateAsync(datos));
+    }
+    const ident = data?.id ?? id;
+    if (publicar && ident !== null) {
+      const publicado = await estado.mutateAsync({ ident, nuevo: "publicado" });
       avisar({ mensaje: publicado.message });
-    } else {
+    } else if (data) {
       avisar({ mensaje: message });
     }
-    if (id === null) navigate(config.editor(data.id), SIN_CONFIRMAR);
+    if (id === null && data) navigate(config.editor(data.id), SIN_CONFIRMAR);
     return data;
   }
 

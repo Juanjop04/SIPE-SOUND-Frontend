@@ -97,14 +97,14 @@ export function CierreLeccion({
         className="flex justify-between gap-4 border-t border-linea pt-4 text-sm"
       >
         {anterior ? (
-          <Link to={paths.leccion(anterior.id)} className="text-muted hover:text-accent">
+          <Link to={paths.leccion(anterior.id)} className={claseBoton({ variante: "secundario" })}>
             ← Lección anterior
           </Link>
         ) : (
           <span />
         )}
         {siguiente && (
-          <Link to={paths.leccion(siguiente.id)} className="text-muted hover:text-accent">
+          <Link to={paths.leccion(siguiente.id)} className={claseBoton()}>
             Lección siguiente →
           </Link>
         )}

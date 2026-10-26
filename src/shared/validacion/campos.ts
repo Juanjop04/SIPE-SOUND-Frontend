@@ -1,6 +1,7 @@
 // Constructores de Zod por tipo de dato (contrato 08 §2). Los mensajes son los mismos que
 // devuelve la API cuando existen. Cada feature arma su esquema en features/<f>/schemas.ts.
 import { z } from "zod";
+import { MENSAJE_VIDEO, VIDEO_URL_MAX, extraerVideo, leerInicio } from "@/shared/lib/youtube";
 import { LIMITES } from "./limites";
 
 const minimo = (n: number) => `Debe tener al menos ${n} caracteres.`;
@@ -108,6 +109,24 @@ export const codigoVerificacion = () =>
           new RegExp(`^\\d{${LIMITES.codigoVerificacion.largo}}$`),
           `El código tiene ${LIMITES.codigoVerificacion.largo} dígitos.`,
         ),
+    );
+
+/** Enlace de video de YouTube opcional: vacío = sin video; si no, las mismas reglas que el backend. */
+export const videoYoutube = () =>
+  z
+    .string()
+    .trim()
+    .max(VIDEO_URL_MAX, maximo(VIDEO_URL_MAX))
+    .refine((valor) => valor === "" || extraerVideo(valor) !== null, MENSAJE_VIDEO);
+
+/** "Empieza en" opcional, como m:ss ("0:42", "1:30") hasta 12 horas. */
+export const inicioDeVideo = () =>
+  z
+    .string()
+    .trim()
+    .refine(
+      (valor) => valor === "" || leerInicio(valor) !== null,
+      "Escríbelo como m:ss, por ejemplo 1:30.",
     );
 
 /** Código de curso: recorta, mayúsculas, 8 caracteres del alfabeto sin 0, O, 1, I ni L. */

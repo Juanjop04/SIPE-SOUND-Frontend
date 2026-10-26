@@ -2,13 +2,15 @@ import { Button, EstadoVacio } from "@/shared/ui";
 import type { NecesitaApoyo } from "../tipos";
 import { nombreCompleto, textoMotivos } from "../utils";
 
-/** Quién necesita apoyo hoy y por qué, en texto. "Escribirle" llega con la mensajería (HU-F-407). */
+/** Quién necesita apoyo hoy y por qué, en texto, con "Ver progreso" y "Escribirle" (HU-F-407). */
 export function NecesitanApoyo({
   filas,
   onVer,
+  onEscribir,
 }: {
   filas: NecesitaApoyo[];
   onVer: (estudianteId: string) => void;
+  onEscribir: (fila: NecesitaApoyo) => void;
 }) {
   if (filas.length === 0) {
     return (
@@ -29,9 +31,12 @@ export function NecesitanApoyo({
               {motivo}
             </p>
           ))}
-          <div className="mt-1">
+          <div className="mt-1 flex flex-wrap gap-2">
             <Button variante="secundario" tamano="sm" onClick={() => onVer(f.estudiante_id)}>
               Ver progreso
+            </Button>
+            <Button variante="fantasma" tamano="sm" onClick={() => onEscribir(f)}>
+              Escribirle
             </Button>
           </div>
         </li>
