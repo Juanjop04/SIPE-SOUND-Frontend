@@ -5,6 +5,7 @@ import { cargarCatalogoPage, cargarMisCursosPage, GuardiaCurso } from "@/feature
 import {
   cargarCursosAdminPage,
   cargarDocentesPage,
+  cargarSolicitudesNombrePage,
   cargarTerminosAdminPage,
   cargarUsuariosPage,
 } from "@/features/admin";
@@ -166,6 +167,10 @@ export const router = createBrowserRouter([
                       { path: paths.admin.cursos, lazy: pagina(cargarCursosAdminPage) },
                       { path: paths.admin.docentes, lazy: pagina(cargarDocentesPage) },
                       { path: paths.admin.terminos, lazy: pagina(cargarTerminosAdminPage) },
+                      {
+                        path: paths.admin.solicitudesNombre,
+                        lazy: pagina(cargarSolicitudesNombrePage),
+                      },
                     ],
                   },
                 ],

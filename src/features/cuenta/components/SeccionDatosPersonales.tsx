@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { DialogoSolicitudNombre } from "./DialogoSolicitudNombre";
 import type { PerfilCuenta } from "../types";
 import { Button, Field, Input, MensajeError } from "@/shared/ui";
+import { claveSolicitudDeNombre, miSolicitudDeNombre } from "../api/cuentaApi";
 import { useDatosPersonales } from "../hooks/useDatosPersonales";
 import { SeccionCuenta } from "./SeccionCuenta";
 
@@ -11,6 +13,10 @@ const TEXTO_BLOQUEADO =
 function SoloLectura({ perfil }: { perfil: PerfilCuenta }) {
   const [pidiendo, setPidiendo] = useState(false);
   const cerrar = useCallback(() => setPidiendo(false), []);
+  // HU-B-415: si ya hay una pendiente no se puede enviar otra; si la rechazaron, se avisa.
+  const ultima = useQuery({ queryKey: claveSolicitudDeNombre, queryFn: miSolicitudDeNombre });
+  const pendiente = ultima.data?.estado === "pendiente";
+  const rechazada = ultima.data?.estado === "rechazada";
   return (
     <>
       <dl className="grid gap-3 sm:grid-cols-2">
@@ -24,8 +30,18 @@ function SoloLectura({ perfil }: { perfil: PerfilCuenta }) {
         </div>
       </dl>
       <p className="text-sm text-muted">{TEXTO_BLOQUEADO}</p>
+      {pendiente && (
+        <p role="status" className="text-sm text-paper">
+          Tu solicitud está pendiente: un administrador la responderá pronto.
+        </p>
+      )}
+      {rechazada && (
+        <p role="status" className="text-sm text-paper">
+          Tu última solicitud fue rechazada. Puedes enviar otra explicando mejor el motivo.
+        </p>
+      )}
       <div>
-        <Button variante="secundario" onClick={() => setPidiendo(true)}>
+        <Button variante="secundario" disabled={pendiente} onClick={() => setPidiendo(true)}>
           Solicitar cambio de nombre
         </Button>
       </div>

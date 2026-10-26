@@ -9,6 +9,7 @@ import {
   Library,
   Mail,
   ScrollText,
+  UserCog,
   UserPlus,
   Users,
   type LucideIcon,
@@ -41,6 +42,7 @@ const SECCIONES_ADMIN: Seccion[] = [
   { to: paths.admin.usuarios, etiqueta: "Usuarios", Icono: Users },
   { to: paths.admin.cursos, etiqueta: "Todos los cursos", Icono: Library },
   { to: paths.admin.docentes, etiqueta: "Docentes", Icono: GraduationCap },
+  { to: paths.admin.solicitudesNombre, etiqueta: "Cambios de nombre", Icono: UserCog },
   { to: paths.admin.terminos, etiqueta: "Términos", Icono: ScrollText },
 ];
 

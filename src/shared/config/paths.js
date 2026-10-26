@@ -73,6 +73,8 @@ export const paths = Object.freeze({
     cursos: "/admin/cursos",
     /** Editor Markdown de los términos y condiciones (HU-F-510). */
     terminos: "/admin/terminos",
+    /** Solicitudes de cambio de nombre de estudiantes y docentes (HU-F-515). */
+    solicitudesNombre: "/admin/solicitudes-nombre",
   }),
 });
 
