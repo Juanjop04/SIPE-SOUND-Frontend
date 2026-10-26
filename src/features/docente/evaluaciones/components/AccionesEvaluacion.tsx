@@ -7,6 +7,8 @@ interface AccionesEvaluacionProps {
   id: number | null;
   estado: EstadoEvaluacion | null;
   ocupado: boolean;
+  /** Hay algo distinto de lo guardado: sin cambios no se puede guardar. */
+  hayCambios: boolean;
   tieneIntentos: boolean;
   onPublicar: () => void;
   onCerrar: () => void;
@@ -20,6 +22,7 @@ export function AccionesEvaluacion(props: AccionesEvaluacionProps) {
     id,
     estado,
     ocupado,
+    hayCambios,
     tieneIntentos,
     onPublicar,
     onCerrar,
@@ -54,7 +57,7 @@ export function AccionesEvaluacion(props: AccionesEvaluacionProps) {
       <div className="flex flex-wrap gap-3">
         {enBorrador ? (
           <>
-            <Button type="submit" variante="secundario" cargando={ocupado}>
+            <Button type="submit" variante="secundario" cargando={ocupado} disabled={!hayCambios}>
               Guardar borrador
             </Button>
             <Button cargando={ocupado} onClick={onPublicar}>
@@ -68,7 +71,7 @@ export function AccionesEvaluacion(props: AccionesEvaluacionProps) {
                 Cerrar evaluación
               </Button>
             )}
-            <Button type="submit" cargando={ocupado}>
+            <Button type="submit" cargando={ocupado} disabled={!hayCambios}>
               Guardar cambios
             </Button>
           </>

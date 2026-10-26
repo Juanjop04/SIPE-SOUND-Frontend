@@ -9,24 +9,51 @@ import type { DetalleEvaluacionDocente, EstadoEvaluacion } from "./tipos";
 // Navegar sin preguntar: lo guardado ya está a salvo (ver ConfirmarSalida).
 const SIN_CONFIRMAR = { replace: true, state: { sinConfirmar: true } };
 
+interface EntradaDeGuardado {
+  datos: DatosFormulario;
+  publicar: boolean;
+  cambios: CambiosEvaluacion;
+}
+
+/**
+ * Crea, o edita solo lo que cambió: los datos generales con PATCH y las preguntas con PUT, cada uno
+ * únicamente si se tocó. Con intentos las preguntas no se pueden reemplazar (422).
+ */
+async function guardarEvaluacion(
+  id: number | null,
+  tieneIntentos: boolean,
+  { datos, publicar, cambios }: EntradaDeGuardado,
+) {
+  let ident = id;
+  let message = "";
+  if (ident === null) {
+    const creada = await evaluacionesApi.crear(aEnvio(datos, true));
+    ident = creada.data.id;
+    message = creada.message;
+  } else if (cambios.generales) {
+    message = (await evaluacionesApi.editar(ident, aEnvio(datos, false))).message;
+  }
+  const preguntasNuevas = id === null || cambios.preguntas;
+  if (preguntasNuevas && !tieneIntentos && datos.preguntas.length > 0) {
+    await evaluacionesApi.preguntas(ident, preguntasAEnvio(datos));
+  }
+  const final = publicar ? await evaluacionesApi.estado(ident, "publicada") : { message };
+  return { id: ident, message: final.message };
+}
+
 /** Guardar, publicar, cerrar, eliminar y duplicar; compone los endpoints de HU-B-311. */
+/** Qué cambió desde lo guardado: sin cambios no se pide nada al backend. */
+export interface CambiosEvaluacion {
+  generales: boolean;
+  preguntas: boolean;
+}
+
 export function useEditorEvaluacion(evaluacion: DetalleEvaluacionDocente | null) {
   const navigate = useNavigate();
   const { avisar } = useAviso();
   const id = evaluacion?.id ?? null;
-  const guardar = useMutacionEvaluacion(
-    async ({ datos, publicar }: { datos: DatosFormulario; publicar: boolean }) => {
-      const { data, message } =
-        id === null
-          ? await evaluacionesApi.crear(aEnvio(datos, true))
-          : await evaluacionesApi.editar(id, aEnvio(datos, false));
-      // Con intentos las preguntas no se pueden reemplazar (422): solo se envían los datos generales.
-      if (!evaluacion?.tiene_intentos && datos.preguntas.length > 0) {
-        await evaluacionesApi.preguntas(data.id, preguntasAEnvio(datos));
-      }
-      const final = publicar ? await evaluacionesApi.estado(data.id, "publicada") : { message };
-      return { id: data.id, message: final.message };
-    },
+  const guardar = useMutacionEvaluacion((datos: EntradaDeGuardado) =>
+    guardarEvaluacion(id, evaluacion?.tiene_intentos ?? false, datos),
   );
   const estado = useMutacionEvaluacion((nuevo: EstadoEvaluacion) =>
     evaluacionesApi.estado(id ?? 0, nuevo),
@@ -55,8 +82,12 @@ export function useEditorEvaluacion(evaluacion: DetalleEvaluacionDocente | null)
     return data.id;
   });
 
-  async function guardarDatos(datos: DatosFormulario, publicar: boolean) {
-    const resultado = await guardar.mutateAsync({ datos, publicar });
+  async function guardarDatos(
+    datos: DatosFormulario,
+    publicar: boolean,
+    cambios: CambiosEvaluacion = { generales: true, preguntas: true },
+  ) {
+    const resultado = await guardar.mutateAsync({ datos, publicar, cambios });
     avisar({ mensaje: resultado.message });
     if (id === null) navigate(paths.docente.evaluacion(resultado.id), SIN_CONFIRMAR);
   }
