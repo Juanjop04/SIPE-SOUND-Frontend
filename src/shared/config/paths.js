@@ -29,6 +29,8 @@ export const paths = Object.freeze({
   progreso: "/progreso",
   /** Mis cursos: unirme con código y leer comentarios (HU-F-311). */
   cursos: "/cursos",
+  /** Catálogo de todos los cursos para pedir inscripción (HU-F-513). */
+  cursosDisponibles: "/cursos/disponibles",
   /** @param {string | number} [id] */
   leccion: (id = ":id") => `/leccion/${id}`,
   /** @param {string | number} [id] */
@@ -41,6 +43,8 @@ export const paths = Object.freeze({
   docente: Object.freeze({
     inicio: "/docente",
     cursos: "/docente/cursos",
+    /** Solicitudes de inscripción a mis cursos: pendientes y aceptadas (HU-F-514). */
+    solicitudes: "/docente/solicitudes",
     /** @param {string | number} [id] */
     curso: (id = ":id") => `/docente/cursos/${id}`,
     /** Estudiantes × bloques del curso y quién necesita apoyo (HU-F-406). */
@@ -69,6 +73,8 @@ export const paths = Object.freeze({
     cursos: "/admin/cursos",
     /** Editor Markdown de los términos y condiciones (HU-F-510). */
     terminos: "/admin/terminos",
+    /** Solicitudes de cambio de nombre de estudiantes y docentes (HU-F-515). */
+    solicitudesNombre: "/admin/solicitudes-nombre",
   }),
 });
 

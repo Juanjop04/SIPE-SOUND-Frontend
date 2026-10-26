@@ -23,6 +23,19 @@ export function solicitarCambioDeNombre(cuerpo: string): Promise<Respuesta<{ id:
   return http.conMensaje("POST", "/me/solicitud-nombre", { cuerpo });
 }
 
+/** GET /me/solicitud-nombre (HU-B-415): tu última solicitud de cambio de nombre, o null. */
+export interface MiSolicitudDeNombre {
+  estado: "pendiente" | "aceptada" | "rechazada";
+  creado_en: string;
+  resuelta_en: string | null;
+}
+
+export const claveSolicitudDeNombre = ["cuenta", "solicitud-nombre"] as const;
+
+export function miSolicitudDeNombre(): Promise<MiSolicitudDeNombre | null> {
+  return http.get("/me/solicitud-nombre");
+}
+
 /**
  * POST /me/reautenticacion: paso 1, la contraseña actual. Si coincide, envía un código al correo
  * actual y devuelve el correo enmascarado. Contraseña errada → 401 "La contraseña actual no coincide."

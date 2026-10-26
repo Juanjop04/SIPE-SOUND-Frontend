@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import { cargarAcordesPage } from "@/features/acordes";
 import { cargarCuentaPage } from "@/features/cuenta";
-import { cargarMisCursosPage } from "@/features/cursos";
+import { cargarCatalogoPage, cargarMisCursosPage, GuardiaCurso } from "@/features/cursos";
 import {
   cargarCursosAdminPage,
   cargarDocentesPage,
+  cargarSolicitudesNombrePage,
   cargarTerminosAdminPage,
   cargarUsuariosPage,
 } from "@/features/admin";
@@ -26,6 +27,7 @@ import {
   cargarEditorLeccionPage,
   cargarEvaluacionesPage,
   cargarProgresoDocentePage,
+  cargarSolicitudesPage,
   cargarResultadosEvaluacionPage,
   cargarResumenPage,
 } from "@/features/docente";
@@ -78,17 +80,24 @@ export const router = createBrowserRouter([
             children: [
               // Con sesión de estudiante, el inicio; si no, la ruta pública (HU-F-315).
               { path: paths.inicio, element: <PaginaRaiz /> },
-              { path: paths.ruta, lazy: pagina(cargarRutaPage) },
-              { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
               { path: paths.acordes, lazy: pagina(cargarAcordesPage) },
-              { path: paths.ejercicios, lazy: pagina(cargarEjerciciosPage) },
-              { path: paths.ejercicio(), lazy: pagina(cargarEjercicioDetallePage) },
+              {
+                // Solo con un curso aceptado (HU-F-513): sin él, el camino es el catálogo.
+                element: <GuardiaCurso />,
+                children: [
+                  { path: paths.ruta, lazy: pagina(cargarRutaPage) },
+                  { path: paths.leccion(), lazy: pagina(cargarLeccionDetallePage) },
+                  { path: paths.ejercicios, lazy: pagina(cargarEjerciciosPage) },
+                  { path: paths.ejercicio(), lazy: pagina(cargarEjercicioDetallePage) },
+                ],
+              },
               { path: paths.terminos, lazy: pagina(cargarTerminosPage) },
               {
                 element: <RequireAuth />,
                 children: [
                   { path: paths.progreso, lazy: pagina(cargarProgresoPage) },
                   { path: paths.cursos, lazy: pagina(cargarMisCursosPage) },
+                  { path: paths.cursosDisponibles, lazy: pagina(cargarCatalogoPage) },
                   { path: paths.mensajes, lazy: pagina(cargarMensajesPage) },
                   { path: paths.mensaje(), lazy: pagina(cargarMensajesPage) },
                   { path: paths.evaluacion(), lazy: pagina(cargarEvaluacionPage) },
@@ -118,6 +127,7 @@ export const router = createBrowserRouter([
                       { path: paths.docente.cursos, lazy: pagina(cargarCursosPage) },
                       { path: paths.docente.curso(), lazy: pagina(cargarCursoDetallePage) },
                       { path: paths.docente.progreso, lazy: pagina(cargarProgresoDocentePage) },
+                      { path: paths.docente.solicitudes, lazy: pagina(cargarSolicitudesPage) },
                       { path: paths.docente.mensajes, lazy: pagina(cargarMensajesPage) },
                       { path: paths.docente.mensaje(), lazy: pagina(cargarMensajesPage) },
                       { path: paths.docente.contenido, lazy: pagina(cargarContenidoPage) },
@@ -157,6 +167,10 @@ export const router = createBrowserRouter([
                       { path: paths.admin.cursos, lazy: pagina(cargarCursosAdminPage) },
                       { path: paths.admin.docentes, lazy: pagina(cargarDocentesPage) },
                       { path: paths.admin.terminos, lazy: pagina(cargarTerminosAdminPage) },
+                      {
+                        path: paths.admin.solicitudesNombre,
+                        lazy: pagina(cargarSolicitudesNombrePage),
+                      },
                     ],
                   },
                 ],

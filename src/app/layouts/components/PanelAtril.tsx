@@ -9,6 +9,8 @@ import {
   Library,
   Mail,
   ScrollText,
+  UserCog,
+  UserPlus,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -30,6 +32,7 @@ const SECCIONES: Seccion[] = [
   { to: paths.docente.inicio, etiqueta: "Resumen", Icono: House, exacto: true },
   { to: paths.docente.cursos, etiqueta: "Cursos", Icono: BookOpen },
   { to: paths.docente.progreso, etiqueta: "Progreso", Icono: Activity },
+  { to: paths.docente.solicitudes, etiqueta: "Solicitudes", Icono: UserPlus },
   { to: paths.docente.contenido, etiqueta: "Contenido", Icono: FileText },
   { to: paths.docente.evaluaciones, etiqueta: "Evaluaciones", Icono: ClipboardCheck },
   { to: paths.docente.mensajes, etiqueta: "Mensajes", Icono: Mail, contador: true },
@@ -39,6 +42,7 @@ const SECCIONES_ADMIN: Seccion[] = [
   { to: paths.admin.usuarios, etiqueta: "Usuarios", Icono: Users },
   { to: paths.admin.cursos, etiqueta: "Todos los cursos", Icono: Library },
   { to: paths.admin.docentes, etiqueta: "Docentes", Icono: GraduationCap },
+  { to: paths.admin.solicitudesNombre, etiqueta: "Cambios de nombre", Icono: UserCog },
   { to: paths.admin.terminos, etiqueta: "Términos", Icono: ScrollText },
 ];
 
