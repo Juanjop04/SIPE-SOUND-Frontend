@@ -10,16 +10,11 @@ export function SinCurso() {
     <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       <EstadoVacio
         titulo="Aún no tienes un curso."
-        descripcion="Para ver la ruta pide entrar a un curso: cuando tu docente o un administrador te acepte, aparecerá aquí. Si tu docente te dio un código, úsalo en Mis cursos."
+        descripcion="Para ver la ruta pide entrar a un curso: cuando su docente o un administrador te acepte, aparecerá aquí. Si tu docente te dio un código, también lo escribes en Cursos disponibles."
         accion={
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link to={paths.cursosDisponibles} className={claseBoton()}>
-              Ver cursos disponibles
-            </Link>
-            <Link to={paths.cursos} className={claseBoton({ variante: "secundario" })}>
-              Tengo un código
-            </Link>
-          </div>
+          <Link to={paths.cursosDisponibles} className={claseBoton()}>
+            Ver cursos disponibles
+          </Link>
         }
       />
     </main>

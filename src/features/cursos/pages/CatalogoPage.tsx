@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
 import { EstadoVacio, Field, Input, MensajeError, Skeleton, claseBoton } from "@/shared/ui";
 import { useCatalogo } from "../api";
+import { FormularioUnirse } from "../components/FormularioUnirse";
 import { TarjetaCatalogo } from "../components/TarjetaCatalogo";
 
 /** /cursos/disponibles (HU-F-513): todos los cursos y el botón para pedir entrar a uno. */
@@ -23,14 +24,23 @@ export default function CatalogoPage() {
         <div>
           <h1 className="font-display text-3xl font-semibold text-paper">Cursos disponibles</h1>
           <p className="mt-2 max-w-prose text-sm text-muted">
-            Pide entrar al curso que quieras. Cuando tu docente o un administrador te acepte, verás
-            su ruta en Mis cursos. Si ya tienes un código, úsalo allí.
+            Pide entrar al curso que quieras: cuando su docente o un administrador te acepte, verás
+            su ruta en Mis cursos. Si tu docente te dio un código, puedes unirte directo.
           </p>
         </div>
         <Link to={paths.cursos} className={claseBoton({ variante: "secundario" })}>
           Ir a Mis cursos
         </Link>
       </header>
+      <section
+        aria-labelledby="unirse-codigo"
+        className="rounded-caja border border-dashed border-linea-fuerte p-5"
+      >
+        <h2 id="unirse-codigo" className="mb-3 font-display text-lg font-semibold text-paper">
+          Unirme con un código
+        </h2>
+        <FormularioUnirse />
+      </section>
       <Field etiqueta="Buscar curso">
         {(campo) => (
           <Input
