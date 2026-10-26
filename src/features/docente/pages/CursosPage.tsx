@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
+import { ROL, useSession } from "@/features/auth";
 import { Button, Drawer, EstadoVacio, MensajeError, Skeleton, useAviso } from "@/shared/ui";
 import { PaginaAtril } from "../components/PaginaAtril";
+import { CursosDisponibles } from "../cursos/components/CursosDisponibles";
 import { FormularioCurso } from "../cursos/components/FormularioCurso";
 import { TarjetaCursoDocente } from "../cursos/components/TarjetaCursoDocente";
 import { useCrearCurso, useCursos } from "../cursos/hooks/useCursos";
@@ -97,6 +99,7 @@ export default function CursosPage() {
   const [creando, setCreando] = useState(false);
   const crear = useCrearCurso();
   const { avisar } = useAviso();
+  const { rol } = useSession();
 
   async function guardar(datos: DatosCurso) {
     const { message } = await crear.mutateAsync(datos);
@@ -113,6 +116,8 @@ export default function CursosPage() {
         </Button>
       </div>
       <CursosActivos onCrear={() => setCreando(true)} />
+      {/* Solo un docente se asigna; el administrador los crea desde Todos los cursos. */}
+      {rol === ROL.docente && <CursosDisponibles />}
       <CursosArchivados />
       <Drawer abierto={creando} onCerrar={() => setCreando(false)} titulo="Nuevo curso">
         <FormularioCurso textoEnviar="Crear curso" onGuardar={guardar} />

@@ -18,6 +18,13 @@ interface ConMensaje<T> {
 }
 
 export const cursosAdminApi = {
+  /** POST /admin/cursos (HU-B-413): sin `docente_id` el curso queda disponible. */
+  crear: (datos: {
+    nombre: string;
+    descripcion: string | null;
+    nivel: string;
+    docente_id: string | null;
+  }): Promise<ConMensaje<unknown>> => http.conMensaje("POST", "/admin/cursos", datos),
   docentes: (filtros: {
     q?: string;
     pagina: number;
