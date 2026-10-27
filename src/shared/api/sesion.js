@@ -6,6 +6,7 @@ import { enviar } from "./httpClient.js";
 
 // Se renueva un poco antes de que venza para no enviar un token caducado.
 const MARGEN_RENOVACION_MS = 30_000;
+const HTTP_NO_AUTENTICADO = 401;
 
 let sesionActual = null;
 let renovacionEnCurso = null;
@@ -38,6 +39,8 @@ function auth(metodo, ruta, opciones = {}) {
 }
 
 function guardar(datos) {
+  // Sin cookie el backend responde 200 con data null: no hay sesión (no es un error).
+  if (!datos) return descartarTrasFallo(new ApiError(HTTP_NO_AUTENTICADO));
   sinSesionConfirmado = false;
   sesionActual = {
     accessToken: datos.access_token,
@@ -54,7 +57,9 @@ function estaVigente(sesion) {
 
 function descartarTrasFallo(error) {
   sesionActual = null;
-  if (error instanceof ApiError && error.statusCode === 401) sinSesionConfirmado = true;
+  if (error instanceof ApiError && error.statusCode === HTTP_NO_AUTENTICADO) {
+    sinSesionConfirmado = true;
+  }
   notificar();
   return null;
 }
