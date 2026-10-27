@@ -3,7 +3,6 @@ import { paths } from "@/shared/config/paths.js";
 import { cn } from "@/shared/lib/cn.js";
 import { EstadoVacio, MensajeError, Select, Skeleton, claseBoton } from "@/shared/ui";
 import { useMisCursos, type MiCurso } from "../api";
-import { FormularioUnirse } from "../components/FormularioUnirse";
 import { TarjetaCurso } from "../components/TarjetaCurso";
 import {
   ESTADOS,
@@ -81,12 +80,19 @@ function Filtros({ cursos }: { cursos: MiCurso[] }) {
   );
 }
 
-/** La tarjeta final: unirse con un código (el flujo de HU-F-311, sin cambios). */
-function TarjetaUnirse() {
+/** La tarjeta final: pedir entrar a otro curso o unirse con un código (HU-F-517). */
+function TarjetaMasCursos() {
   return (
-    <li className="flex flex-col justify-center rounded-caja border border-dashed border-linea-fuerte p-5 md:col-span-2">
-      <h2 className="mb-3 font-display text-lg font-semibold text-paper">Unirme con un código</h2>
-      <FormularioUnirse />
+    <li className="flex flex-col justify-center gap-3 rounded-caja border border-dashed border-linea-fuerte p-5 md:col-span-2">
+      <h2 className="font-display text-lg font-semibold text-paper">¿Quieres otro curso?</h2>
+      <p className="text-sm text-muted">
+        Mira los cursos disponibles y pide entrar, o únete directo con el código de tu docente.
+      </p>
+      <div>
+        <Link to={paths.cursosDisponibles} className={claseBoton()}>
+          Ver cursos disponibles
+        </Link>
+      </div>
     </li>
   );
 }
@@ -118,7 +124,7 @@ export default function MisCursosPage() {
       {data && data.length === 0 && (
         <EstadoVacio
           titulo="Aún no estás en ningún curso."
-          descripcion="Pide entrar a uno desde «Ver cursos disponibles», o escribe abajo el código que te dio tu docente: tu curso aparecerá aquí con su ruta."
+          descripcion="Entra a «Ver cursos disponibles»: pide entrar a uno o únete con el código que te dio tu docente. Tu curso aparecerá aquí con su ruta."
         />
       )}
       {data && data.length > 0 && visibles.length === 0 && (
@@ -129,7 +135,7 @@ export default function MisCursosPage() {
           {visibles.map((curso) => (
             <TarjetaCurso key={curso.id} curso={curso} />
           ))}
-          <TarjetaUnirse />
+          <TarjetaMasCursos />
         </ul>
       )}
     </main>

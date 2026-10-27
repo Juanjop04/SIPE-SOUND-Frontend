@@ -102,6 +102,7 @@ export function useUnirse() {
     mutationFn: cursosApi.unirse,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: cursosKeys.lista() });
+      queryClient.invalidateQueries({ queryKey: cursosKeys.catalogo() });
       // Clave de features/ruta (rutaKeys.todas): sin importarla para no crear un ciclo ruta ↔ cursos.
       queryClient.invalidateQueries({ queryKey: ["ruta"] });
     },

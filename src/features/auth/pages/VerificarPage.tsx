@@ -1,16 +1,16 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
 import { Button, ENLACE_EN_TEXTO, Field, Input, MensajeError } from "@/shared/ui";
-import { ESPERA_REENVIO_SEGUNDOS } from "@/shared/hooks/useCuentaRegresiva";
 import { LIMITES } from "@/shared/validacion";
 import { CampoCodigo } from "../components/CampoCodigo";
 import { CorreoConfirmado } from "../components/CorreoConfirmado";
 import { ReenvioCodigo } from "../components/ReenvioCodigo";
-import { useVerificacion } from "../hooks/useVerificacion";
+import { VigenciaCodigo } from "../components/VigenciaCodigo";
+import { useVerificacion, VIGENCIA_CODIGO_SEGUNDOS } from "../hooks/useVerificacion";
 import { esquemaVerificacion } from "../schemas";
 
-/** Minutos de vigencia del código: la misma espera que usa la cuenta regresiva del reenvío. */
-const VIGENCIA_MINUTOS = Math.round(ESPERA_REENVIO_SEGUNDOS / 60);
+/** Vigencia del código: la misma constante que usa la cuenta regresiva. */
+const VIGENCIA_MINUTOS = Math.round(VIGENCIA_CODIGO_SEGUNDOS / 60);
 const TEXTO_VIGENCIA = `${VIGENCIA_MINUTOS} ${VIGENCIA_MINUTOS === 1 ? "minuto" : "minutos"}`;
 
 const ID_AYUDA = "verificar-ayuda";
@@ -24,8 +24,10 @@ function correoDelEnlace(valor: string | null): string {
 /** Lo que llega por `state` al navegar desde el registro o el inicio de sesión. */
 export interface EstadoVerificar {
   email?: string;
-  /** El código acaba de enviarse: el reenvío espera un minuto. */
-  recienEnviado?: boolean;
+  /** Segundos que le quedan al código vigente (los da el registro). */
+  venceEnSegundos?: number;
+  /** El correo ya había empezado a registrarse. */
+  enCurso?: boolean;
 }
 
 export default function VerificarPage() {
@@ -33,7 +35,7 @@ export default function VerificarPage() {
   const [parametros] = useSearchParams();
   // El state de la navegación (registro, inicio de sesión) manda sobre el parámetro.
   const emailInicial = estado.email ?? correoDelEnlace(parametros.get("email"));
-  const v = useVerificacion(emailInicial, estado.recienEnviado ?? false);
+  const v = useVerificacion(emailInicial, estado.venceEnSegundos);
   const {
     register,
     formState: { errors },
@@ -47,8 +49,16 @@ export default function VerificarPage() {
     <>
       <h1 className="font-display text-3xl font-semibold">Confirma tu correo</h1>
       <p className="mt-2 text-muted">
-        Escribe el código de 6 dígitos que te enviamos. Vence en {TEXTO_VIGENCIA} y solo sirve una vez.
+        Escribe el código de 6 dígitos que te enviamos. Vence en {TEXTO_VIGENCIA} y solo sirve una
+        vez.
       </p>
+
+      {estado.enCurso && (
+        <p role="status" className="mt-4 rounded-lg border border-linea bg-surface p-3 text-sm">
+          Ya tienes un registro en curso con este correo. Escribe el código que te enviamos o pide
+          uno nuevo.
+        </p>
+      )}
 
       <form onSubmit={v.enviar} noValidate className="mt-8 flex flex-col gap-5">
         <Field etiqueta="Correo electrónico" error={errors.email?.message}>
@@ -70,6 +80,8 @@ export default function VerificarPage() {
         <Field etiqueta="Código de 6 dígitos" error={errors.codigo?.message}>
           {(control) => <CampoCodigo {...control} {...register("codigo")} />}
         </Field>
+
+        <VigenciaCodigo {...v.vigencia} />
 
         {v.errorGeneral && <MensajeError mensaje={v.errorGeneral} />}
 
