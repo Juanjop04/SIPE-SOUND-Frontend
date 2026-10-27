@@ -32,3 +32,85 @@ html:has([data-fijo="abajo"]) {
     scroll-padding-top: 8rem;
   }
 }
+
+/*
+ * Tabla de cuentas (Usuarios): filas en rejilla. Desde 821 px son columnas fijas (con desplazamiento
+ * horizontal hasta 1100 px); por debajo, cada fila es una tarjeta apilada y cada celda con
+ * data-label muestra su etiqueta. Se usan media queries (no hay container queries en el proyecto).
+ */
+@layer components {
+  .tabla-cuentas {
+    min-width: 0;
+  }
+  .tabla-cuentas .fila-cabecera {
+    display: none;
+  }
+  .fila-cuenta {
+    display: grid;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-top: 1px solid rgb(var(--color-linea));
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "cb who st"
+      ". acty acty"
+      ". rol rol"
+      ". perm perm"
+      ". act act";
+  }
+  .fila-cuenta > [data-celda="cb"] {
+    grid-area: cb;
+    align-self: start;
+    padding-top: 2px;
+  }
+  .fila-cuenta > [data-celda="who"] {
+    grid-area: who;
+  }
+  .fila-cuenta > [data-celda="st"] {
+    grid-area: st;
+    align-self: start;
+  }
+  .fila-cuenta > [data-celda="acty"] {
+    grid-area: acty;
+  }
+  .fila-cuenta > [data-celda="rol"] {
+    grid-area: rol;
+  }
+  .fila-cuenta > [data-celda="perm"] {
+    grid-area: perm;
+  }
+  .fila-cuenta > [data-celda="act"] {
+    grid-area: act;
+  }
+  .fila-cuenta > [data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(var(--color-muted));
+  }
+  @media (min-width: 821px) {
+    .tabla-cuentas {
+      min-width: 1040px;
+    }
+    .tabla-cuentas .fila-cabecera {
+      display: grid;
+    }
+    .fila-cuenta {
+      gap: 16px;
+      padding: 12px 16px;
+      grid-template-columns: 28px minmax(210px, 1.5fr) 168px 108px 150px 150px 150px;
+      grid-template-areas: none;
+    }
+    .fila-cuenta > [data-celda] {
+      grid-area: auto;
+      align-self: center;
+      padding-top: 0;
+    }
+    .fila-cuenta > [data-label]::before {
+      display: none;
+    }
+  }
+}

@@ -1,4 +1,5 @@
-import { Button } from "@/shared/ui";
+import { Button, Select } from "@/shared/ui";
+import type { RolCuenta } from "../tipos";
 
 /** Máximo de cuentas por petición en lote (HU-B-407). */
 export const MAXIMO_LOTE = 100;
@@ -6,43 +7,64 @@ export const MAXIMO_LOTE = 100;
 interface BarraLoteProps {
   cantidad: number;
   ocupada: boolean;
-  onPermitir: () => void;
-  onBloquear: () => void;
+  onRol: (rol: RolCuenta) => void;
+  onActivar: () => void;
+  onSuspender: () => void;
+  onReenviar: () => void;
   onLimpiar: () => void;
 }
 
-/** Barra fija abajo al elegir cuentas: permiso de nombre en lote. */
+/** Sobre la tabla al elegir cuentas: cambiar rol, activar, suspender o reenviar el código. */
 export function BarraLote({
   cantidad,
   ocupada,
-  onPermitir,
-  onBloquear,
+  onRol,
+  onActivar,
+  onSuspender,
+  onReenviar,
   onLimpiar,
 }: BarraLoteProps) {
   const demasiadas = cantidad > MAXIMO_LOTE;
+  const bloqueada = ocupada || demasiadas;
   return (
     <div
-      data-fijo="abajo"
-      className="sticky bottom-0 z-20 -mx-4 mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-linea bg-ink-2 px-4 py-3 sm:-mx-8 sm:px-8"
+      role="toolbar"
+      aria-label="Acciones para las cuentas elegidas"
+      className="flex flex-wrap items-center gap-2.5 border-b border-linea bg-primary/10 px-4 py-3"
     >
-      <p className="text-sm text-paper">
-        <span className="font-mono tabular-nums">{cantidad}</span>{" "}
-        {cantidad === 1 ? "cuenta elegida" : "cuentas elegidas"}
+      <p className="text-sm font-semibold text-paper">
+        <span className="font-mono tabular-nums">{cantidad}</span> seleccionadas
         {demasiadas && (
-          <span className="text-danger"> · Elige {MAXIMO_LOTE} como máximo por vez.</span>
+          <span className="font-normal text-danger">
+            {" "}
+            · Elige {MAXIMO_LOTE} como máximo por vez.
+          </span>
         )}
       </p>
-      <div className="flex flex-wrap gap-3">
-        <Button variante="fantasma" onClick={onLimpiar}>
-          Quitar selección
-        </Button>
-        <Button variante="secundario" disabled={ocupada || demasiadas} onClick={onBloquear}>
-          Bloquear cambio de nombre
-        </Button>
-        <Button disabled={ocupada || demasiadas} cargando={ocupada} onClick={onPermitir}>
-          Permitir cambio de nombre
-        </Button>
-      </div>
+      <Select
+        value=""
+        disabled={bloqueada}
+        aria-label="Cambiar rol de las cuentas seleccionadas"
+        onChange={(e) => e.target.value && onRol(e.target.value as RolCuenta)}
+        className="h-9 w-44 py-0"
+      >
+        <option value="">Cambiar rol a…</option>
+        <option value="estudiante">Estudiante</option>
+        <option value="docente">Docente</option>
+        <option value="admin">Administrador</option>
+      </Select>
+      <Button variante="fantasma" tamano="sm" disabled={bloqueada} onClick={onActivar}>
+        Activar
+      </Button>
+      <Button variante="fantasma" tamano="sm" disabled={bloqueada} onClick={onSuspender}>
+        Suspender
+      </Button>
+      <Button variante="fantasma" tamano="sm" disabled={bloqueada} onClick={onReenviar}>
+        Reenviar código
+      </Button>
+      <Button variante="fantasma" tamano="sm" className="ml-auto" onClick={onLimpiar}>
+        Quitar selección
+      </Button>
     </div>
   );
 }

@@ -1,5 +1,12 @@
 import { http } from "@/shared/api/httpClient.js";
-import type { DetalleUsuario, FiltrosUsuarios, PaginaUsuarios } from "./tipos";
+import type {
+  AccionEnLote,
+  DetalleUsuario,
+  FiltrosUsuarios,
+  PaginaUsuarios,
+  ResultadoLote,
+  RolCuenta,
+} from "./tipos";
 
 const RUTA = "/admin/usuarios";
 export const POR_PAGINA = 20;
@@ -29,13 +36,42 @@ export const usuariosApi = {
   /** Código nuevo; el resultado del envío se ve en `ultimo_envio_verificacion`. */
   reenviarCodigo: (id: string): Promise<ConMensaje<null>> =>
     http.conMensaje("POST", `${RUTA}/${id}/verificacion/reenviar`, {}),
-  verificar: (datos: { id: string; motivo: string }): Promise<ConMensaje<null>> =>
-    http.conMensaje("POST", `${RUTA}/${datos.id}/verificacion`, { motivo: datos.motivo }),
-  suspender: (datos: { id: string; motivo: string }): Promise<ConMensaje<unknown>> =>
+  verificar: (id: string): Promise<ConMensaje<null>> =>
+    http.conMensaje("POST", `${RUTA}/${id}/verificacion`, {}),
+  /** `notificar` avisa por correo de la suspensión. */
+  suspender: (datos: { id: string; notificar: boolean }): Promise<ConMensaje<unknown>> =>
     http.conMensaje("PATCH", `${RUTA}/${datos.id}/estado`, {
       estado: "suspendida",
-      motivo: datos.motivo,
+      notificar: datos.notificar,
     }),
+  cambiarRol: (datos: {
+    id: string;
+    rol: RolCuenta;
+    notificar: boolean;
+  }): Promise<ConMensaje<unknown>> =>
+    http.conMensaje("PATCH", `${RUTA}/${datos.id}/rol`, {
+      rol: datos.rol,
+      notificar: datos.notificar,
+    }),
+  /** Nombre, apellido y correo; un correo nuevo deja la cuenta pendiente y envía un código. */
+  editar: (datos: {
+    id: string;
+    nombre: string;
+    apellido: string;
+    email: string;
+  }): Promise<ConMensaje<unknown>> =>
+    http.conMensaje("PATCH", `${RUTA}/${datos.id}`, {
+      nombre: datos.nombre,
+      apellido: datos.apellido,
+      email: datos.email,
+    }),
+  /** Procesa solo las cuentas válidas; las demás vuelven en `omitidas`. */
+  enLote: (datos: {
+    ids: string[];
+    accion: AccionEnLote;
+    rol?: RolCuenta;
+    notificar?: boolean;
+  }): Promise<ConMensaje<ResultadoLote>> => http.conMensaje("POST", `${RUTA}/lote`, datos),
   reactivar: (id: string): Promise<ConMensaje<unknown>> =>
     http.conMensaje("PATCH", `${RUTA}/${id}/estado`, { estado: "activa" }),
   permitirNombre: (datos: { id: string; permitir: boolean }): Promise<ConMensaje<unknown>> =>

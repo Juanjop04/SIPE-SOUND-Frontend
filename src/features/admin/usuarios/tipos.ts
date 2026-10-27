@@ -27,10 +27,17 @@ export interface Usuario {
 }
 
 export type TotalesPorEstado = Record<EstadoCuenta, number>;
+export type TotalesPorRol = Record<RolCuenta, number>;
 
 export interface PaginaUsuarios {
   data: Usuario[];
-  meta: { pagina: number; por_pagina: number; total: number; totales: TotalesPorEstado };
+  meta: {
+    pagina: number;
+    por_pagina: number;
+    total: number;
+    totales: TotalesPorEstado;
+    roles: TotalesPorRol;
+  };
   message: string;
 }
 
@@ -72,7 +79,15 @@ export interface DetalleUsuario extends Usuario {
 }
 
 export type FiltroPermiso = "si" | "no";
-export type OrdenUsuarios = "nombre" | "-creado_en" | "-ultimo_acceso";
+export type OrdenUsuarios = "nombre" | "apellido" | "-ultimo_acceso" | "rol" | "-creado_en";
+
+export type AccionEnLote = "rol" | "activar" | "suspender" | "reenviar";
+
+/** Respuesta de POST /admin/usuarios/lote: solo se procesan las cuentas válidas. */
+export interface ResultadoLote {
+  cambiadas: string[];
+  omitidas: { id: string; motivo: string }[];
+}
 
 /** Lo que vive en la URL (contrato de HU-F-404: sobrevive a recargar). */
 export interface FiltrosUsuarios {

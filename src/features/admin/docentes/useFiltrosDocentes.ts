@@ -4,7 +4,13 @@ import { LIMITES } from "@/shared/validacion";
 import type { EstadoActividad, FiltrosDocentes, OrdenDocentes } from "./tipos";
 
 const ESTADOS: EstadoActividad[] = ["activo", "inactivo", "sin_actividad"];
-const ORDENES: OrdenDocentes[] = ["nombre", "ultima_actividad", "-acciones_30d"];
+const ORDENES: OrdenDocentes[] = [
+  "nombre",
+  "ultima_actividad",
+  "-acciones_30d",
+  "-cursos",
+  "-estudiantes",
+];
 
 /** Búsqueda, estado de actividad, orden y página de la tabla de docentes viven en la URL. */
 export function useFiltrosDocentes() {

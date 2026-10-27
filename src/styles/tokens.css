@@ -18,6 +18,7 @@
   --color-success: 52 211 153; /* #34D399 · verde: solo logro (completado, aprobado) */
   --color-suena: 245 185 66; /* #F5B942 · ámbar: solo la cuerda que suena */
   --color-danger: 247 112 122; /* #F7707A · errores y acciones destructivas */
+  --color-aviso: 251 191 36; /* #FBBF24 · pendiente o por completar (texto; ≥ 9 sobre toda capa) */
   --color-muted: 174 182 216; /* #AEB6D8 · texto secundario */
   --color-paper: 245 246 255; /* #F5F6FF · texto principal */
   /* Texto sobre un fondo primary (botón, ítem activo). */
@@ -55,6 +56,7 @@
   --color-success: 8 113 77; /* #08714D · verde legible como texto (≥ 4.82); #19B981 daba 2.53 */
   --color-suena: 168 108 5; /* #A86C05 · ámbar de la cuerda que suena (≥ 3.91) */
   --color-danger: 184 43 54; /* #B82B36 · errores (≥ 4.88) */
+  --color-aviso: 138 90 0; /* #8A5A00 · pendiente o por completar (≥ 4.63 sobre toda capa) */
   --color-muted: 79 88 128; /* #4F5880 · texto secundario (≥ 5.52) */
   --color-paper: 33 27 80; /* #211B50 · texto principal (≥ 12.55) */
   --color-sobre-primary: 255 255 255; /* blanco sobre #5B3DEB · 6.34 */

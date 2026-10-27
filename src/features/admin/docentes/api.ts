@@ -29,6 +29,7 @@ export const actividadApi = {
   linea: (id: string, filtros: FiltrosLinea): Promise<Pagina<EventoActividad>> =>
     http.getPaginado(`/admin/docentes/${id}/actividad`, {
       tipo: filtros.tipo,
+      desde: filtros.desde,
       curso_id: filtros.curso,
       pagina: filtros.pagina,
       por_pagina: POR_PAGINA,

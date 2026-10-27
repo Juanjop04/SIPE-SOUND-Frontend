@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Docentes · SIPE-SOUND</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B1020}
+*{box-sizing:border-box}
+a{color:#B9C8FF}a:hover{color:#F5F6FF}
+button,input,select{font-family:inherit;font-size:inherit}
+:focus-visible{outline:2px solid #8B83FF;outline-offset:2px}
+.shell{container-type:inline-size;min-height:100vh;background:#0B1020;color:#F5F6FF;font-family:'IBM Plex Sans',system-ui,sans-serif}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+.side{display:flex;flex-direction:column;gap:2px;padding:18px 12px;border-right:1px solid #1C2240;background:#0B1020}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 10px 22px;font-weight:700;letter-spacing:.08em;font-size:15px}
+.nav{display:flex;align-items:center;gap:12px;min-height:40px;padding:8px 10px;border-radius:6px;color:#AEB6D9;text-decoration:none;font-size:14px}
+.nav:hover{background:#141A2E;color:#F5F6FF}
+.nav.on{background:#171D33;color:#F5F6FF;font-weight:600}
+.nav.on svg{color:#8B83FF}
+.sidex{display:none}
+.top{position:relative;display:flex;align-items:center;gap:12px;padding:12px 32px;border-bottom:1px solid #1C2240}
+.menubtn{display:none}
+.ib{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:none;border-radius:6px;border:1px solid transparent;background:transparent;color:#B9C8FF;cursor:pointer;padding:0}
+.ib:hover{background:#1E2442;color:#F5F6FF}
+.ib.edit{color:#CFCBFF;border-color:#2A3152}
+.ib.edit:hover{background:#6257F5;border-color:#6257F5;color:#FFFFFF}
+.ib.danger:hover{color:#FCA5A5;background:rgba(248,113,113,.1)}
+.who{display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 6px 4px 4px;border:0;border-radius:6px;background:transparent;color:#F5F6FF;cursor:pointer}
+.who:hover{background:#141A2E}
+.mono-av{width:34px;height:34px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:#B9C8FF;color:#0B1020;font-weight:700;font-size:13px;flex:none}
+.pmenu{position:absolute;right:24px;top:64px;z-index:40;width:240px;background:#171D33;border:1px solid #2A3152;border-radius:8px;padding:6px;display:flex;flex-direction:column;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.pitem{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:8px 10px;border:0;border-radius:5px;background:transparent;color:#F5F6FF;text-decoration:none;font-size:14px;text-align:left;cursor:pointer}
+.pitem:hover{background:#222947;color:#F5F6FF}
+.pitem.out{color:#FCA5A5}
+.pad{width:100%;max-width:1360px;padding:32px 32px 56px;display:flex;flex-direction:column;gap:22px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid #232A47;overflow-x:auto}
+.tab{flex:none;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;margin-bottom:-1px;border:0;border-bottom:2px solid transparent;background:transparent;color:#9AA3C7;font-size:14px;cursor:pointer}
+.tab:hover{color:#F5F6FF}
+.tab.on{color:#F5F6FF;font-weight:600;border-bottom-color:#6257F5}
+.tab .n{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:400;color:#9AA3C7}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,220px));gap:8px}
+.stat{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 14px;border:1px solid #232A47;border-radius:6px;background:#11162B;color:#F5F6FF;text-align:left}
+button.stat{cursor:pointer}
+button.stat:hover{border-color:#3A4270}
+button.stat.on{border-color:#6257F5;background:rgba(98,87,245,.1)}
+.stat .n{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500;line-height:1.2}
+.stat .sl{font-size:13px;color:#AEB6D9}
+.c-act{color:#34D399}.c-ina{color:#FBBF24}.c-sin{color:#AEB6D9}.c-warn{color:#FCA5A5}
+.filters{display:grid;grid-template-columns:minmax(0,2fr) repeat(2,minmax(0,1fr));gap:12px;align-items:end;max-width:900px}
+.lbl{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:13px;font-weight:600}
+.fld,.fsel{width:100%;height:42px;padding:0 12px;border-radius:6px;border:1px solid #2A3152;background:#0F1428;color:#F5F6FF;font-size:14px;font-weight:400}
+.fsel{appearance:none;-webkit-appearance:none;padding-right:34px;cursor:pointer}
+.fld:focus,.fsel:focus{border-color:#6257F5}
+.fld.err{border-color:#F87171}
+.selw{position:relative;display:block}
+.selw svg{position:absolute;right:10px;top:50%;margin-top:-8px;pointer-events:none}
+.tw{border:1px solid #232A47;border-radius:8px;background:#11162B;overflow:hidden}
+.tscroll{overflow-x:auto}
+.tmin{min-width:860px}
+.tr{display:grid;gap:16px;align-items:center;padding:12px 16px;border-top:1px solid #1F2643;font-size:14px}
+.tr.b:hover{background:#151B33}
+.th{border-top:0;padding-top:10px;padding-bottom:10px;background:#0E1326;font-size:12px;font-weight:600;color:#9AA3C7}
+.cols-att{grid-template-columns:minmax(220px,1.6fr) 150px 170px 80px 48px}
+.cols-doc{grid-template-columns:minmax(240px,1.8fr) 130px 140px 110px 70px 96px 48px}
+.cols-pre{grid-template-columns:minmax(240px,2fr) 130px 150px 80px}
+.cols-cur{grid-template-columns:minmax(190px,1.6fr) 96px 170px 112px 140px 96px 88px}
+.cols-est{grid-template-columns:minmax(180px,1.3fr) minmax(170px,1.2fr) 180px 130px}
+.num{text-align:right;font-family:'IBM Plex Mono',monospace;font-size:13px;font-variant-numeric:tabular-nums}
+.nm{all:unset;cursor:pointer;font-weight:600;color:#F5F6FF}
+.nm:hover{text-decoration:underline;text-underline-offset:3px}
+.nm:focus-visible{outline:2px solid #8B83FF;outline-offset:2px}
+.em{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#9AA3C7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cell-who{display:flex;flex-direction:column;gap:3px;min-width:0}
+.cact{display:flex;justify-content:flex-end;gap:4px}
+.prog{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.bar{width:72px;height:6px;border-radius:3px;background:#262D4A;overflow:hidden;flex:none}
+.bar span{display:block;height:100%;background:#6257F5}
+.btn{height:40px;padding:0 16px;border-radius:6px;border:1px solid transparent;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;text-decoration:none}
+.btn.pri{background:#6257F5;color:#FFFFFF}
+.btn.pri:hover{background:#5348E6;color:#FFFFFF}
+.btn.pri:disabled{background:#262D4F;color:#8E97BD;cursor:not-allowed}
+.btn.gh{background:transparent;border-color:#2A3152;color:#F5F6FF}
+.btn.gh:hover{background:#1A2040;color:#F5F6FF}
+.btn.gh:disabled{opacity:.45;cursor:not-allowed}
+.btn.dgf{background:#DC2626;color:#FFFFFF}
+.btn.dgf:hover{background:#B91C1C}
+.btn.sm{height:34px;padding:0 12px;font-size:13px}
+.back{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:32px;font-size:13px;color:#B9C8FF}
+.back:hover{color:#F5F6FF}
+.back:focus-visible{outline:2px solid #8B83FF;outline-offset:2px}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:13px;color:#9AA3C7}
+.legend{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:12px;color:#9AA3C7}
+.empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:44px 20px;text-align:center}
+.ev{display:grid;grid-template-columns:120px 32px minmax(0,1fr);gap:12px;align-items:start;padding:14px 16px;border-top:1px solid #1F2643}
+.ev:first-child{border-top:0}
+.evi{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:#1A2040;color:#B9C8FF}
+.ropt{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid #232A47;border-radius:6px;cursor:pointer}
+.ropt:hover{border-color:#3A4270}
+.ropt.on{border-color:#6257F5;background:rgba(98,87,245,.08)}
+.ropt input{margin:0;width:16px;height:16px;accent-color:#6257F5}
+.scrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:rgba(5,8,18,.66);cursor:pointer}
+.mwrap{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{position:relative;width:100%;max-width:500px;max-height:100%;overflow-y:auto;background:#171D33;border:1px solid #2A3152;border-radius:10px;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.chg{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:6px;background:#0F1428;border:1px solid #232A47}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:10px;max-width:calc(100% - 32px);padding:12px 16px;border-radius:6px;background:#F5F6FF;color:#0B1020;font-size:14px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.preform{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;max-width:760px}
+@container (max-width: 960px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{display:none}
+  .side.open{display:flex;position:fixed;top:0;left:0;bottom:0;width:300px;max-width:86%;z-index:65;overflow-y:auto;border-right:1px solid #2A3152}
+  .sidex{display:inline-flex;margin-left:auto}
+  .menubtn{display:inline-flex}
+  .crumb,.themes{display:none}
+  .top{padding:10px 16px}
+  .pad{padding:20px 16px 40px}
+  .pmenu{right:12px}
+  .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .f-search{grid-column:1/-1}
+}
+@container (max-width: 820px){
+  .tmin{min-width:0}
+  .th{display:none}
+  .tr{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:14px 16px}
+  .tr > [data-label]{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;text-align:right}
+  .tr > [data-label]::before{content:attr(data-label);font-family:'IBM Plex Sans',sans-serif;color:#9AA3C7;text-align:left;font-size:12px}
+  .tr > .cact{justify-content:flex-start;padding-top:4px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ev{grid-template-columns:32px minmax(0,1fr)}
+  .ev .evt{grid-column:2;order:3}
+}
+@container (max-width: 560px){
+  .filters,.preform{grid-template-columns:minmax(0,1fr)}
+  .uname{display:none}
+  h1{font-size:26px !important}
+}
+</style>
+</helmet>
+
+<div class="shell">
+<div class="app">
+
+  <nav class="{{sideCls}}" aria-label="Navegación principal">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><path d="M17 3c7.5 0 13 3.4 13 8.6 0 6.6-7.6 17.9-13 19.4C11.6 29.5 4 18.2 4 11.6 4 6.4 9.5 3 17 3z" fill="#6257F5"/><path d="M11 14v4M14.5 11.5v9M18 13v6M21.5 10.5v11M25 14v4" stroke="#F5F6FF" stroke-width="1.8" stroke-linecap="round"/></svg>
+      SIPE-SOUND
+      <button class="ib sidex" onClick="{{closeMenu}}" aria-label="Cerrar menú"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Resumen</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>Cursos</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Progreso</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg>Solicitudes</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Contenido</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 13l2 2 4-4"/></svg>Evaluaciones</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Mensajes</a>
+    <a class="nav" href="Main.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg>Usuarios</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16M8 4v16M12 4l4 16M17 4l3 16"/></svg>Todos los cursos</a>
+    <a class="nav on" href="#" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/></svg>Docentes</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 11-5.7"/><path d="M17 14l4 4-3 3-4-4v-3z"/></svg>Cambios de nombre</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H6"/><path d="M6 3a2 2 0 0 0-2 2v3h4M8 3v16a2 2 0 1 1-4 0v-1"/><path d="M12 8h4M12 12h4"/></svg>Términos</a>
+  </nav>
+
+  <main style="min-width: 0; display: flex; flex-direction: column">
+    <header class="top">
+      <button class="ib menubtn" onClick="{{openMenu}}" aria-label="Abrir menú"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <p class="crumb" style="margin: 0; font-size: 13px; color: #9AA3C7">Administración <span aria-hidden="true">/</span> <span style="color: #F5F6FF">{{crumb}}</span></p>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 6px">
+        <button class="ib" aria-label="Mensajes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></button>
+        <button class="who" onClick="{{toggleProfile}}" aria-expanded="{{profileOpen}}" aria-label="Menú de la cuenta">
+          <span class="mono-av">IB</span>
+          <span class="uname" style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><span style="font-size: 14px; font-weight: 600">Isaac Bonilla</span><span style="font-size: 12px; color: #9AA3C7">Administrador</span></span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+      <sc-if value="{{profileOpen}}" hint-placeholder-val="{{ false }}">
+        <div class="pmenu">
+          <a class="pitem" href="MiCuenta.dc.html">Mi cuenta</a>
+          <button class="pitem" onClick="{{viewAsStudent}}">Ver como estudiante</button>
+          <button class="pitem out" onClick="{{logout}}">Cerrar sesión</button>
+        </div>
+      </sc-if>
+    </header>
+
+    <div class="pad">
+
+      <!-- ===================== LIST VIEW ===================== -->
+      <sc-if value="{{isList}}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 6px; max-width: 680px">
+          <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -.01em">Docentes <span class="mono" style="font-size: 18px; font-weight: 400; color: #9AA3C7">{{docCount}}</span></h1>
+          <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #AEB6D9">Quién está activo, qué cursos tiene cada docente y qué correos están autorizados para registrarse como docentes.</p>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Secciones de docentes">
+          <sc-for list="{{ltabs}}" as="t" hint-placeholder-count="3">
+            <button class="{{t.cls}}" role="tab" aria-selected="{{t.on}}" onClick="{{t.pick}}">{{t.label}}<span class="n">{{t.n}}</span></button>
+          </sc-for>
+        </div>
+
+        <!-- Resumen -->
+        <sc-if value="{{tabResumen}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 12px">
+            <div class="stats">
+              <sc-for list="{{summary}}" as="s" hint-placeholder-count="4">
+                <button class="stat" onClick="{{s.go}}"><span class="{{s.numCls}}">{{s.n}}</span><span class="sl">{{s.label}}</span></button>
+              </sc-for>
+            </div>
+            <div class="legend">
+              <span><strong class="c-act">Activo</strong> movimiento en los últimos 7 días</span>
+              <span><strong class="c-ina">Inactivo</strong> 8 a 30 días sin movimiento</span>
+              <span><strong class="c-sin">Sin actividad</strong> más de 30 días o nunca</span>
+            </div>
+          </div>
+
+          <section style="display: flex; flex-direction: column; gap: 12px">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <h2 style="margin: 0; font-size: 17px; font-weight: 700">Requieren atención <span class="mono" style="font-size: 13px; font-weight: 400; color: #9AA3C7">{{attentionCount}}</span></h2>
+              <p style="margin: 0; font-size: 13px; color: #9AA3C7">Docentes inactivos o sin actividad que tienen cursos asignados.</p>
+            </div>
+            <div class="tw">
+              <div class="tr th cols-att"><span>Docente</span><span>Estado</span><span>Último movimiento</span><span style="text-align: right">Cursos</span><span></span></div>
+              <sc-for list="{{attention}}" as="d" hint-placeholder-count="2">
+                <div class="tr b cols-att">
+                  <span class="cell-who"><button class="nm" onClick="{{d.open}}">{{d.name}}</button><span class="em">{{d.email}}</span></span>
+                  <span data-label="Estado"><span class="{{d.stCls}}" style="font-weight: 600">{{d.stLabel}}</span></span>
+                  <span data-label="Último movimiento" class="mono" style="font-size: 13px">{{d.lastAct}}</span>
+                  <span data-label="Cursos" class="num">{{d.courses}}</span>
+                  <span class="cact"><button class="ib edit" onClick="{{d.open}}" title="Ver detalle" aria-label="Ver detalle de {{d.name}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></span>
+                </div>
+              </sc-for>
+              <sc-if value="{{attentionEmpty}}" hint-placeholder-val="{{ false }}">
+                <div class="empty" style="border-top: 1px solid #1F2643"><span style="font-weight: 600">Todos los docentes con cursos están activos.</span></div>
+              </sc-if>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- Lista de docentes -->
+        <sc-if value="{{tabDocentes}}" hint-placeholder-val="{{ false }}">
+          <div class="filters">
+            <label class="lbl f-search">Buscar docente
+              <span class="selw">
+                <input class="fld" type="search" placeholder="Nombre, apellido o correo" value="{{dq}}" onChange="{{onDq}}" style="padding-left: 38px">
+                <svg style="left: 12px; right: auto" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              </span>
+            </label>
+            <label class="lbl">Actividad
+              <span class="selw">
+                <select class="fsel" value="{{dact}}" onChange="{{onDact}}">
+                  <option value="todos">Todos</option>
+                  <option value="act">Activos</option>
+                  <option value="ina">Inactivos</option>
+                  <option value="sin">Sin actividad</option>
+                </select>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </span>
+            </label>
+            <label class="lbl">Ordenar por
+              <span class="selw">
+                <select class="fsel" value="{{dsort}}" onChange="{{onDsort}}">
+                  <option value="nombre">Nombre</option>
+                  <option value="cursos">Más cursos</option>
+                  <option value="estudiantes">Más estudiantes</option>
+                </select>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </span>
+            </label>
+          </div>
+          <div class="tw">
+            <div class="tscroll"><div class="tmin">
+              <div class="tr th cols-doc"><span>Nombre y correo</span><span>Actividad</span><span>Última actividad</span><span style="text-align: right">Acciones 30 d</span><span style="text-align: right">Cursos</span><span style="text-align: right">Estudiantes</span><span></span></div>
+              <sc-for list="{{docRows}}" as="d" hint-placeholder-count="2">
+                <div class="tr b cols-doc">
+                  <span class="cell-who"><button class="nm" onClick="{{d.open}}">{{d.name}}</button><span class="em">{{d.email}}</span></span>
+                  <span data-label="Actividad"><span class="{{d.stCls}}" style="font-weight: 600">{{d.stLabel}}</span></span>
+                  <span data-label="Última actividad" class="mono" style="font-size: 13px">{{d.lastAct}}</span>
+                  <span data-label="Acciones 30 días" class="num">{{d.actions}}</span>
+                  <span data-label="Cursos" class="num">{{d.courses}}</span>
+                  <span data-label="Estudiantes" class="num">{{d.students}}</span>
+                  <span class="cact"><button class="ib edit" onClick="{{d.open}}" title="Ver detalle" aria-label="Ver detalle de {{d.name}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></span>
+                </div>
+              </sc-for>
+              <sc-if value="{{docEmpty}}" hint-placeholder-val="{{ false }}">
+                <div class="empty" style="border-top: 1px solid #1F2643"><span style="font-weight: 600">Ningún docente coincide con la búsqueda.</span></div>
+              </sc-if>
+            </div></div>
+            <div style="padding: 12px 16px; border-top: 1px solid #1F2643"><span class="mono" style="font-size: 12px; color: #9AA3C7">{{docShown}} de {{docCount}} docentes</span></div>
+          </div>
+        </sc-if>
+
+        <!-- Preautorizaciones -->
+        <sc-if value="{{tabPre}}" hint-placeholder-val="{{ false }}">
+          <div class="preform">
+            <label class="lbl">Correo del docente
+              <input class="{{preCls}}" type="email" placeholder="profe@colegio.edu.co" value="{{preEmail}}" onChange="{{onPreEmail}}" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px">
+            </label>
+            <button class="btn pri" onClick="{{authorize}}" disabled="{{preDisabled}}">Autorizar</button>
+          </div>
+          <span style="font-size: 13px; color: {{preHintColor}}; margin-top: -10px">{{preHint}}</span>
+          <div class="tw">
+            <div class="tr th cols-pre"><span>Correo</span><span>Estado</span><span>Autorizado</span><span style="text-align: right">Acciones</span></div>
+            <sc-for list="{{preRows}}" as="p" hint-placeholder-count="2">
+              <div class="tr b cols-pre">
+                <span class="em" style="font-size: 13px; color: #F5F6FF">{{p.email}}</span>
+                <span data-label="Estado"><span class="{{p.stCls}}" style="font-weight: 600">{{p.stLabel}}</span></span>
+                <span data-label="Autorizado" class="mono" style="font-size: 13px">{{p.date}}</span>
+                <span class="cact">
+                  <sc-if value="{{p.pending}}" hint-placeholder-val="{{ false }}">
+                    <button class="ib danger" onClick="{{p.revoke}}" title="Revocar" aria-label="Revocar autorización de {{p.email}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+                  </sc-if>
+                  <sc-if value="{{p.applied}}" hint-placeholder-val="{{ true }}">
+                    <span style="font-size: 12px; color: #6E78A8">Ya registrado</span>
+                  </sc-if>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <!-- ===================== DETAIL VIEW ===================== -->
+      <sc-if value="{{isDetail}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <button class="back" onClick="{{goBack}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>Docentes</button>
+          <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+            <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+              <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -.01em">{{sel.name}}</h1>
+              <div class="meta">
+                <span class="mono" style="font-size: 12px">{{sel.email}}</span>
+                <span style="color: #34D399; font-weight: 600">Cuenta activa</span>
+                <span class="{{sel.stCls}}" style="font-weight: 600">{{sel.stLabel}}</span>
+                <span>Última actividad: <span class="mono" style="font-size: 12px; color: #F5F6FF">{{sel.lastAct}}</span></span>
+              </div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <button class="btn gh" onClick="{{sendMsg}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Enviar mensaje</button>
+              <a class="btn gh" href="Main.dc.html">Ver en Usuarios</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span class="n">{{sel.courses}}</span><span class="sl">Cursos</span></div>
+          <div class="stat"><span class="n">{{sel.students}}</span><span class="sl">Estudiantes</span></div>
+          <div class="stat"><span class="n">{{sel.avgLabel}}</span><span class="sl">Avance promedio</span></div>
+          <div class="stat"><span class="{{sel.idleCls}}">{{sel.idle}}</span><span class="sl">Sin avance 7 días</span></div>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Detalle del docente">
+          <sc-for list="{{dtabs}}" as="t" hint-placeholder-count="3">
+            <button class="{{t.cls}}" role="tab" aria-selected="{{t.on}}" onClick="{{t.pick}}">{{t.label}}<span class="n">{{t.n}}</span></button>
+          </sc-for>
+        </div>
+
+        <!-- Cursos asignados -->
+        <sc-if value="{{dtCursos}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+            <span style="font-size: 13px; color: #9AA3C7">{{unassignedLine}}</span>
+            <button class="btn gh sm" onClick="{{openAssign}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Asignar curso</button>
+          </div>
+          <div class="tw">
+            <div class="tscroll"><div class="tmin">
+              <div class="tr th cols-cur"><span>Curso</span><span style="text-align: right">Estudiantes</span><span style="text-align: right">Avance promedio</span><span style="text-align: right">Sin avance 7 d</span><span>Último movimiento</span><span style="text-align: right">Bloques en ruta</span><span style="text-align: right">Acciones</span></div>
+              <sc-for list="{{courseRows}}" as="c" hint-placeholder-count="3">
+                <div class="tr b cols-cur">
+                  <a href="#" style="font-weight: 600; text-underline-offset: 3px">{{c.name}}</a>
+                  <span data-label="Estudiantes" class="num">{{c.students}}</span>
+                  <span data-label="Avance promedio" class="prog"><span class="bar"><span style="width: {{c.pct}}%"></span></span><span class="num" style="min-width: 40px">{{c.pctLabel}}</span></span>
+                  <span data-label="Sin avance 7 días" class="{{c.idleCls}}">{{c.idle}}</span>
+                  <span data-label="Último movimiento" class="mono" style="font-size: 13px; color: #9AA3C7">{{c.lastMove}}</span>
+                  <span data-label="Bloques en ruta" class="num">{{c.blocks}}</span>
+                  <span class="cact">
+                    <button class="ib edit" onClick="{{c.reassign}}" title="Reasignar a otro docente" aria-label="Reasignar {{c.name}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg></button>
+                    <button class="ib danger" onClick="{{c.remove}}" title="Quitar docente del curso" aria-label="Quitar docente de {{c.name}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 11h6"/></svg></button>
+                  </span>
+                </div>
+              </sc-for>
+              <sc-if value="{{coursesEmpty}}" hint-placeholder-val="{{ false }}">
+                <div class="empty" style="border-top: 1px solid #1F2643">
+                  <span style="font-weight: 600">Este docente no tiene cursos asignados.</span>
+                  <button class="btn gh sm" onClick="{{openAssign}}">Asignar curso</button>
+                </div>
+              </sc-if>
+            </div></div>
+          </div>
+        </sc-if>
+
+        <!-- Actividad -->
+        <sc-if value="{{dtActividad}}" hint-placeholder-val="{{ false }}">
+          <div class="filters" style="grid-template-columns: repeat(2, minmax(0, 220px))">
+            <label class="lbl">Periodo
+              <span class="selw">
+                <select class="fsel" value="{{period}}" onChange="{{onPeriod}}">
+                  <option value="7">Últimos 7 días</option>
+                  <option value="28">Últimos 28 días</option>
+                  <option value="90">Últimos 90 días</option>
+                </select>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </span>
+            </label>
+            <label class="lbl">Tipo
+              <span class="selw">
+                <select class="fsel" value="{{etype}}" onChange="{{onEtype}}">
+                  <option value="todos">Todos</option>
+                  <option value="contenido">Contenido</option>
+                  <option value="evaluacion">Evaluaciones</option>
+                  <option value="mensaje">Mensajes</option>
+                  <option value="sesion">Inicios de sesión</option>
+                </select>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </span>
+            </label>
+          </div>
+          <div class="stats">
+            <sc-for list="{{actKpis}}" as="k" hint-placeholder-count="4">
+              <div class="stat"><span class="n">{{k.n}}</span><span class="sl">{{k.label}}</span></div>
+            </sc-for>
+          </div>
+          <div class="tw">
+            <sc-for list="{{events}}" as="e" hint-placeholder-count="4">
+              <div class="ev">
+                <span class="evt mono" style="font-size: 12px; color: #9AA3C7; padding-top: 7px">{{e.when}}</span>
+                <span class="evi" aria-hidden="true">
+                  <sc-if value="{{e.isContenido}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg></sc-if>
+                  <sc-if value="{{e.isEval}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 13l2 2 4-4"/></svg></sc-if>
+                  <sc-if value="{{e.isMsg}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></sc-if>
+                  <sc-if value="{{e.isSesion}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5M15 12H3M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4"/></svg></sc-if>
+                </span>
+                <span style="display: flex; flex-direction: column; gap: 2px; padding-top: 5px">
+                  <span style="font-size: 14px; line-height: 1.45">{{e.text}}</span>
+                  <span style="font-size: 12px; color: #9AA3C7">{{e.course}}</span>
+                </span>
+              </div>
+            </sc-for>
+            <sc-if value="{{eventsEmpty}}" hint-placeholder-val="{{ false }}">
+              <div class="empty">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6E78A8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span style="font-size: 15px; font-weight: 600">Sin actividad en {{periodLabel}}</span>
+                <span style="font-size: 13px; color: #9AA3C7; max-width: 420px; line-height: 1.5">{{sel.name}} no ha publicado contenido, calificado evaluaciones ni enviado mensajes en este periodo.</span>
+                <button class="btn gh sm" onClick="{{sendMsg}}" style="margin-top: 4px">Enviar mensaje</button>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <!-- Estudiantes -->
+        <sc-if value="{{dtEstudiantes}}" hint-placeholder-val="{{ false }}">
+          <div class="filters">
+            <label class="lbl f-search">Buscar estudiante
+              <span class="selw">
+                <input class="fld" type="search" placeholder="Nombre del estudiante" value="{{sq}}" onChange="{{onSq}}" style="padding-left: 38px">
+                <svg style="left: 12px; right: auto" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              </span>
+            </label>
+            <label class="lbl">Curso
+              <span class="selw">
+                <select class="fsel" value="{{scf}}" onChange="{{onScf}}">
+                  <option value="todos">Todos los cursos</option>
+                  <option value="c1">Guitarra 11-A</option>
+                  <option value="c2">Guitarra 7°A</option>
+                  <option value="c3">Guitarra 9°B · Intermedio</option>
+                  <option value="c4">Guitarra 10°A</option>
+                </select>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </span>
+            </label>
+            <label class="lbl">Ordenar por
+              <span class="selw">
+                <select class="fsel" value="{{ssort}}" onChange="{{onSsort}}">
+                  <option value="nombre">Nombre</option>
+                  <option value="avance">Menor avance</option>
+                </select>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </span>
+            </label>
+          </div>
+          <div class="tw">
+            <div class="tr th cols-est"><span>Estudiante</span><span>Curso</span><span style="text-align: right">Avance</span><span>Último avance</span></div>
+            <sc-for list="{{studentRows}}" as="s" hint-placeholder-count="4">
+              <div class="tr b cols-est">
+                <span style="font-weight: 600">{{s.name}}</span>
+                <span data-label="Curso"><a href="#" style="text-underline-offset: 3px">{{s.course}}</a></span>
+                <span data-label="Avance" class="prog"><span class="bar"><span style="width: {{s.pct}}%"></span></span><span class="num" style="min-width: 40px">{{s.pct}} %</span></span>
+                <span data-label="Último avance" class="{{s.lastCls}}" style="font-size: 13px">{{s.last}}</span>
+              </div>
+            </sc-for>
+            <sc-if value="{{studentsEmpty}}" hint-placeholder-val="{{ false }}">
+              <div class="empty" style="border-top: 1px solid #1F2643"><span style="font-weight: 600">No hay estudiantes para mostrar.</span></div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </sc-if>
+    </div>
+  </main>
+</div>
+
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+  <button class="scrim" style="z-index: 64" onClick="{{closeMenu}}" aria-label="Cerrar menú"></button>
+</sc-if>
+
+<!-- ===================== POPUPS ===================== -->
+<sc-if value="{{m}}" hint-placeholder-val="{{ false }}">
+  <div class="mwrap">
+    <button class="scrim" style="position: absolute" onClick="{{closeModal}}" aria-label="Cerrar ventana"></button>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-popup">
+      <div style="padding: 22px 24px 0; display: flex; flex-direction: column; gap: 14px">
+        <h2 id="titulo-popup" style="margin: 0; font-size: 19px; font-weight: 700">{{m.title}}</h2>
+        <sc-if value="{{m.subject}}" hint-placeholder-val="{{ true }}">
+          <div class="chg">
+            <span style="font-size: 15px; font-weight: 600">{{m.subject}}</span>
+            <span class="mono" style="font-size: 12px; color: #9AA3C7">{{m.subjectMeta}}</span>
+          </div>
+        </sc-if>
+        <p style="margin: 0; font-size: 14px; line-height: 1.55; color: #D9DDF0">{{m.text}}</p>
+        <sc-if value="{{m.hasOptions}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 8px" role="radiogroup" aria-label="{{m.optLabel}}">
+            <sc-for list="{{m.options}}" as="o" hint-placeholder-count="2">
+              <label class="{{o.cls}}">
+                <input type="radio" name="popup-opcion" checked="{{o.on}}" onChange="{{o.pick}}">
+                <span style="display: flex; flex-direction: column; gap: 2px">
+                  <span style="font-size: 14px; font-weight: 600">{{o.label}}</span>
+                  <span style="font-size: 12px; color: #9AA3C7">{{o.meta}}</span>
+                </span>
+              </label>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{m.noOptions}}" hint-placeholder-val="{{ false }}">
+          <span style="font-size: 13px; color: #FBBF24">{{m.noOptionsText}}</span>
+        </sc-if>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 20px 24px 22px">
+        <button class="btn gh" onClick="{{closeModal}}">Cancelar</button>
+        <button class="{{m.ctaCls}}" onClick="{{confirmModal}}" disabled="{{m.ctaDisabled}}">{{m.cta}}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{toast}}" hint-placeholder-val="{{ false }}">
+  <div class="toast" role="status">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0E8A61" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+    {{toast}}
+  </div>
+</sc-if>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"vista":{"editor":"enum","options":["resumen","docentes","preautorizaciones","detalle-cursos","detalle-actividad","detalle-estudiantes"],"default":"resumen"},"actividadDeEjemplo":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  seed() {
+    return {
+      docs: [
+        { id: 'd1', name: 'Docente de Prueba', email: 'docente.prueba@example.com', act: 'sin', lastAct: 'Nunca', actions: 0 },
+        { id: 'd2', name: 'Juanjo Pajón', email: 'juanjose.pajoncalle@gmail.com', act: 'sin', lastAct: 'Nunca', actions: 0 }
+      ],
+      courses: [
+        { id: 'c1', name: 'Guitarra 11-A', doc: 'd1', blocks: 0, lastMove: '—' },
+        { id: 'c2', name: 'Guitarra 7°A', doc: 'd1', blocks: 4, lastMove: '—' },
+        { id: 'c3', name: 'Guitarra 9°B · Intermedio', doc: 'd1', blocks: 4, lastMove: '—' },
+        { id: 'c4', name: 'Guitarra 10°A', doc: 'd2', blocks: 3, lastMove: '—' }
+      ],
+      enroll: [
+        { s: 'KIKE VENECO', c: 'c2', pct: 47, last: 'Hace 3 horas', idle: false },
+        { s: 'playoneitor', c: 'c2', pct: 0, last: 'Sin avance', idle: true },
+        { s: 'KIKE VENECO', c: 'c3', pct: 0, last: 'Hace 3 horas', idle: false },
+        { s: 'playoneitor', c: 'c3', pct: 0, last: 'Sin avance', idle: true },
+        { s: 'pajoncito playonero', c: 'c4', pct: 12, last: 'Hace 2 días', idle: false },
+        { s: 'regiregi goat', c: 'c4', pct: 0, last: 'Sin avance', idle: true }
+      ],
+      pre: [
+        { email: 'juanjose.pajoncalle@gmail.com', status: 'aplicada', date: '27 oct 2026' },
+        { email: 'docente.prueba@example.com', status: 'aplicada', date: '23 oct 2026' }
+      ]
+    };
+  }
+  data() {
+    const st = this.state || {};
+    if (!this._seed) this._seed = this.seed();
+    return {
+      docs: this._seed.docs,
+      courses: st.courses || this._seed.courses,
+      enroll: this._seed.enroll,
+      pre: st.pre || this._seed.pre
+    };
+  }
+  toast(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: null }), 2800);
+  }
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  renderVals() {
+    const st = this.state || {};
+    const D = this.data();
+    const v0 = this.props.vista || 'resumen';
+    const example = this.props.actividadDeEjemplo === true;
+    const SL = { act: 'Activo', ina: 'Inactivo', sin: 'Sin actividad' };
+    const SC = { act: 'c-act', ina: 'c-ina', sin: 'c-sin' };
+    const cmp = (a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' });
+
+    const view = st.view || (v0.indexOf('detalle') === 0 ? 'detail' : 'list');
+    const ltab = st.ltab || (['resumen', 'docentes', 'preautorizaciones'].indexOf(v0) >= 0 ? v0 : 'resumen');
+    const dtab = st.dtab || (v0 === 'detalle-actividad' ? 'actividad' : (v0 === 'detalle-estudiantes' ? 'estudiantes' : 'cursos'));
+    const selId = st.selId || 'd1';
+
+    const coursesOf = id => D.courses.filter(c => c.doc === id);
+    const enrollOf = id => { const ids = coursesOf(id).map(c => c.id); return D.enroll.filter(e => ids.indexOf(e.c) >= 0); };
+    const uniqStudents = id => enrollOf(id).map(e => e.s).filter((s, i, a) => a.indexOf(s) === i).length;
+    const open = id => () => this.setState({ view: 'detail', selId: id, dtab: 'cursos', sq: '', scf: 'todos', profileOpen: false });
+
+    const docVM = d => ({
+      id: d.id, name: d.name, email: d.email, lastAct: d.lastAct, actions: d.actions,
+      stLabel: SL[d.act], stCls: SC[d.act],
+      courses: coursesOf(d.id).length, students: uniqStudents(d.id),
+      open: open(d.id)
+    });
+    const allDocs = D.docs.map(docVM);
+    const unassigned = D.courses.filter(c => !c.doc);
+
+    // Summary (Resumen)
+    const cnt = k => D.docs.filter(d => d.act === k).length;
+    const goList = act => () => this.setState({ ltab: 'docentes', dact: act });
+    const summary = [
+      { n: cnt('act'), label: 'Activos', numCls: 'n c-act', go: goList('act') },
+      { n: cnt('ina'), label: 'Inactivos', numCls: 'n c-ina', go: goList('ina') },
+      { n: cnt('sin'), label: 'Sin actividad', numCls: 'n c-sin', go: goList('sin') },
+      { n: unassigned.length, label: 'Cursos sin docente', numCls: 'n' + (unassigned.length ? ' c-warn' : ''), go: () => this.toast(unassigned.length ? (unassigned.length === 1 ? '1 curso espera docente' : unassigned.length + ' cursos esperan docente') : 'Todos los cursos tienen docente') }
+    ];
+    const attention = allDocs.filter(d => d.courses > 0 && D.docs.find(x => x.id === d.id).act !== 'act');
+
+    // Docentes list
+    const dq = st.dq || '', dact = st.dact || 'todos', dsort = st.dsort || 'nombre';
+    let docRows = allDocs.filter(d => (!dq.trim() || (d.name + ' ' + d.email).toLowerCase().indexOf(dq.trim().toLowerCase()) >= 0) && (dact === 'todos' || D.docs.find(x => x.id === d.id).act === dact));
+    docRows = docRows.slice().sort((a, b) => dsort === 'cursos' ? b.courses - a.courses || cmp(a.name, b.name) : (dsort === 'estudiantes' ? b.students - a.students || cmp(a.name, b.name) : cmp(a.name, b.name)));
+
+    // Preauthorizations
+    const preEmail = st.preEmail || '';
+    const pe = preEmail.trim().toLowerCase();
+    const preValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pe);
+    const preDup = D.pre.some(p => p.email.toLowerCase() === pe);
+    const preRows = D.pre.map(p => ({
+      email: p.email, date: p.date,
+      stLabel: p.status === 'aplicada' ? 'Aplicada' : 'Pendiente',
+      stCls: p.status === 'aplicada' ? 'c-act' : 'c-ina',
+      pending: p.status !== 'aplicada', applied: p.status === 'aplicada',
+      revoke: () => this.setState({ modal: { kind: 'revocar', email: p.email } })
+    }));
+
+    const ltabs = [['resumen', 'Resumen', ''], ['docentes', 'Docentes', D.docs.length], ['preautorizaciones', 'Preautorizaciones', D.pre.length]]
+      .map(t => ({ label: t[1], n: t[2], on: ltab === t[0], cls: 'tab' + (ltab === t[0] ? ' on' : ''), pick: () => this.setState({ ltab: t[0] }) }));
+
+    // Detail
+    const selDoc = D.docs.find(d => d.id === selId) || D.docs[0];
+    const myCourses = coursesOf(selDoc.id);
+    const myEnroll = enrollOf(selDoc.id);
+    const avgOf = list => list.length ? Math.floor(list.reduce((s, e) => s + e.pct, 0) / list.length) : null;
+    const selAvg = avgOf(myEnroll);
+    const selIdle = myEnroll.filter(e => e.idle).length;
+    const sel = Object.assign(docVM(selDoc), {
+      avgLabel: selAvg === null ? '—' : selAvg + '%',
+      idle: selIdle, idleCls: 'n' + (selIdle ? ' c-ina' : '')
+    });
+
+    const courseRows = myCourses.map(c => {
+      const en = D.enroll.filter(e => e.c === c.id);
+      const avg = avgOf(en);
+      const idle = en.filter(e => e.idle).length;
+      return {
+        name: c.name, students: en.length,
+        pct: avg === null ? 0 : avg, pctLabel: avg === null ? '—' : avg + ' %',
+        idle: idle, idleCls: 'num' + (idle ? ' c-ina' : ''),
+        lastMove: c.lastMove, blocks: c.blocks,
+        reassign: () => this.setState({ modal: { kind: 'reasignar', courseId: c.id, target: null } }),
+        remove: () => this.setState({ modal: { kind: 'quitar', courseId: c.id } })
+      };
+    });
+
+    // Activity
+    const period = st.period || '28';
+    const etype = st.etype || 'todos';
+    const periodLabel = { '7': 'los últimos 7 días', '28': 'los últimos 28 días', '90': 'los últimos 90 días' }[period];
+    const exampleEvents = [
+      { d: 0, when: 'Hoy · 9:42', type: 'contenido', text: 'Publicó el bloque «Acordes abiertos»', course: 'Guitarra 7°A' },
+      { d: 1, when: 'Ayer · 16:10', type: 'evaluacion', text: 'Calificó la evaluación «Ritmo 4/4» de KIKE VENECO', course: 'Guitarra 7°A' },
+      { d: 1, when: 'Ayer · 15:58', type: 'mensaje', text: 'Respondió un mensaje de playoneitor', course: 'Guitarra 9°B · Intermedio' },
+      { d: 6, when: '21 oct · 11:05', type: 'contenido', text: 'Editó el bloque «Postura y afinación»', course: 'Guitarra 9°B · Intermedio' },
+      { d: 12, when: '15 oct · 8:30', type: 'sesion', text: 'Inició sesión', course: 'Web · Chrome' }
+    ];
+    const baseEvents = example && selDoc.id === 'd1' ? exampleEvents : [];
+    const inPeriod = baseEvents.filter(e => e.d <= Number(period));
+    const events = inPeriod.filter(e => etype === 'todos' || e.type === etype).map(e => Object.assign({}, e, {
+      isContenido: e.type === 'contenido', isEval: e.type === 'evaluacion', isMsg: e.type === 'mensaje', isSesion: e.type === 'sesion'
+    }));
+    const byType = t => inPeriod.filter(e => e.type === t).length;
+    const actKpis = [
+      { n: inPeriod.length, label: 'Acciones' },
+      { n: byType('contenido'), label: 'Contenidos' },
+      { n: byType('evaluacion'), label: 'Calificaciones' },
+      { n: byType('mensaje'), label: 'Mensajes' }
+    ];
+
+    // Students
+    const sq = st.sq || '', scf = st.scf || 'todos', ssort = st.ssort || 'nombre';
+    let studentRows = myEnroll.filter(e => (!sq.trim() || e.s.toLowerCase().indexOf(sq.trim().toLowerCase()) >= 0) && (scf === 'todos' || e.c === scf))
+      .map(e => ({ name: e.s, course: (D.courses.find(c => c.id === e.c) || {}).name, pct: e.pct, last: e.last, lastCls: e.idle ? 'c-ina' : '' }));
+    studentRows = studentRows.sort((a, b) => ssort === 'avance' ? a.pct - b.pct || cmp(a.name, b.name) : cmp(a.name, b.name) || cmp(a.course, b.course));
+
+    const dtabs = [['cursos', 'Cursos asignados', myCourses.length], ['actividad', 'Actividad', inPeriod.length], ['estudiantes', 'Estudiantes', myEnroll.length]]
+      .map(t => ({ label: t[1], n: t[2], on: dtab === t[0], cls: 'tab' + (dtab === t[0] ? ' on' : ''), pick: () => this.setState({ dtab: t[0] }) }));
+
+    // Popup view model
+    const md = st.modal || null;
+    let m = null;
+    const setTarget = id => this.setState({ modal: Object.assign({}, md, { target: id }) });
+    if (md && md.kind === 'quitar') {
+      const c = D.courses.find(x => x.id === md.courseId);
+      const n = D.enroll.filter(e => e.c === c.id).length;
+      m = { title: '¿Quitar el docente de este curso?', subject: c.name, subjectMeta: 'Docente: ' + selDoc.name,
+        text: 'El curso quedará sin docente. ' + (n ? 'Sus ' + n + ' estudiantes conservan el progreso, pero nadie revisará entregas hasta que asignes otro docente.' : 'No tiene estudiantes inscritos.'),
+        cta: 'Sí, quitar docente', ctaCls: 'btn dgf', ctaDisabled: false };
+    } else if (md && md.kind === 'reasignar') {
+      const c = D.courses.find(x => x.id === md.courseId);
+      const others = D.docs.filter(d => d.id !== selDoc.id);
+      m = { title: 'Reasignar curso', subject: c.name, subjectMeta: 'Docente actual: ' + selDoc.name,
+        text: 'Elige el nuevo docente. Los estudiantes, su progreso y el contenido del curso se mantienen.',
+        hasOptions: others.length > 0, noOptions: others.length === 0, noOptionsText: 'No hay otros docentes. Autoriza uno en Preautorizaciones.', optLabel: 'Nuevo docente',
+        options: others.map(d => ({ label: d.name, meta: coursesOf(d.id).length + ' cursos · ' + SL[d.act], on: md.target === d.id, cls: 'ropt' + (md.target === d.id ? ' on' : ''), pick: () => setTarget(d.id) })),
+        cta: 'Reasignar', ctaCls: 'btn pri', ctaDisabled: !md.target };
+    } else if (md && md.kind === 'asignar') {
+      m = { title: 'Asignar curso a ' + selDoc.name, subject: '', subjectMeta: '',
+        text: unassigned.length ? 'Estos cursos no tienen docente. Elige uno para asignárselo.' : 'Todos los cursos tienen docente. Para pasar un curso a este docente, usa «Reasignar» desde el docente actual.',
+        hasOptions: unassigned.length > 0, noOptions: false, optLabel: 'Curso',
+        options: unassigned.map(c => ({ label: c.name, meta: D.enroll.filter(e => e.c === c.id).length + ' estudiantes', on: md.target === c.id, cls: 'ropt' + (md.target === c.id ? ' on' : ''), pick: () => setTarget(c.id) })),
+        cta: 'Asignar', ctaCls: 'btn pri', ctaDisabled: !md.target };
+    } else if (md && md.kind === 'revocar') {
+      m = { title: '¿Revocar esta preautorización?', subject: md.email, subjectMeta: 'Pendiente de registro',
+        text: 'Si la persona se registra con este correo entrará como estudiante. Puedes volver a autorizarla cuando quieras.',
+        cta: 'Sí, revocar', ctaCls: 'btn dgf', ctaDisabled: false };
+    }
+    const closeModal = () => this.setState({ modal: null });
+    const confirmModal = () => {
+      if (!md) return;
+      if (md.kind === 'quitar') {
+        const c = D.courses.find(x => x.id === md.courseId);
+        this.setState({ courses: D.courses.map(x => x.id === c.id ? Object.assign({}, x, { doc: null }) : x), modal: null });
+        this.toast(c.name + ' quedó sin docente');
+      } else if (md.kind === 'reasignar' && md.target) {
+        const c = D.courses.find(x => x.id === md.courseId);
+        const to = D.docs.find(d => d.id === md.target);
+        this.setState({ courses: D.courses.map(x => x.id === c.id ? Object.assign({}, x, { doc: to.id }) : x), modal: null });
+        this.toast(c.name + ' ahora es de ' + to.name);
+      } else if (md.kind === 'asignar' && md.target) {
+        const c = D.courses.find(x => x.id === md.target);
+        this.setState({ courses: D.courses.map(x => x.id === c.id ? Object.assign({}, x, { doc: selDoc.id }) : x), modal: null });
+        this.toast(c.name + ' asignado a ' + selDoc.name);
+      } else if (md.kind === 'revocar') {
+        this.setState({ pre: D.pre.filter(p => p.email !== md.email), modal: null });
+        this.toast('Preautorización revocada');
+      }
+    };
+
+    const menuOpen = !!st.menuOpen;
+    return {
+      isList: view === 'list', isDetail: view === 'detail',
+      crumb: view === 'detail' ? 'Docentes / ' + selDoc.name : 'Docentes',
+      docCount: D.docs.length,
+      ltabs: ltabs, tabResumen: ltab === 'resumen', tabDocentes: ltab === 'docentes', tabPre: ltab === 'preautorizaciones',
+      summary: summary, attention: attention, attentionCount: attention.length, attentionEmpty: attention.length === 0,
+      dq: dq, dact: dact, dsort: dsort, docRows: docRows, docShown: docRows.length, docEmpty: docRows.length === 0,
+      onDq: e => this.setState({ dq: e.target.value }),
+      onDact: e => this.setState({ dact: e.target.value }),
+      onDsort: e => this.setState({ dsort: e.target.value }),
+      preEmail: preEmail, preRows: preRows,
+      preCls: 'fld' + (pe && (!preValid || preDup) ? ' err' : ''),
+      preDisabled: !preValid || preDup,
+      preHint: pe && !preValid ? 'Escribe un correo válido.' : (preDup ? 'Este correo ya está en la lista.' : 'Recibirá el rol docente cuando se registre y confirme este correo.'),
+      preHintColor: pe && (!preValid || preDup) ? '#FCA5A5' : '#9AA3C7',
+      onPreEmail: e => this.setState({ preEmail: e.target.value }),
+      authorize: () => {
+        if (!preValid || preDup) return;
+        this.setState({ pre: [{ email: pe, status: 'pendiente', date: '27 oct 2026' }].concat(D.pre), preEmail: '' });
+        this.toast(pe + ' quedó autorizado como docente');
+      },
+      sel: sel, dtabs: dtabs,
+      dtCursos: dtab === 'cursos', dtActividad: dtab === 'actividad', dtEstudiantes: dtab === 'estudiantes',
+      courseRows: courseRows, coursesEmpty: courseRows.length === 0,
+      unassignedLine: unassigned.length ? (unassigned.length === 1 ? '1 curso sin docente para asignar' : unassigned.length + ' cursos sin docente para asignar') : 'No hay cursos sin docente para asignar.',
+      openAssign: () => this.setState({ modal: { kind: 'asignar', target: null } }),
+      period: period, etype: etype, periodLabel: periodLabel, actKpis: actKpis, events: events, eventsEmpty: events.length === 0,
+      onPeriod: e => this.setState({ period: e.target.value }),
+      onEtype: e => this.setState({ etype: e.target.value }),
+      sq: sq, scf: scf, ssort: ssort, studentRows: studentRows, studentsEmpty: studentRows.length === 0,
+      onSq: e => this.setState({ sq: e.target.value }),
+      onScf: e => this.setState({ scf: e.target.value }),
+      onSsort: e => this.setState({ ssort: e.target.value }),
+      goBack: () => this.setState({ view: 'list' }),
+      sendMsg: () => this.toast('Abriendo conversación con ' + selDoc.name),
+      m: m, closeModal: closeModal, confirmModal: confirmModal,
+      menuOpen: menuOpen, sideCls: 'side' + (menuOpen ? ' open' : ''),
+      profileOpen: !!st.profileOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      toggleProfile: () => this.setState({ profileOpen: !st.profileOpen }),
+      viewAsStudent: () => { this.setState({ profileOpen: false }); this.toast('Vista de estudiante activada'); },
+      logout: () => { this.setState({ profileOpen: false }); this.toast('Sesión cerrada'); },
+      toast: st.toast || null
+    };
+  }
+}
+</script>
+</body>
+</html>

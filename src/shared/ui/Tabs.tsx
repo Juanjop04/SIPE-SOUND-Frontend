@@ -4,6 +4,8 @@ import { cn } from "@/shared/lib/cn.js";
 export interface Pestana {
   id: string;
   etiqueta: string;
+  /** Cifra en mono junto a la etiqueta (p. ej. cuántos cursos). */
+  contador?: number | string;
   contenido: ReactNode;
 }
 
@@ -74,6 +76,9 @@ export function Tabs({ etiqueta, pestanas, activa, onCambiar, className }: TabsP
               )}
             >
               {pestana.etiqueta}
+              {pestana.contador !== undefined && (
+                <span className="ml-2 font-mono text-xs text-muted">{pestana.contador}</span>
+              )}
             </button>
           );
         })}

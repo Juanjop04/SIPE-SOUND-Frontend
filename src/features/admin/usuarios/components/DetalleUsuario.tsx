@@ -1,186 +1,213 @@
-import type { ReactNode } from "react";
-import { Drawer, MensajeError, Skeleton } from "@/shared/ui";
+import { useState, type ReactNode } from "react";
+import { cn } from "@/shared/lib/cn.js";
 import { formatearFecha } from "@/shared/lib/formato";
+import { Button, Drawer, MensajeError, Skeleton } from "@/shared/ui";
 import { useDetalleUsuario } from "../hooks";
-import type { DetalleUsuario as Detalle } from "../tipos";
-import { ETIQUETA_ACCION, ETIQUETA_ESTADO, ETIQUETA_ROL, nombreCompleto } from "../utils";
+import { esquemaEdicionCuenta } from "../schemas";
+import type { DetalleUsuario as Detalle, RolCuenta } from "../tipos";
+import { ETIQUETA_ESTADO, ETIQUETA_ROL, nombreCompleto } from "../utils";
+import type { AccionUsuario } from "./AccionesFila";
+import { Cursos, Historia, Progreso } from "./SeccionesDetalle";
+import {
+  type Borrador,
+  type ErroresBorrador,
+  SeccionAcceso,
+  SeccionCorreoPendiente,
+  SeccionDatos,
+  SeccionEliminar,
+  SeccionRol,
+} from "./SeccionesEdicion";
 
-function Dato({ etiqueta, children }: { etiqueta: string; children: React.ReactNode }) {
+export type { Borrador } from "./SeccionesEdicion";
+
+const COLOR_ESTADO = {
+  pendiente_verificacion: "text-aviso",
+  activa: "text-success",
+  suspendida: "text-danger",
+} as const;
+
+function borradorDe(u: Detalle): Borrador {
+  return {
+    nombre: u.nombre,
+    apellido: u.apellido ?? "",
+    email: u.email,
+    rol: u.rol,
+    activa: u.estado !== "suspendida",
+    puedeEditarNombre: u.puede_editar_nombre,
+  };
+}
+
+function hayCambios(u: Detalle, b: Borrador): boolean {
+  const origen = borradorDe(u);
+  return (Object.keys(origen) as (keyof Borrador)[]).some((clave) => {
+    const nuevo = b[clave];
+    return (typeof nuevo === "string" ? nuevo.trim() : nuevo) !== origen[clave];
+  });
+}
+
+/** Al promover se permite el cambio de nombre; al bajar de administrador se bloquea. */
+function permisoTrasCambiarRol(u: Detalle, rol: RolCuenta): boolean {
+  if (rol === "admin") return true;
+  return u.rol === "admin" ? false : u.puede_editar_nombre;
+}
+
+function erroresDe(b: Borrador): { validos: boolean; errores: ErroresBorrador } {
+  const resultado = esquemaEdicionCuenta.safeParse(b);
+  const errores: ErroresBorrador = {};
+  if (!resultado.success) {
+    for (const problema of resultado.error.issues) {
+      const campo = problema.path[0] as keyof ErroresBorrador;
+      errores[campo] ??= problema.message;
+    }
+  }
+  return { validos: resultado.success, errores };
+}
+
+function Encabezado({ u, propia }: { u: Detalle; propia: boolean }) {
   return (
-    <div>
-      <dt className="text-xs text-muted">{etiqueta}</dt>
-      <dd className="text-sm text-paper">{children}</dd>
+    <div className="flex flex-col gap-1.5 pb-5">
+      <span className="text-xl font-bold text-paper">{nombreCompleto(u)}</span>
+      <span className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
+        <span className={cn("font-semibold", COLOR_ESTADO[u.estado])}>
+          {ETIQUETA_ESTADO[u.estado]}
+        </span>
+        <span>{ETIQUETA_ROL[u.rol]}</span>
+        <span className="font-mono text-xs">Último acceso: {formatearFecha(u.ultimo_acceso)}</span>
+      </span>
+      {propia && (
+        <p className="mt-2 text-sm text-paper">
+          Es tu cuenta: puedes editar tus datos, pero no cambiar tu rol, suspenderte ni eliminarte.
+        </p>
+      )}
     </div>
   );
 }
 
-function Seccion({ titulo, children }: { titulo: string; children: React.ReactNode }) {
-  return (
-    <section aria-label={titulo} className="flex flex-col gap-2">
-      <h3 className="font-display text-lg font-semibold text-paper">{titulo}</h3>
-      {children}
-    </section>
-  );
+interface FormularioProps {
+  usuario: Detalle;
+  propia: boolean;
+  guardando: boolean;
+  accionesCursos?: (cuenta: Detalle) => ReactNode;
+  onGuardar: (usuario: Detalle, borrador: Borrador) => void;
+  onAccion: (accion: AccionUsuario, usuario: Detalle) => void;
+  onCerrar: () => void;
 }
 
-function Datos({ u }: { u: Detalle }) {
+function Formulario({
+  usuario: u,
+  propia,
+  guardando,
+  accionesCursos,
+  onGuardar,
+  onAccion,
+  onCerrar,
+}: FormularioProps) {
+  const [b, setB] = useState<Borrador>(() => borradorDe(u));
+  const { validos, errores } = erroresDe(b);
+  const cambios = hayCambios(u, b);
+  const correoCambia = b.email.trim().toLowerCase() !== u.email.toLowerCase();
+
   return (
-    <Seccion titulo="Datos">
-      <dl className="grid gap-3 sm:grid-cols-2">
-        <Dato etiqueta="Correo">
-          <span className="break-all font-mono text-xs">{u.email}</span>
-        </Dato>
-        <Dato etiqueta="Rol">{ETIQUETA_ROL[u.rol]}</Dato>
-        <Dato etiqueta="Estado">{ETIQUETA_ESTADO[u.estado]}</Dato>
-        <Dato etiqueta="Cambio de nombre">{u.puede_editar_nombre ? "Permitido" : "Bloqueado"}</Dato>
-        <Dato etiqueta="Creada">
-          <span className="font-mono text-xs">{formatearFecha(u.creado_en)}</span>
-        </Dato>
-        <Dato etiqueta="Correo verificado">
-          <span className="font-mono text-xs">{formatearFecha(u.correo_verificado_en)}</span>
-        </Dato>
-        <Dato etiqueta="Último acceso">
-          <span className="font-mono text-xs">{formatearFecha(u.ultimo_acceso)}</span>
-        </Dato>
-        {u.estado === "suspendida" && (
-          <Dato etiqueta="Motivo de la suspensión">{u.motivo_suspension ?? "—"}</Dato>
+    <div className="flex h-full flex-col">
+      <div className="flex-1 overflow-y-auto pr-1">
+        <Encabezado u={u} propia={propia} />
+        <SeccionDatos
+          borrador={b}
+          errores={errores}
+          correoCambia={correoCambia}
+          propia={propia}
+          onCambiar={(c) => setB({ ...b, ...c })}
+        />
+        <SeccionRol
+          rolActual={u.rol}
+          elegido={b.rol}
+          propia={propia}
+          onElegir={(rol) => setB({ ...b, rol, puedeEditarNombre: permisoTrasCambiarRol(u, rol) })}
+        />
+        <SeccionAcceso
+          borrador={b}
+          esAdminHoy={u.rol === "admin"}
+          propia={propia}
+          onCambiar={(c) => setB({ ...b, ...c })}
+        />
+        {u.estado === "pendiente_verificacion" && (
+          <SeccionCorreoPendiente usuario={u} onAccion={onAccion} />
         )}
-      </dl>
-    </Seccion>
-  );
-}
+        <SeccionEliminar propia={propia} onEliminar={() => onAccion("eliminar", u)} />
+        <div className="flex flex-col gap-1 border-t border-linea pt-2">
+          <Cursos u={u} />
+          {accionesCursos?.(u)}
+          <Progreso u={u} />
+          <Historia u={u} />
+        </div>
+      </div>
 
-function Cursos({ u }: { u: Detalle }) {
-  if (u.rol === "docente") {
-    return (
-      <Seccion titulo="Cursos a cargo">
-        {u.cursos_a_cargo.length === 0 ? (
-          <p className="text-sm text-muted">No tiene cursos a cargo.</p>
-        ) : (
-          <ul className="divide-y divide-linea text-sm">
-            {u.cursos_a_cargo.map((c) => (
-              <li key={c.id} className="flex justify-between gap-3 py-2">
-                <span>
-                  {c.nombre}
-                  {c.archivado_en && <span className="text-muted"> · Archivado</span>}
-                </span>
-                <span className="font-mono text-xs text-muted">{c.estudiantes} estudiantes</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Seccion>
-    );
-  }
-  return (
-    <Seccion titulo="Inscripciones">
-      {u.inscripciones.length === 0 ? (
-        <p className="text-sm text-muted">No está inscrita en cursos activos.</p>
-      ) : (
-        <ul className="divide-y divide-linea text-sm">
-          {u.inscripciones.map((i) => (
-            <li key={i.curso_id} className="flex justify-between gap-3 py-2">
-              <span>
-                {i.curso}
-                <span className="text-muted">
-                  {" "}
-                  · {nombreCompleto({ nombre: i.docente, apellido: i.docente_apellido })}
-                </span>
-              </span>
-              <span className="font-mono text-xs text-muted">{formatearFecha(i.inscrito_en)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Seccion>
-  );
-}
-
-function Progreso({ u }: { u: Detalle }) {
-  if (!u.progreso) return null;
-  const { lecciones, ejercicios, bloques_aprobados, ultimo_avance } = u.progreso;
-  return (
-    <Seccion titulo="Progreso">
-      <dl className="grid gap-3 sm:grid-cols-2">
-        <Dato etiqueta="Lecciones">
-          <span className="font-mono">
-            {lecciones.completadas} de {lecciones.total}
-          </span>
-        </Dato>
-        <Dato etiqueta="Ejercicios">
-          <span className="font-mono">
-            {ejercicios.completados} de {ejercicios.total}
-          </span>
-        </Dato>
-        <Dato etiqueta="Bloques aprobados">
-          <span className="font-mono">{bloques_aprobados}</span>
-        </Dato>
-        <Dato etiqueta="Último avance">
-          <span className="font-mono text-xs">{formatearFecha(ultimo_avance)}</span>
-        </Dato>
-      </dl>
-    </Seccion>
-  );
-}
-
-function Historia({ u }: { u: Detalle }) {
-  return (
-    <Seccion titulo="Historia de acciones">
-      {u.acciones.length === 0 ? (
-        <p className="text-sm text-muted">El administrador no ha hecho nada sobre esta cuenta.</p>
-      ) : (
-        <ul className="divide-y divide-linea text-sm">
-          {u.acciones.map((a) => (
-            <li key={`${a.accion}-${a.creado_en}`} className="flex justify-between gap-3 py-2">
-              <span>
-                {ETIQUETA_ACCION[a.accion] ?? a.accion}
-                {a.admin && <span className="text-muted"> · {a.admin}</span>}
-              </span>
-              <span className="shrink-0 font-mono text-xs text-muted">
-                {formatearFecha(a.creado_en)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Seccion>
+      <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-linea pt-4">
+        <span className="min-w-36 flex-1 text-sm text-muted">
+          {cambios ? "Hay cambios sin guardar" : "Sin cambios"}
+        </span>
+        <Button variante="fantasma" onClick={onCerrar}>
+          Cancelar
+        </Button>
+        <Button
+          cargando={guardando}
+          disabled={!cambios || !validos}
+          onClick={() => onGuardar(u, b)}
+        >
+          Guardar cambios
+        </Button>
+      </div>
+    </div>
   );
 }
 
 interface DetalleUsuarioProps {
   /** null = cerrado. */
   usuarioId: string | null;
+  /** Id del administrador conectado (su cuenta no cambia de rol, no se suspende ni se elimina). */
+  miId: string | undefined;
+  guardando: boolean;
   onCerrar: () => void;
+  onGuardar: (usuario: Detalle, borrador: Borrador) => void;
+  onAccion: (accion: AccionUsuario, usuario: Detalle) => void;
   /** Acciones extra bajo los cursos (retirar de todos, enlace a los cursos a cargo). */
   accionesCursos?: (cuenta: Detalle) => ReactNode;
 }
 
-/** Detalle de una cuenta en un Drawer: datos, cursos, progreso y la historia del administrador. */
-export function DetalleUsuario({ usuarioId, onCerrar, accionesCursos }: DetalleUsuarioProps) {
+/**
+ * Panel de edición de una cuenta (Drawer de 520 px): datos, rol, acceso y eliminación con pie
+ * fijo (Guardar solo con cambios válidos), más los cursos, el progreso y la historia.
+ */
+export function DetalleUsuario({
+  usuarioId,
+  miId,
+  guardando,
+  onCerrar,
+  onGuardar,
+  onAccion,
+  accionesCursos,
+}: DetalleUsuarioProps) {
   const { data, isPending, error, refetch } = useDetalleUsuario(usuarioId);
   return (
-    <Drawer
-      ancho="amplio"
-      abierto={usuarioId !== null}
-      onCerrar={onCerrar}
-      titulo={data ? nombreCompleto(data) : "Detalle de la cuenta"}
-    >
+    <Drawer ancho="medio" abierto={usuarioId !== null} onCerrar={onCerrar} titulo="Editar usuario">
       {isPending && usuarioId && (
         <div aria-busy="true">
           <Skeleton lineas={6} />
         </div>
       )}
       {error && <MensajeError mensaje={error.message} onReintentar={() => refetch()} />}
-      {data && (
-        <div className="flex flex-col gap-8">
-          <Datos u={data} />
-          <div className="flex flex-col gap-3">
-            <Cursos u={data} />
-            {accionesCursos?.(data)}
-          </div>
-          <Progreso u={data} />
-          <Historia u={data} />
-        </div>
+      {data && data.id === usuarioId && (
+        // key: un panel nuevo (otra cuenta) empieza con su propio borrador.
+        <Formulario
+          key={data.id}
+          usuario={data}
+          propia={data.id === miId}
+          guardando={guardando}
+          accionesCursos={accionesCursos}
+          onGuardar={onGuardar}
+          onAccion={onAccion}
+          onCerrar={onCerrar}
+        />
       )}
     </Drawer>
   );

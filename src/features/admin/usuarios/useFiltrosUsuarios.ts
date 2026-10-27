@@ -12,7 +12,13 @@ import { LIMITES } from "@/shared/validacion";
 const ESTADOS: readonly EstadoCuenta[] = ["pendiente_verificacion", "activa", "suspendida"];
 const ROLES: readonly RolCuenta[] = ["estudiante", "docente", "admin"];
 const PERMISOS: readonly FiltroPermiso[] = ["si", "no"];
-const ORDENES: readonly OrdenUsuarios[] = ["nombre", "-creado_en", "-ultimo_acceso"];
+const ORDENES: readonly OrdenUsuarios[] = [
+  "nombre",
+  "apellido",
+  "-ultimo_acceso",
+  "rol",
+  "-creado_en",
+];
 
 // Un valor de la URL que no es de la lista (enlace viejo o escrito a mano) se ignora.
 function dentroDe<T extends string>(opciones: readonly T[], valor: string | null): T | undefined {

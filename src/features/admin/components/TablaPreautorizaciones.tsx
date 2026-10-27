@@ -1,25 +1,19 @@
 import { useCallback, useState } from "react";
+import { Trash2 } from "lucide-react";
 import { formatearFecha } from "@/shared/lib/formato";
 import { Button, Dialog, MensajeError, Table, useAviso, type ColumnaTabla } from "@/shared/ui";
 import { useRetirarPreautorizacion } from "../hooks/usePreautorizaciones";
 import type { EstadoPreautorizacion, Preautorizacion } from "../types";
 
-// ○ pendiente (aún no se registra) · ● aplicada (ya es docente): símbolo + texto.
-const ESTADOS: Record<EstadoPreautorizacion, { simbolo: string; clase: string }> = {
-  pendiente: { simbolo: "○", clase: "text-muted" },
-  aplicada: { simbolo: "●", clase: "text-success" },
+// Pendiente (aún no se registra) en aviso · Aplicada (ya es docente) en verde: texto en color.
+const ESTADOS: Record<EstadoPreautorizacion, { texto: string; clase: string }> = {
+  pendiente: { texto: "Pendiente", clase: "text-aviso" },
+  aplicada: { texto: "Aplicada", clase: "text-success" },
 };
 
 function Estado({ estado }: { estado: EstadoPreautorizacion }) {
-  const { simbolo, clase } = ESTADOS[estado];
-  return (
-    <span className="inline-flex items-center gap-2">
-      <span aria-hidden="true" className={`font-mono ${clase}`}>
-        {simbolo}
-      </span>
-      {estado}
-    </span>
-  );
+  const { texto, clase } = ESTADOS[estado];
+  return <span className={`font-semibold ${clase}`}>{texto}</span>;
 }
 
 export function TablaPreautorizaciones({ filas }: { filas: Preautorizacion[] }) {
@@ -40,7 +34,12 @@ export function TablaPreautorizaciones({ filas }: { filas: Preautorizacion[] }) 
   }
 
   const columnas: ColumnaTabla<Preautorizacion>[] = [
-    { id: "email", encabezado: "Correo", celda: (f) => f.email, valorOrden: (f) => f.email },
+    {
+      id: "email",
+      encabezado: "Correo",
+      celda: (f) => <span className="font-mono text-[13px]">{f.email}</span>,
+      valorOrden: (f) => f.email,
+    },
     {
       id: "estado",
       encabezado: "Estado",
@@ -59,10 +58,18 @@ export function TablaPreautorizaciones({ filas }: { filas: Preautorizacion[] }) 
       encabezado: "Acciones",
       celda: (f) =>
         f.estado === "pendiente" ? (
-          <Button variante="fantasma" tamano="sm" onClick={() => setPorRetirar(f.email)}>
-            Retirar
-          </Button>
-        ) : null,
+          <button
+            type="button"
+            aria-label={`Revocar la autorización de ${f.email}`}
+            title="Revocar autorización"
+            onClick={() => setPorRetirar(f.email)}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-transparent text-accent transition-colors duration-rapida hover:bg-danger/10 hover:text-danger"
+          >
+            <Trash2 size={17} aria-hidden="true" />
+          </button>
+        ) : (
+          <span className="text-xs text-muted">Ya registrado</span>
+        ),
     },
   ];
 
@@ -77,7 +84,7 @@ export function TablaPreautorizaciones({ filas }: { filas: Preautorizacion[] }) 
       <Dialog
         abierto={porRetirar !== null}
         onCerrar={cerrar}
-        titulo="¿Retirar esta autorización?"
+        titulo="¿Revocar esta autorización?"
         descripcion={`${porRetirar ?? ""} ya no recibirá el rol docente al registrarse.`}
         acciones={
           <>
@@ -89,7 +96,7 @@ export function TablaPreautorizaciones({ filas }: { filas: Preautorizacion[] }) 
               cargando={retirar.isPending}
               onClick={() => confirmar().catch(() => null)}
             >
-              Retirar
+              Sí, revocar
             </Button>
           </>
         }

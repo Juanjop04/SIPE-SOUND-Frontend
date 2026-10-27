@@ -29,6 +29,7 @@ export default {
           hover: token("barra-hover"),
         },
         danger: token("danger"),
+        aviso: token("aviso"),
         muted: token("muted"),
         paper: token("paper"),
       },

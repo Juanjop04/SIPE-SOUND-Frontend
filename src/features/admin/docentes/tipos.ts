@@ -2,11 +2,13 @@
 export type EstadoActividad = "activo" | "inactivo" | "sin_actividad";
 export type TipoActividad =
   "sesion" | "leccion" | "ejercicio" | "evaluacion" | "retroalimentacion" | "mensaje" | "curso";
-export type OrdenDocentes = "nombre" | "ultima_actividad" | "-acciones_30d";
+export type OrdenDocentes =
+  "nombre" | "ultima_actividad" | "-acciones_30d" | "-cursos" | "-estudiantes";
 
 export interface DocenteActividad {
   docente_id: string;
   nombre: string;
+  email: string;
   estado_actividad: EstadoActividad;
   ultima_actividad: string | null;
   acciones_30d: number;
@@ -48,8 +50,13 @@ export interface FiltrosDocentes {
   pagina: number;
 }
 
+/** Lo que filtra la línea de tiempo: un tipo o el grupo "contenido" (lecciones, ejercicios, cursos). */
+export type FiltroTipo = TipoActividad | "contenido";
+
 export interface FiltrosLinea {
-  tipo?: TipoActividad;
+  tipo?: FiltroTipo;
+  /** Desde qué día (AAAA-MM-DD) se cuentan los eventos. */
+  desde?: string;
   curso?: number;
   pagina: number;
 }
