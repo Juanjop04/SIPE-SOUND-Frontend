@@ -30,7 +30,7 @@ export const COLUMNA_DETALLE: ColumnaTabla<DocenteActividad> = {
       to={paths.admin.docente(d.docente_id)}
       aria-label={`Ver el detalle de ${d.nombre}`}
       title="Ver el detalle"
-      className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-transparent text-accent transition-colors duration-rapida hover:border-linea-fuerte hover:bg-surface"
+      className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-md border border-linea-fuerte text-accent transition-colors duration-rapida hover:border-primary hover:bg-primary hover:text-sobre-primary"
     >
       <ChevronRight size={18} aria-hidden="true" />
     </Link>
