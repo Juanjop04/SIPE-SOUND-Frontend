@@ -10,11 +10,23 @@ export interface DatosRegistro {
   acepta_terminos: true;
 }
 
+/** `data` de POST /auth/registro (HU-B-416). */
+export interface RespuestaRegistro {
+  email: string;
+  /** El correo ya había empezado a registrarse: no se creó nada, puede escribir su código. */
+  registro_en_curso: boolean;
+  /** Segundos que le quedan al código vigente (0 si ya venció). */
+  vence_en_segundos: number;
+}
+
 /**
  * POST /auth/registro. Solo estos cinco campos: nunca `rol` (lo asigna la base; el backend
  * responde 400 a cualquier campo de más). Devuelve el `message` para mostrarlo tal cual.
+ * 409 si el correo ya tiene una cuenta.
  */
-export function registrar(datos: DatosRegistro): Promise<{ data: unknown; message: string }> {
+export function registrar(
+  datos: DatosRegistro,
+): Promise<{ data: RespuestaRegistro; message: string }> {
   const { nombre, apellido, email, password, acepta_terminos } = datos;
   return http.conMensaje("POST", "/auth/registro", {
     nombre,

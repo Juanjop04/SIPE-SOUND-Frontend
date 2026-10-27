@@ -16,7 +16,7 @@ export default function RegistroPage() {
   } = formulario;
   const email = watch("email").trim().toLowerCase();
 
-  if (exito) return <ExitoRegistro mensaje={exito.mensaje} email={exito.email} />;
+  if (exito) return <ExitoRegistro {...exito} />;
 
   return (
     <>
