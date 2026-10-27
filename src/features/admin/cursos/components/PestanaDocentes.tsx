@@ -14,6 +14,7 @@ import { LIMITES } from "@/shared/validacion";
 import { useDocentes } from "../hooks";
 import type { DocenteAdmin } from "../tipos";
 import { DialogoReasignar, type CursoPorReasignar } from "./DialogoReasignar";
+import { DialogoQuitarDocente, type DocentePorQuitar } from "./DialogoQuitarDocente";
 import { DrawerDocente } from "./DrawerDocente";
 
 const ESTADO: Record<DocenteAdmin["estado"], string> = {
@@ -48,6 +49,7 @@ export function PestanaDocentes() {
   const [pagina, setPagina] = useState(1);
   const [abierto, setAbierto] = useState<DocenteAdmin | null>(null);
   const [porReasignar, setPorReasignar] = useState<CursoPorReasignar | null>(null);
+  const [porQuitar, setPorQuitar] = useState<DocentePorQuitar | null>(null);
   const { data, isPending, error, refetch } = useDocentes(q.trim() || undefined, pagina);
 
   return (
@@ -94,8 +96,10 @@ export function PestanaDocentes() {
         nombre={abierto ? nombreDocente(abierto) : ""}
         onCerrar={() => setAbierto(null)}
         onReasignar={setPorReasignar}
+        onQuitar={setPorQuitar}
       />
       <DialogoReasignar curso={porReasignar} onCerrar={() => setPorReasignar(null)} />
+      <DialogoQuitarDocente quitar={porQuitar} onCerrar={() => setPorQuitar(null)} />
     </div>
   );
 }

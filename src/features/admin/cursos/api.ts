@@ -42,11 +42,14 @@ export const cursosAdminApi = {
     }),
   estudiantes: (cursoId: number, pagina: number): Promise<Pagina<EstudianteDeCurso>> =>
     http.getPaginado(`/admin/cursos/${cursoId}/estudiantes`, { pagina, por_pagina: POR_PAGINA }),
-  /** El curso pasa a otro docente con la cuenta activa; sus estudiantes y evaluaciones se mantienen. */
+  /** Asigna (curso sin docente) o reasigna a un docente con la cuenta activa; el docente recibe un correo. */
   reasignar: (datos: { cursoId: number; docenteId: string }): Promise<ConMensaje<unknown>> =>
     http.conMensaje("PATCH", `/admin/cursos/${datos.cursoId}/docente`, {
       docente_id: datos.docenteId,
     }),
+  /** El curso queda disponible (sin docente); estudiantes, ruta y evaluaciones se conservan. */
+  quitarDocente: (cursoId: number): Promise<ConMensaje<unknown>> =>
+    http.conMensaje("DELETE", `/admin/cursos/${cursoId}/docente`),
   /** Borra la inscripción, no el progreso. El `message` sugiere regenerar el código. */
   retirar: (datos: { cursoId: number; estudianteId: string }): Promise<ConMensaje<null>> =>
     http.conMensaje("DELETE", `/admin/cursos/${datos.cursoId}/estudiantes/${datos.estudianteId}`),

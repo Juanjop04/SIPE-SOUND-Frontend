@@ -7,15 +7,55 @@ export interface CursoPorReasignar {
   id: number;
   nombre: string;
   estudiantes: number;
-  docenteId: string;
-  /** Nombre completo de quien lo tiene hoy. */
-  docente: string;
+  /** null = el curso no tiene docente: se asigna en vez de reasignar (HU-F-518). */
+  docenteId: string | null;
+  /** Nombre completo de quien lo tiene hoy; null si no tiene. */
+  docente: string | null;
 }
 
 const nombreDe = (d: Pick<DocenteAdmin, "nombre" | "apellido">) =>
   [d.nombre, d.apellido].filter(Boolean).join(" ");
 
-function Formulario({ curso, onCerrar }: { curso: CursoPorReasignar; onCerrar: () => void }) {
+interface PropsFormulario {
+  curso: CursoPorReasignar;
+  onCerrar: () => void;
+  /** Tras asignar o reasignar con éxito (p. ej. cerrar el panel que mostraba el curso). */
+  onHecho?: () => void;
+}
+
+/** Texto del aviso tras confirmar: nombra el curso y a las personas. */
+function textoResumen(curso: CursoPorReasignar, destino: string): string {
+  const aviso = `${destino} recibirá un correo con el curso asignado.`;
+  if (!curso.docente) return `El curso ${curso.nombre} queda a cargo de ${destino}. ${aviso}`;
+  return `El curso ${curso.nombre} pasa de ${curso.docente} a ${destino}. Sus ${curso.estudiantes} estudiantes y evaluaciones se mantienen. ${aviso}`;
+}
+
+function tituloDe(curso: CursoPorReasignar | null): string {
+  if (!curso) return "Asignar curso";
+  return `${curso.docente ? "Reasignar" : "Asignar docente a"} ${curso.nombre}`;
+}
+
+/** Resumen visible antes de confirmar. */
+function ResumenDestino({ curso, destino }: { curso: CursoPorReasignar; destino: string }) {
+  return (
+    <p role="status" className="text-sm text-paper">
+      {curso.docente ? (
+        <>
+          El curso <strong>{curso.nombre}</strong> pasa de <strong>{curso.docente}</strong> a{" "}
+          <strong>{destino}</strong>. Sus {curso.estudiantes} estudiantes y evaluaciones se
+          mantienen.{" "}
+        </>
+      ) : (
+        <>
+          El curso <strong>{curso.nombre}</strong> queda a cargo de <strong>{destino}</strong>.{" "}
+        </>
+      )}
+      <strong>{destino}</strong> recibirá un correo con el curso asignado.
+    </p>
+  );
+}
+
+function Formulario({ curso, onCerrar, onHecho }: PropsFormulario) {
   const { data, isPending, error, refetch } = useDocentesParaElegir();
   const reasignar = useReasignarCurso();
   const [busqueda, setBusqueda] = useState("");
@@ -32,9 +72,7 @@ function Formulario({ curso, onCerrar }: { curso: CursoPorReasignar; onCerrar: (
       `${nombreDe(d)} ${d.email}`.toLowerCase().includes(busqueda.trim().toLowerCase()),
   );
   const destino = data.data.find((d) => d.id === elegido);
-  const resumen = destino
-    ? `El curso ${curso.nombre} pasa de ${curso.docente} a ${nombreDe(destino)}. Sus ${curso.estudiantes} estudiantes y evaluaciones se mantienen.`
-    : null;
+  const resumen = destino ? textoResumen(curso, nombreDe(destino)) : null;
 
   return (
     <form
@@ -44,7 +82,12 @@ function Formulario({ curso, onCerrar }: { curso: CursoPorReasignar; onCerrar: (
         if (!destino || !resumen) return;
         reasignar.mutate(
           { cursoId: curso.id, docenteId: destino.id, resumen },
-          { onSuccess: onCerrar },
+          {
+            onSuccess: () => {
+              onCerrar();
+              onHecho?.();
+            },
+          },
         );
       }}
       className="flex flex-col gap-4"
@@ -60,7 +103,7 @@ function Formulario({ curso, onCerrar }: { curso: CursoPorReasignar; onCerrar: (
           />
         )}
       </Field>
-      <Field etiqueta="Nuevo docente">
+      <Field etiqueta={curso.docente ? "Nuevo docente" : "Docente"}>
         {(campo) => (
           <Select {...campo} value={elegido} onChange={(e) => setElegido(e.target.value)}>
             <option value="">Elige un docente…</option>
@@ -75,18 +118,14 @@ function Formulario({ curso, onCerrar }: { curso: CursoPorReasignar; onCerrar: (
       {candidatos.length === 0 && (
         <p className="text-sm text-muted">No hay docentes activos con esa búsqueda.</p>
       )}
-      {resumen && (
-        <p role="status" className="text-sm text-paper">
-          {resumen}
-        </p>
-      )}
+      {destino && <ResumenDestino curso={curso} destino={nombreDe(destino)} />}
       {reasignar.error && <MensajeError mensaje={reasignar.error.message} />}
       <div className="flex justify-end gap-3">
         <Button variante="fantasma" onClick={onCerrar}>
           Cancelar
         </Button>
         <Button type="submit" disabled={!destino} cargando={reasignar.isPending}>
-          Reasignar curso
+          {curso.docente ? "Reasignar curso" : "Asignar curso"}
         </Button>
       </div>
     </form>
@@ -97,17 +136,14 @@ interface DialogoReasignarProps {
   /** null = cerrado. */
   curso: CursoPorReasignar | null;
   onCerrar: () => void;
+  onHecho?: () => void;
 }
 
-/** Reasignar un curso a otro docente: el resumen nombra el curso y a las dos personas. */
-export function DialogoReasignar({ curso, onCerrar }: DialogoReasignarProps) {
+/** Asignar un curso sin docente o reasignarlo: el resumen nombra el curso y a las personas. */
+export function DialogoReasignar({ curso, onCerrar, onHecho }: DialogoReasignarProps) {
   return (
-    <Dialog
-      abierto={curso !== null}
-      onCerrar={onCerrar}
-      titulo={curso ? `Reasignar ${curso.nombre}` : "Reasignar curso"}
-    >
-      {curso && <Formulario curso={curso} onCerrar={onCerrar} />}
+    <Dialog abierto={curso !== null} onCerrar={onCerrar} titulo={tituloDe(curso)}>
+      {curso && <Formulario curso={curso} onCerrar={onCerrar} onHecho={onHecho} />}
     </Dialog>
   );
 }

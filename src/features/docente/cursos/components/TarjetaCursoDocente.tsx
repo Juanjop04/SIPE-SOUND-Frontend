@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
 import { Cuerda } from "@/shared/music";
-import { ROL, useSession } from "@/features/auth";
 import { claseBoton } from "@/shared/ui";
 import { nombreCompleto } from "../datos";
 import {
@@ -11,7 +10,6 @@ import {
   type CursoConProgreso,
 } from "../utils/tarjetas";
 import { BotonCopiar } from "./BotonCopiar";
-import { BotonRetirarme } from "./BotonRetirarme";
 
 function Cifras({ datos }: { datos: CursoConProgreso }) {
   const { curso, progreso } = datos;
@@ -89,9 +87,6 @@ export function TarjetaCursoDocente({ datos }: { datos: CursoConProgreso }) {
   const { curso } = datos;
   const base = paths.docente.curso(curso.id);
   const archivado = curso.archivado_en !== null;
-  // Solo el docente a cargo se retira (el administrador reasigna desde Todos los cursos).
-  const { rol } = useSession();
-  const puedeRetirarse = rol === ROL.docente && !archivado;
   return (
     <li className="flex flex-col gap-4 rounded-caja border border-linea bg-surface p-5">
       <div>
@@ -141,7 +136,6 @@ export function TarjetaCursoDocente({ datos }: { datos: CursoConProgreso }) {
         >
           Ajustes
         </Link>
-        {puedeRetirarse && <BotonRetirarme cursoId={curso.id} nombre={curso.nombre} />}
       </div>
     </li>
   );

@@ -1,15 +1,10 @@
 import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
-import { ROL, useSession } from "@/features/auth";
-import { Button, Drawer, EstadoVacio, MensajeError, Skeleton, useAviso } from "@/shared/ui";
+import { EstadoVacio, MensajeError, Skeleton } from "@/shared/ui";
 import { PaginaAtril } from "../components/PaginaAtril";
-import { CursosDisponibles } from "../cursos/components/CursosDisponibles";
-import { FormularioCurso } from "../cursos/components/FormularioCurso";
 import { TarjetaCursoDocente } from "../cursos/components/TarjetaCursoDocente";
-import { useCrearCurso, useCursos } from "../cursos/hooks/useCursos";
+import { useCursos } from "../cursos/hooks/useCursos";
 import { unirCursos } from "../cursos/utils/tarjetas";
 import { useResumenProgreso } from "../progreso/hooks";
-import type { DatosCurso } from "../types";
 
 const REJILLA = "grid gap-5 sm:grid-cols-2 xl:grid-cols-3";
 
@@ -25,7 +20,7 @@ function Cargando() {
   );
 }
 
-function CursosActivos({ onCrear }: { onCrear: () => void }) {
+function CursosActivos() {
   const cursos = useCursos("activo");
   const resumen = useResumenProgreso(null);
   const datos = useMemo(
@@ -41,9 +36,8 @@ function CursosActivos({ onCrear }: { onCrear: () => void }) {
   if (datos.length === 0) {
     return (
       <EstadoVacio
-        titulo="Aún no tienes cursos."
-        descripcion="Crea uno y comparte el código con tu grupo."
-        accion={<Button onClick={onCrear}>Crear mi primer curso</Button>}
+        titulo="Aún no tienes cursos asignados"
+        descripcion="El administrador te asignará uno y te avisaremos por correo. Cuando llegue, podrás crear su contenido."
       />
     );
   }
@@ -96,32 +90,10 @@ function ListaArchivados() {
 
 /** Cursos del docente como tarjetas (HU-F-505): avance, a quién escribirle y acceso directo. */
 export default function CursosPage() {
-  const [creando, setCreando] = useState(false);
-  const crear = useCrearCurso();
-  const { avisar } = useAviso();
-  const { rol } = useSession();
-
-  async function guardar(datos: DatosCurso) {
-    const { message } = await crear.mutateAsync(datos);
-    avisar({ mensaje: message });
-    setCreando(false);
-  }
-
   return (
     <PaginaAtril titulo="Cursos" descripcion="Tus grupos: avance, código y quién necesita apoyo.">
-      <div className="mb-6 flex justify-end">
-        <Button onClick={() => setCreando(true)}>
-          <Plus size={16} aria-hidden="true" />
-          Nuevo curso
-        </Button>
-      </div>
-      <CursosActivos onCrear={() => setCreando(true)} />
-      {/* Solo un docente se asigna; el administrador los crea desde Todos los cursos. */}
-      {rol === ROL.docente && <CursosDisponibles />}
+      <CursosActivos />
       <CursosArchivados />
-      <Drawer abierto={creando} onCerrar={() => setCreando(false)} titulo="Nuevo curso">
-        <FormularioCurso textoEnviar="Crear curso" onGuardar={guardar} />
-      </Drawer>
     </PaginaAtril>
   );
 }
