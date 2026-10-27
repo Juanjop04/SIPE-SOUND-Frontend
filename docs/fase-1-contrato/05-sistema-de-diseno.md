@@ -9,6 +9,13 @@
 > (HU-F-320, HU-F-321, HU-F-315). Esta versión del documento ya la incorpora; los cambios respecto a
 > la anterior están marcados con *(enmienda)*.
 
+> **Enmienda 2026-10-27 (rediseño de Usuarios, Mi cuenta y Docentes, HU-F-521).** El equipo aprobó los
+> prototipos de `docs/disenos/` y con ellos una paleta oscura ajustada: capas `#0F1428` / `#11162B` /
+> `#171D33`, bordes `#232A47` y `#2A3152`, texto secundario `#9AA3C7`, error `#FCA5A5`, confirmación
+> destructiva `#DC2626` y foco `#8B83FF`. Los bordes de campo (`linea-control`, ≈ 1.4:1) **no llegan
+> a 3:1** (WCAG 1.4.11): es una decisión del equipo; el tema claro conserva el borde AA y los trazos
+> que hay que leer siguen en `linea-fuerte`. Todo texto conserva ≥ 4.5:1 (tabla de §3).
+
 ## 1. Concepto
 
 La interfaz toma su lenguaje de la **anatomía de la guitarra** y de la
@@ -36,19 +43,23 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 | Token CSS | Clase Tailwind | Hex | Rol |
 |---|---|---|---|
 | `--color-ink` | `ink` | `#0B1020` | Capa 0: fondo de la página. |
-| `--color-ink-2` | `ink-2` | `#10162B` | Capa 1: barra lateral, encabezado, barras fijas, pistas de progreso. |
-| `--color-surface` | `surface` | `#171D33` | Capa 2: tarjetas, paneles, tablas, controles. **Siempre con borde `linea`** (frente al fondo solo da 1.14:1). |
-| `--color-surface-2` | `surface-2` | `#1F2744` | Capa 3: lo que flota (`Drawer`, `Dialog`, menús, avisos) y el hover de una tarjeta. |
-| `--color-linea` | `linea` | `#3A4673` | Bordes de tarjetas y divisores (2.08 sobre `ink`). |
-| `--color-linea-fuerte` | `linea-fuerte` | `#6B78A8` | Bordes de **controles** y trazos que hay que leer (`ChordDiagram`): ≥ 3:1 en todas las capas. |
+| `--color-ink-2` | `ink-2` | `#0F1428` | Capa 1: campos, encabezado de tabla, barras fijas, pistas de progreso. |
+| `--color-surface` | `surface` | `#11162B` | Capa 2: tarjetas, paneles, tablas, panel lateral de edición. **Siempre con borde `linea`.** |
+| `--color-surface-2` | `surface-2` | `#171D33` | Capa 3: lo que flota (`Dialog`, menús, avisos) y el hover de una tarjeta. |
+| `--color-linea` | `linea` | `#232A47` | Bordes de tarjetas, tablas y divisores (decorativos). |
+| `--color-linea-fuerte` | `linea-fuerte` | `#6B78A8` | Trazos que hay que leer (`ChordDiagram`, gráficos): ≥ 3:1 en todas las capas. |
+| `--color-linea-control` | `linea-control` | `#2A3152` | Bordes de campos y botones secundarios (paleta del rediseño; ver amendment). |
 | `--color-primary` | `primary` | `#6257F5` | Violeta brillante: fondo de botón primario, relleno de progreso, ítem activo de la barra lateral. **Nunca texto.** |
 | `--color-primary-hover` | `primary-hover` | `#5348E6` | Hover del botón primario (más oscuro: el texto gana contraste). |
 | `--color-primary-claro` | `primary-claro` | `#9A94FA` | Violeta legible como texto o trazo: puntos del acorde, categorías, cifras destacadas. |
 | `--color-accent` | `accent` | `#B9C8FF` | Lavanda: enlaces, foco (`anillo`), íconos y series de gráficos. |
 | `--color-success` | `success` | `#34D399` | **Verde: logro** (completado, aprobado). *(enmienda: antes ámbar)* |
 | `--color-suena` | `suena` | `#F5B942` | **Ámbar: la cuerda que suena**, solo en animaciones de cuerdas y en la cuerda del mástil. |
-| `--color-danger` | `danger` | `#F7707A` | Errores y acciones destructivas. |
-| `--color-muted` | `muted` | `#AEB6D8` | Texto secundario. |
+| `--color-danger` | `danger` | `#FCA5A5` | Errores, estado Suspendida y texto destructivo. |
+| `--color-peligro` | `peligro` | `#DC2626` | Fondo del botón de confirmación destructiva (hover `#B91C1C`, texto blanco 4.83:1). |
+| `--color-aviso` | `aviso` | `#FBBF24` | Pendiente o por completar (texto). |
+| `--color-foco` | `foco` | `#8B83FF` | Contorno de foco (`outline: 2px`). |
+| `--color-muted` | `muted` | `#9AA3C7` | Metadatos, etiquetas y ayudas. |
 | `--color-paper` | `paper` | `#F5F6FF` | Texto principal. |
 
 > **Tema claro** *(enmienda HU-F-323)*: los mismos tokens tienen valores claros en
@@ -68,8 +79,8 @@ canales RGB, y Tailwind los consume con `rgb(var(--…) / <alpha-value>)`.
 | `ink` / `ink-2` / `surface` / `surface-2` | ~70 % |
 | `paper` / `muted` (texto) | ~20 % |
 | `primary` | ≤ 8 % — un único botón primario por vista, rellenos de progreso, ítem activo |
-| `accent` | ≤ 4 % — enlaces, foco, íconos de tarjeta, series de gráficos |
-| `success` | Solo donde hay un logro real |
+| `accent` | 11.5 | 11.1 | 10.9 | 10.1 | Enlaces, foco, íconos, texto |
+| `success` | 9.9 | 9.5 | 9.3 | 8.7 | Texto y marcas de logro |
 | `suena` | Solo en la cuerda que suena |
 
 ### 2.3 Tipografía
@@ -104,15 +115,17 @@ sobre los colores puros de la paleta de HU-F-320; el detalle por estado está en
 
 | Texto / elemento | `ink` | `ink-2` | `surface` | `surface-2` | Uso permitido |
 |---|---|---|---|---|---|
-| `paper` | 17.6 | 16.7 | 15.5 | 13.6 | Todo texto |
-| `muted` | 9.5 | 9.0 | 8.3 | 7.3 | Todo texto |
-| `accent` | 11.5 | 10.9 | 10.1 | 8.9 | Enlaces, foco, íconos, texto |
-| `primary-claro` | 7.2 | 6.8 | 6.3 | 5.6 | Texto y trazos violeta |
-| `success` | 9.9 | 9.3 | 8.7 | 7.6 | Texto y marcas de logro |
+| `paper` | 17.6 | 17.0 | 16.6 | 15.5 | Todo texto |
+| `muted` | 7.6 | 7.3 | 7.2 | 6.7 | Todo texto |
+| `accent` | 11.5 | 11.1 | 10.9 | 10.1 | Enlaces, foco, íconos, texto |
+| `primary-claro` | 7.2 | 6.9 | 6.8 | 6.3 | Texto y trazos violeta |
+| `success` | 9.9 | 9.5 | 9.3 | 8.7 | Texto y marcas de logro |
 | `suena` | 10.7 | 10.2 | 9.5 | 8.3 | Cuerda que suena |
-| `danger` | 6.8 | 6.5 | 6.0 | 5.3 | Texto de error |
-| `linea-fuerte` | 4.4 | 4.2 | 3.9 | 3.4 | Bordes de controles (1.4.11) |
-| `linea` | 2.1 | — | 1.8 | 1.6 | Bordes de tarjetas y divisores (decorativos) |
+| `danger` | 10.0 | 9.6 | 9.4 | 8.8 | Texto de error |
+| `aviso` | 11.3 | 10.9 | 10.7 | 10.0 | Pendiente (texto) |
+| `linea-fuerte` | 4.4 | 4.2 | 4.2 | 3.9 | Trazos que hay que leer (1.4.11) |
+| `linea-control` | 1.5 | 1.4 | 1.4 | 1.3 | ⚠ Borde de campo del rediseño (decisión del equipo) |
+| `linea` | 1.4 | 1.3 | 1.3 | 1.2 | Bordes de tarjetas y divisores (decorativos) |
 | `primary` | **3.8** | 3.6 | **3.3** | — | ❌ **Nunca como texto** (no llega a 4.5). Fondo de botón (texto `paper` encima: 4.64; en hover `primary-hover`: 5.68) y relleno de progreso sobre pista `ink-2` (3.59). |
 
 Reglas que se mantienen de HU-F-314:

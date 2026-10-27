@@ -11,7 +11,7 @@ body {
 
 /* Foco visible y accesible en todo control (contrato 03 §6): accent sobre ink ≥ 3:1. */
 :focus-visible {
-  outline: 2px solid rgb(var(--color-accent));
+  outline: 2px solid rgb(var(--color-foco));
   outline-offset: 2px;
 }
 

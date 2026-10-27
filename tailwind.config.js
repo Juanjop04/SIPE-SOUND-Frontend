@@ -10,7 +10,12 @@ export default {
         ink: { DEFAULT: token("ink"), 2: token("ink-2") },
         surface: { DEFAULT: token("surface"), 2: token("surface-2") },
         // "linea" y no "border": evita la clase ambigua border-border.
-        linea: { DEFAULT: token("linea"), fuerte: token("linea-fuerte") },
+        linea: {
+          DEFAULT: token("linea"),
+          fuerte: token("linea-fuerte"),
+          control: token("linea-control"),
+        },
+        foco: token("foco"),
         primary: {
           DEFAULT: token("primary"),
           hover: token("primary-hover"),

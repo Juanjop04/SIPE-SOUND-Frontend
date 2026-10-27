@@ -16,7 +16,7 @@ export function Drawer({ ancho = "normal", ...props }: DrawerProps) {
   return (
     <PanelModal
       {...props}
-      className={`m-0 ml-auto h-dvh max-h-dvh w-full max-w-full border-l border-linea ${ANCHOS[ancho]}`}
+      className={`m-0 ml-auto h-dvh max-h-dvh w-full max-w-full border-l border-linea bg-surface ${ANCHOS[ancho]}`}
     />
   );
 }
