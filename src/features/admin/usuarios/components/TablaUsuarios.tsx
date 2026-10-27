@@ -1,158 +1,274 @@
 import { cn } from "@/shared/lib/cn.js";
 import { formatearFecha } from "@/shared/lib/formato";
-import { ESCRITORIO_MEDIO, useMediaQuery } from "@/shared/hooks/useMediaQuery";
-import { Table, type ColumnaTabla } from "@/shared/ui";
-import type { EstadoCuenta, Usuario } from "../tipos";
-import { ETIQUETA_ESTADO, ETIQUETA_ROL, nombreCompleto, textoEnvio } from "../utils";
+import { Interruptor } from "@/shared/ui";
+import type { EstadoCuenta, RolCuenta, Usuario } from "../tipos";
+import {
+  ETIQUETA_ESTADO,
+  ETIQUETA_ROL,
+  lineaDeActividad,
+  nombreCompleto,
+  textoEnvio,
+} from "../utils";
 import { AccionesFila, type AccionUsuario } from "./AccionesFila";
 
 const COLOR_ESTADO: Record<EstadoCuenta, string> = {
-  pendiente_verificacion: "border-linea-fuerte text-muted",
-  activa: "border-success text-success",
-  suspendida: "border-danger text-danger",
+  pendiente_verificacion: "text-aviso",
+  activa: "text-success",
+  suspendida: "text-peligro-texto",
 };
 
-/** Estado de la cuenta: siempre con texto, nunca solo color (contrato 05 §6). */
-function PildoraEstado({ estado }: { estado: EstadoCuenta }) {
+const COLOR_ROL: Record<RolCuenta, string> = {
+  estudiante: "border-linea-fuerte text-paper",
+  docente: "border-accent/50 text-accent",
+  admin: "border-primary text-primary-claro",
+};
+
+const ROLES = Object.keys(ETIQUETA_ROL) as RolCuenta[];
+
+interface FilaProps {
+  usuario: Usuario;
+  propia: boolean;
+  marcada: boolean;
+  editando: boolean;
+  enviando: boolean;
+  onAlternar: (usuario: Usuario) => void;
+  onAccion: (accion: AccionUsuario, usuario: Usuario) => void;
+  onCambiarRol: (usuario: Usuario, rol: RolCuenta) => void;
+}
+
+function CeldaNombre({ usuario: u, onAccion }: Pick<FilaProps, "usuario" | "onAccion">) {
+  const sinApellido = !u.apellido?.trim();
   return (
-    <span
-      className={cn(
-        "inline-flex w-fit rounded-full border px-2 py-0.5 text-xs",
-        COLOR_ESTADO[estado],
-      )}
-    >
-      {ETIQUETA_ESTADO[estado]}
-    </span>
+    <div role="cell" data-celda="who" className="flex min-w-0 flex-col gap-0.5">
+      <span className="flex min-w-0 items-baseline">
+        <button
+          type="button"
+          onClick={() => onAccion("detalle", u)}
+          className="truncate text-left text-sm font-semibold text-paper underline-offset-4 hover:underline"
+        >
+          {nombreCompleto(u)}
+        </button>
+        {sinApellido && <span className="ml-2 text-xs font-semibold text-aviso">Sin apellido</span>}
+      </span>
+      <span className="truncate font-mono text-xs text-muted">{u.email}</span>
+    </div>
   );
 }
 
-function Envio({ usuario, enviando }: { usuario: Usuario; enviando: boolean }) {
-  const { texto, fallo } = textoEnvio(usuario, enviando);
-  return <span className={fallo ? "text-danger" : "text-muted"}>{texto}</span>;
+function CeldaRol({
+  usuario: u,
+  propia,
+  onCambiarRol,
+}: Pick<FilaProps, "usuario" | "propia" | "onCambiarRol">) {
+  return (
+    <div role="cell" data-celda="rol" data-label="Rol">
+      {/* Controlado: si el diálogo se cancela, el selector vuelve al rol que tiene la cuenta. */}
+      <select
+        value={u.rol}
+        disabled={propia}
+        onChange={(e) => onCambiarRol(u, e.target.value as RolCuenta)}
+        aria-label={`Rol de ${nombreCompleto(u)}`}
+        title={propia ? "No puedes cambiar tu propio rol" : undefined}
+        className={cn(
+          "h-9 w-full rounded-md border bg-surface px-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-60",
+          COLOR_ROL[u.rol],
+        )}
+      >
+        {ROLES.map((rol) => (
+          <option key={rol} value={rol}>
+            {ETIQUETA_ROL[rol]}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function CeldaActividad({ usuario: u, enviando }: Pick<FilaProps, "usuario" | "enviando">) {
+  const envio = textoEnvio(u, enviando);
+  const hayEnvio = u.estado === "pendiente_verificacion" && (enviando || envio.fallo);
+  return (
+    <div role="cell" data-celda="acty" data-label="Actividad" className="flex flex-col gap-0.5">
+      <span className="font-mono text-xs text-paper">
+        {u.ultimo_acceso ? formatearFecha(u.ultimo_acceso) : "Sin accesos"}
+      </span>
+      <span className={cn("text-xs", envio.fallo ? "text-peligro-texto" : "text-muted")}>
+        {hayEnvio ? envio.texto : lineaDeActividad(u)}
+      </span>
+    </div>
+  );
+}
+
+function tituloCuenta(propia: boolean, esAdmin: boolean, suspendida: boolean): string {
+  if (propia) return "No puedes suspender tu propia cuenta";
+  if (esAdmin) return "Los administradores no se suspenden";
+  return suspendida
+    ? "Cuenta suspendida: enciéndela para reactivarla"
+    : "Cuenta activa: apágala para suspenderla";
+}
+
+function textoNombre(esAdmin: boolean, editable: boolean): string {
+  if (esAdmin) return "Nombre editable";
+  return editable ? "Cambio de nombre" : "Nombre bloqueado";
+}
+
+function tituloNombre(esAdmin: boolean, editable: boolean): string {
+  if (esAdmin) return "Los administradores siempre pueden cambiar su nombre";
+  return editable
+    ? "Puede cambiar su nombre: apágalo para bloquearlo"
+    : "No puede cambiar su nombre: enciéndelo para permitirlo";
+}
+
+function CeldaPermisos({
+  usuario: u,
+  propia,
+  onAccion,
+}: Pick<FilaProps, "usuario" | "propia" | "onAccion">) {
+  const nombre = nombreCompleto(u);
+  const esAdmin = u.rol === "admin";
+  const suspendida = u.estado === "suspendida";
+  return (
+    <div
+      role="cell"
+      data-celda="perm"
+      data-label="Permisos"
+      className="flex flex-col gap-2 max-[820px]:flex-row max-[820px]:flex-wrap max-[820px]:gap-x-6"
+    >
+      <Interruptor
+        activo={!suspendida}
+        etiqueta={`Cuenta activa de ${nombre}`}
+        texto="Cuenta activa"
+        titulo={tituloCuenta(propia, esAdmin, suspendida)}
+        disabled={propia || esAdmin}
+        onCambiar={() => onAccion(suspendida ? "reactivar" : "suspender", u)}
+      />
+      <Interruptor
+        activo={u.puede_editar_nombre}
+        etiqueta={`Permitir cambio de nombre a ${nombre}`}
+        texto={textoNombre(esAdmin, u.puede_editar_nombre)}
+        titulo={tituloNombre(esAdmin, u.puede_editar_nombre)}
+        disabled={esAdmin}
+        onCambiar={() => onAccion(u.puede_editar_nombre ? "bloquear" : "permitir", u)}
+      />
+    </div>
+  );
+}
+
+function Fila(props: FilaProps) {
+  const { usuario: u, propia, marcada, editando, onAlternar, onAccion } = props;
+  return (
+    <div
+      role="row"
+      className={cn(
+        "fila-cuenta transition-colors duration-rapida hover:bg-surface",
+        marcada && "bg-primary/5",
+        editando && "bg-primary/10",
+      )}
+    >
+      <div role="cell" data-celda="cb">
+        <input
+          type="checkbox"
+          checked={marcada}
+          disabled={propia}
+          onChange={() => onAlternar(u)}
+          aria-label={`Elegir a ${nombreCompleto(u)}`}
+          className="h-[18px] w-[18px] accent-primary"
+        />
+      </div>
+      <CeldaNombre usuario={u} onAccion={onAccion} />
+      <CeldaRol usuario={u} propia={propia} onCambiarRol={props.onCambiarRol} />
+      <div role="cell" data-celda="st">
+        <span className={cn("text-sm font-semibold", COLOR_ESTADO[u.estado])}>
+          {ETIQUETA_ESTADO[u.estado]}
+        </span>
+      </div>
+      <CeldaActividad usuario={u} enviando={props.enviando} />
+      <CeldaPermisos usuario={u} propia={propia} onAccion={onAccion} />
+      <div role="cell" data-celda="act">
+        <AccionesFila usuario={u} propia={propia} onAccion={onAccion} />
+      </div>
+    </div>
+  );
 }
 
 interface TablaUsuariosProps {
   usuarios: Usuario[];
-  seleccion: ReadonlySet<string>;
+  seleccion: ReadonlyMap<string, Usuario>;
+  /** Id del administrador conectado: su fila no cambia de rol, no se suspende ni se elimina. */
+  miId: string | undefined;
+  /** Cuenta abierta en el panel (resaltada). */
+  editandoId: string | null;
   /** Cuentas cuyo código se está reenviando ("Enviando…"). */
   enviando: ReadonlySet<string>;
-  onAlternar: (id: string) => void;
+  onAlternar: (usuario: Usuario) => void;
+  onElegirPagina: (usuarios: Usuario[], marcar: boolean) => void;
   onAccion: (accion: AccionUsuario, usuario: Usuario) => void;
+  onCambiarRol: (usuario: Usuario, rol: RolCuenta) => void;
 }
 
-function Casilla({
-  usuario,
-  marcada,
-  onAlternar,
-}: {
-  usuario: Usuario;
-  marcada: boolean;
-  onAlternar: (id: string) => void;
-}) {
+function Cabecera({ todas, onElegir }: { todas: boolean; onElegir: () => void }) {
   return (
-    <input
-      type="checkbox"
-      checked={marcada}
-      onChange={() => onAlternar(usuario.id)}
-      aria-label={`Elegir a ${nombreCompleto(usuario)}`}
-      className="h-4 w-4 accent-primary"
-    />
+    <div
+      role="row"
+      className="fila-cuenta fila-cabecera border-t-0 bg-ink-2 py-2.5 text-xs font-semibold text-muted"
+    >
+      <div role="columnheader">
+        <input
+          type="checkbox"
+          checked={todas}
+          onChange={onElegir}
+          aria-label="Elegir todas las cuentas visibles"
+          className="h-[18px] w-[18px] accent-primary"
+        />
+      </div>
+      <div role="columnheader">Nombre y correo</div>
+      <div role="columnheader">Rol</div>
+      <div role="columnheader">Estado</div>
+      <div role="columnheader">Actividad</div>
+      <div role="columnheader">Permisos</div>
+      <div role="columnheader" className="text-right">
+        Acciones
+      </div>
+    </div>
   );
 }
 
-function columnasDe({
+/**
+ * Tabla de cuentas en rejilla (patrón "Atril"): columnas fijas en escritorio y una tarjeta por
+ * cuenta en pantallas angostas (ver .fila-cuenta en styles/index.css).
+ */
+export function TablaUsuarios({
+  usuarios,
   seleccion,
+  miId,
+  editandoId,
   enviando,
   onAlternar,
+  onElegirPagina,
   onAccion,
-}: Omit<TablaUsuariosProps, "usuarios">): ColumnaTabla<Usuario>[] {
-  return [
-    {
-      id: "elegir",
-      encabezado: "Elegir",
-      celda: (u) => <Casilla usuario={u} marcada={seleccion.has(u.id)} onAlternar={onAlternar} />,
-    },
-    {
-      id: "nombre",
-      encabezado: "Nombre y correo",
-      celda: (u) => (
-        <div className="flex flex-col">
-          <button
-            type="button"
-            onClick={() => onAccion("detalle", u)}
-            className="whitespace-nowrap text-left underline decoration-linea-fuerte underline-offset-2 hover:decoration-accent"
-          >
-            {nombreCompleto(u)}
-          </button>
-          <span className="whitespace-nowrap font-mono text-xs">{u.email}</span>
-          <span className="text-xs text-muted">{ETIQUETA_ROL[u.rol]}</span>
-        </div>
-      ),
-    },
-    { id: "estado", encabezado: "Estado", celda: (u) => <PildoraEstado estado={u.estado} /> },
-    {
-      id: "envio",
-      encabezado: "Último envío del código",
-      celda: (u) => <Envio usuario={u} enviando={enviando.has(u.id)} />,
-    },
-    {
-      id: "acceso",
-      encabezado: "Último acceso",
-      celda: (u) => (
-        <span className="whitespace-nowrap font-mono text-xs">
-          {formatearFecha(u.ultimo_acceso)}
-        </span>
-      ),
-    },
-    {
-      id: "acciones",
-      encabezado: "Acciones",
-      celda: (u) => <AccionesFila usuario={u} onAccion={onAccion} />,
-    },
-  ];
-}
+  onCambiarRol,
+}: TablaUsuariosProps) {
+  const elegibles = usuarios.filter((u) => u.id !== miId);
+  const todas = elegibles.length > 0 && elegibles.every((u) => seleccion.has(u.id));
 
-/** Menos de 768 px: cada cuenta es un bloque apilado (nombre y estado, correo, menú). */
-function ListaApilada(props: TablaUsuariosProps) {
-  const { usuarios, seleccion, enviando, onAlternar, onAccion } = props;
   return (
-    <ul className="divide-y divide-linea rounded-caja border border-linea">
-      {usuarios.map((u) => (
-        <li key={u.id} className="flex items-start gap-3 p-3">
-          <Casilla usuario={u} marcada={seleccion.has(u.id)} onAlternar={onAlternar} />
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={() => onAccion("detalle", u)}
-                className="text-left font-medium text-paper underline decoration-linea-fuerte underline-offset-2 hover:decoration-accent"
-              >
-                {nombreCompleto(u)}
-              </button>
-              <PildoraEstado estado={u.estado} />
-            </div>
-            <p className="break-all font-mono text-xs text-muted">{u.email}</p>
-            <p className="text-xs">
-              {ETIQUETA_ROL[u.rol]} · <Envio usuario={u} enviando={enviando.has(u.id)} />
-            </p>
-            <AccionesFila usuario={u} onAccion={onAccion} />
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/** Tabla densa de cuentas (patrón "Atril"); apilada en pantallas angostas. */
-export function TablaUsuarios(props: TablaUsuariosProps) {
-  const ancha = useMediaQuery(ESCRITORIO_MEDIO);
-  if (!ancha) return <ListaApilada {...props} />;
-  return (
-    <Table
-      etiqueta="Cuentas de usuario"
-      filas={props.usuarios}
-      columnas={columnasDe(props)}
-      obtenerId={(u) => u.id}
-    />
+    <div className="overflow-x-auto">
+      <div role="table" aria-label="Cuentas de usuario" className="tabla-cuentas">
+        <Cabecera todas={todas} onElegir={() => onElegirPagina(elegibles, !todas)} />
+        {usuarios.map((u) => (
+          <Fila
+            key={u.id}
+            usuario={u}
+            propia={u.id === miId}
+            marcada={seleccion.has(u.id)}
+            editando={u.id === editandoId}
+            enviando={enviando.has(u.id)}
+            onAlternar={onAlternar}
+            onAccion={onAccion}
+            onCambiarRol={onCambiarRol}
+          />
+        ))}
+      </div>
+    </div>
   );
 }

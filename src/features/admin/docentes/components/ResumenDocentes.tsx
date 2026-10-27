@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
-import { paths } from "@/shared/config/paths.js";
+import { useSearchParams } from "react-router-dom";
 import { fechaRelativa } from "@/shared/lib/formato";
 import {
-  claseBoton,
+  CifraCompacta,
   EstadoVacio,
   MensajeError,
   Skeleton,
@@ -10,20 +9,12 @@ import {
   type ColumnaTabla,
 } from "@/shared/ui";
 import { useCursosSinDocente, useDocentesEnEstado } from "../hooks";
-import type { DocenteActividad } from "../tipos";
+import type { DocenteActividad, EstadoActividad } from "../tipos";
+import { COLUMNA_DETALLE, COLUMNA_NOMBRE } from "./ColumnaDetalle";
 import { EstadoDeActividad } from "./EstadoDeActividad";
 
-function Cifra({ etiqueta, valor }: { etiqueta: string; valor: number | undefined }) {
-  return (
-    <div className="rounded-caja border border-linea bg-surface p-4">
-      <dt className="text-sm text-muted">{etiqueta}</dt>
-      <dd className="mt-1 font-mono text-2xl tabular-nums text-paper">{valor ?? "—"}</dd>
-    </div>
-  );
-}
-
 const COLUMNAS: ColumnaTabla<DocenteActividad>[] = [
-  { id: "nombre", encabezado: "Docente", celda: (d) => d.nombre },
+  { ...COLUMNA_NOMBRE, encabezado: "Docente" },
   {
     id: "estado",
     encabezado: "Estado",
@@ -35,19 +26,7 @@ const COLUMNAS: ColumnaTabla<DocenteActividad>[] = [
     celda: (d) => (d.ultima_actividad ? fechaRelativa(d.ultima_actividad) : "Nunca"),
   },
   { id: "cursos", encabezado: "Cursos", numerica: true, celda: (d) => d.cursos_asignados },
-  {
-    id: "abrir",
-    encabezado: "Detalle",
-    celda: (d) => (
-      <Link
-        to={paths.admin.docente(d.docente_id)}
-        aria-label={`Abrir a ${d.nombre}`}
-        className={claseBoton({ variante: "secundario", tamano: "sm" })}
-      >
-        Abrir
-      </Link>
-    ),
-  },
+  COLUMNA_DETALLE,
 ];
 
 function Atencion() {
@@ -77,7 +56,7 @@ function Atencion() {
     (d) => d.cursos_asignados > 0,
   );
   if (filas.length === 0) {
-    return <EstadoVacio titulo="Ningún docente con cursos requiere atención." />;
+    return <EstadoVacio titulo="Todos los docentes con cursos están activos." />;
   }
   return (
     <Table
@@ -89,26 +68,68 @@ function Atencion() {
   );
 }
 
-/** Pestaña "Resumen": cifras reales y los docentes con cursos que dejaron de moverse. */
+/** Pestaña "Resumen": cifras reales que filtran, la leyenda de estados y quiénes requieren atención. */
 export function ResumenDocentes() {
+  const [, setParametros] = useSearchParams();
   const activos = useDocentesEnEstado("activo");
   const inactivos = useDocentesEnEstado("inactivo");
   const sinActividad = useDocentesEnEstado("sin_actividad");
   const sinDocente = useCursosSinDocente();
+  const cursosSinDocente = sinDocente.data?.meta.total;
+
+  // Abre la pestaña Docentes ya filtrada por ese estado de actividad.
+  const abrir = (estado: EstadoActividad) => () => setParametros({ tab: "docentes", estado });
+
   return (
-    <div className="flex flex-col gap-8">
-      <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Cifra etiqueta="Docentes activos" valor={activos.data?.meta.total} />
-        <Cifra etiqueta="Docentes inactivos" valor={inactivos.data?.meta.total} />
-        <Cifra etiqueta="Docentes sin actividad" valor={sinActividad.data?.meta.total} />
-        <Cifra etiqueta="Cursos sin docente" valor={sinDocente.data?.meta.total} />
-      </dl>
-      <section aria-labelledby="atencion">
-        <h2 id="atencion" className="mb-3 font-display text-xl font-semibold text-paper">
+    <div className="flex flex-col gap-6">
+      <div
+        role="group"
+        aria-label="Docentes por estado de actividad"
+        className="grid grid-cols-2 gap-2 min-[821px]:grid-cols-[repeat(auto-fill,minmax(170px,220px))]"
+      >
+        <CifraCompacta
+          etiqueta="Activos"
+          valor={activos.data?.meta.total}
+          colorValor="text-success"
+          onClick={abrir("activo")}
+        />
+        <CifraCompacta
+          etiqueta="Inactivos"
+          valor={inactivos.data?.meta.total}
+          colorValor="text-aviso"
+          onClick={abrir("inactivo")}
+        />
+        <CifraCompacta
+          etiqueta="Sin actividad"
+          valor={sinActividad.data?.meta.total}
+          colorValor="text-muted"
+          onClick={abrir("sin_actividad")}
+        />
+        <CifraCompacta
+          etiqueta="Cursos sin docente"
+          valor={cursosSinDocente}
+          colorValor={cursosSinDocente ? "text-peligro-texto" : "text-paper"}
+        />
+      </div>
+      <p className="flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-muted">
+        <span>
+          <strong className="font-semibold text-success">Activo:</strong> movimiento en los últimos
+          7 días
+        </span>
+        <span>
+          <strong className="font-semibold text-aviso">Inactivo:</strong> de 8 a 30 días
+        </span>
+        <span>
+          <strong className="font-semibold text-paper">Sin actividad:</strong> más de 30 días o
+          nunca
+        </span>
+      </p>
+      <section aria-labelledby="atencion" className="flex flex-col gap-3">
+        <h2 id="atencion" className="font-display text-xl font-semibold text-paper">
           Requieren atención
         </h2>
-        <p className="mb-3 max-w-prose text-sm text-muted">
-          Docentes inactivos (8 a 30 días) o sin actividad (más de 30) que tienen cursos asignados.
+        <p className="max-w-prose text-sm text-muted">
+          Docentes inactivos o sin actividad que tienen cursos asignados.
         </p>
         <Atencion />
       </section>

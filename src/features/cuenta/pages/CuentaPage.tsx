@@ -1,15 +1,11 @@
-import { useCallback, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { perfilKeys, usePerfil } from "@/features/auth";
-import { formatearFecha } from "@/shared/lib/formato";
-import { TrasteDivider } from "@/shared/music";
-import { Button, MensajeError, Skeleton } from "@/shared/ui";
-import { DialogoIdentidad } from "../components/DialogoIdentidad";
-import { SeccionCuenta } from "../components/SeccionCuenta";
+import { MensajeError, Skeleton } from "@/shared/ui";
+import { EncabezadoCuenta } from "../components/EncabezadoCuenta";
+import { IndiceCuenta } from "../components/IndiceCuenta";
 import { SeccionDatosPersonales } from "../components/SeccionDatosPersonales";
-import type { Motivo } from "../utils/pasosIdentidad";
-
-type Exitos = Partial<Record<Motivo, string>>;
+import { SeccionesCorreoYClave } from "../components/SeccionesCorreoYClave";
+import { SeccionApariencia, SeccionSesion } from "../components/SeccionesAparienciaYSesion";
 
 function Cargando() {
   return (
@@ -21,26 +17,13 @@ function Cargando() {
   );
 }
 
+/** Mi cuenta (HU-F-403, rediseño HU-F-521): identidad arriba, índice y secciones debajo. */
 export default function CuentaPage() {
   const queryClient = useQueryClient();
   const { perfil, estaCargando, error } = usePerfil();
-  const [motivo, setMotivo] = useState<Motivo | null>(null);
-  const [exitos, setExitos] = useState<Exitos>({});
-  const cerrar = useCallback(() => setMotivo(null), []);
-  const alTerminar = useCallback(
-    (hecho: Motivo, mensaje: string) => setExitos((antes) => ({ ...antes, [hecho]: mensaje })),
-    [],
-  );
 
   return (
-    <main className="mx-auto max-w-prose px-4 py-8 sm:px-8">
-      <h1 className="font-display text-3xl font-semibold text-paper">Mi cuenta</h1>
-      <p className="mt-2 text-sm text-muted">
-        Tus datos, tu correo y tu contraseña. Para cambiar el correo o la contraseña te pedimos
-        confirmar que eres tú.
-      </p>
-      <TrasteDivider className="my-8" />
-
+    <main className="mx-auto flex max-w-[67.5rem] flex-col gap-8 px-4 py-8 sm:px-8 sm:py-9">
       {estaCargando && <Cargando />}
       {!estaCargando && !perfil && (
         <MensajeError
@@ -49,39 +32,19 @@ export default function CuentaPage() {
         />
       )}
       {perfil && (
-        <div className="flex flex-col gap-10">
-          <SeccionDatosPersonales perfil={perfil} />
-          <TrasteDivider />
-          <SeccionCuenta
-            titulo="Correo"
-            exito={exitos.correo}
-            accion={
-              <Button variante="secundario" onClick={() => setMotivo("correo")}>
-                Cambiar correo
-              </Button>
-            }
-          >
-            <p className="break-all font-mono text-paper">{perfil.email ?? "—"}</p>
-            <p className="font-mono text-sm text-muted">
-              {perfil.correo_verificado_en
-                ? `Verificado el ${formatearFecha(perfil.correo_verificado_en)}`
-                : "Sin verificar"}
-            </p>
-          </SeccionCuenta>
-          <TrasteDivider />
-          <SeccionCuenta
-            titulo="Contraseña"
-            exito={exitos.contrasena}
-            accion={
-              <Button variante="secundario" onClick={() => setMotivo("contrasena")}>
-                Cambiar contraseña
-              </Button>
-            }
-          />
-        </div>
+        <>
+          <EncabezadoCuenta perfil={perfil} />
+          <div className="grid items-start gap-5 min-[1101px]:grid-cols-[11.5rem_minmax(0,1fr)] min-[1101px]:gap-10">
+            <IndiceCuenta />
+            <div className="flex min-w-0 flex-col">
+              <SeccionDatosPersonales perfil={perfil} />
+              <SeccionesCorreoYClave perfil={perfil} />
+              <SeccionApariencia />
+              <SeccionSesion />
+            </div>
+          </div>
+        </>
       )}
-
-      <DialogoIdentidad motivo={motivo} onCerrar={cerrar} alTerminar={alTerminar} />
     </main>
   );
 }

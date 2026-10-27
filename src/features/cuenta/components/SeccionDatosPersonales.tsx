@@ -55,8 +55,11 @@ function Editable({ perfil }: { perfil: PerfilCuenta }) {
     useDatosPersonales(perfil);
   const {
     register,
+    watch,
+    reset,
     formState: { errors, isDirty },
   } = formulario;
+  const vista = [watch("nombre"), watch("apellido")].map((t) => t.trim()).filter(Boolean);
 
   return (
     <form onSubmit={enviar} noValidate className="flex flex-col gap-4">
@@ -76,10 +79,16 @@ function Editable({ perfil }: { perfil: PerfilCuenta }) {
       {errorGeneral && <MensajeError mensaje={errorGeneral} />}
       {/* Un solo botón primario, y solo cuando hay algo que guardar. */}
       {isDirty && (
-        <div>
+        <div className="flex flex-wrap items-center gap-2.5">
           <Button type="submit" cargando={guardando} disabled={enfriando}>
             Guardar
           </Button>
+          <Button variante="fantasma" onClick={() => reset()}>
+            Descartar
+          </Button>
+          <span className="text-sm text-muted">
+            Se mostrará como <strong className="text-paper">{vista.join(" ")}</strong>
+          </span>
         </div>
       )}
     </form>
@@ -90,7 +99,11 @@ function Editable({ perfil }: { perfil: PerfilCuenta }) {
 export function SeccionDatosPersonales({ perfil }: { perfil: PerfilCuenta }) {
   const puedeEditar = perfil.puede_editar_nombre || perfil.rol === "admin";
   return (
-    <SeccionCuenta titulo="Datos personales">
+    <SeccionCuenta
+      id="datos"
+      titulo="Datos personales"
+      descripcion="Así te ven los estudiantes y docentes en cursos, mensajes y evaluaciones."
+    >
       {puedeEditar ? <Editable perfil={perfil} /> : <SoloLectura perfil={perfil} />}
     </SeccionCuenta>
   );

@@ -73,7 +73,7 @@ export function SelectorDocente({ valor, onElegir, excluir = null }: SelectorDoc
                       <EstadoDeActividad estado={d.estado_actividad} />
                     </span>
                     {d.estado_actividad === "sin_actividad" && (
-                      <span className="text-sm text-danger">Sin actividad hace más de 30 días</span>
+                      <span className="text-sm text-peligro-texto">Sin actividad hace más de 30 días</span>
                     )}
                   </span>
                 </label>

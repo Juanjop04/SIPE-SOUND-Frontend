@@ -40,7 +40,7 @@ export function Field({ etiqueta, ayuda, error, className, children }: FieldProp
         </p>
       )}
       {error && (
-        <p id={idError} className="text-xs text-danger">
+        <p id={idError} className="text-xs text-peligro-texto">
           {error}
         </p>
       )}

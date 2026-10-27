@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mi cuenta · SIPE-SOUND</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B1020}
+*{box-sizing:border-box}
+a{color:#B9C8FF}a:hover{color:#F5F6FF}
+button,input,select{font-family:inherit;font-size:inherit}
+:focus-visible{outline:2px solid #8B83FF;outline-offset:2px}
+.shell{container-type:inline-size;min-height:100vh;background:#0B1020;color:#F5F6FF;font-family:'IBM Plex Sans',system-ui,sans-serif}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+.side{display:flex;flex-direction:column;gap:2px;padding:18px 12px;border-right:1px solid #1C2240;background:#0B1020}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 10px 22px;font-weight:700;letter-spacing:.08em;font-size:15px}
+.nav{display:flex;align-items:center;gap:12px;min-height:40px;padding:8px 10px;border-radius:6px;color:#AEB6D9;text-decoration:none;font-size:14px}
+.nav:hover{background:#141A2E;color:#F5F6FF}
+.sidex{display:none}
+.top{position:relative;display:flex;align-items:center;gap:12px;padding:12px 32px;border-bottom:1px solid #1C2240}
+.menubtn{display:none}
+.ib{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:none;border-radius:6px;border:1px solid transparent;background:transparent;color:#B9C8FF;cursor:pointer;padding:0}
+.ib:hover{background:#1E2442;color:#F5F6FF}
+.who{display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 6px 4px 4px;border:0;border-radius:6px;background:transparent;color:#F5F6FF;cursor:pointer}
+.who:hover{background:#141A2E}
+.mono-av{width:34px;height:34px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:#B9C8FF;color:#0B1020;font-weight:700;font-size:13px;flex:none}
+.pmenu{position:absolute;right:24px;top:64px;z-index:40;width:240px;background:#171D33;border:1px solid #2A3152;border-radius:8px;padding:6px;display:flex;flex-direction:column;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.pitem{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:8px 10px;border:0;border-radius:5px;background:transparent;color:#F5F6FF;text-decoration:none;font-size:14px;text-align:left;cursor:pointer}
+.pitem:hover{background:#222947;color:#F5F6FF}
+.pitem.on{background:#222947}
+.pitem.out{color:#FCA5A5}
+.wrap{width:100%;max-width:1080px;padding:36px 32px 64px;display:flex;flex-direction:column;gap:32px}
+.hero{display:flex;flex-wrap:wrap;align-items:center;gap:20px;padding-bottom:28px;border-bottom:1px solid #232A47}
+.big-av{width:76px;height:76px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#B9C8FF;color:#0B1020;font-size:28px;font-weight:700;flex:none}
+.layout{display:grid;grid-template-columns:184px minmax(0,1fr);gap:40px;align-items:start}
+.toc{display:flex;flex-direction:column;gap:2px}
+.toc a{display:block;padding:8px 10px;border-radius:6px;color:#9AA3C7;text-decoration:none;font-size:14px;white-space:nowrap}
+.toc a:hover{color:#F5F6FF;background:#141A2E}
+.sec{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px 32px;padding:28px 0;border-top:1px solid #232A47}
+.sec:first-child{border-top:0;padding-top:0}
+.sec h2{margin:0 0 6px;font-size:16px;font-weight:600}
+.sec .desc{margin:0;font-size:13px;line-height:1.55;color:#9AA3C7}
+.body{display:flex;flex-direction:column;gap:16px;min-width:0}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.lbl{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:13px;font-weight:600}
+.fld{width:100%;height:42px;padding:0 12px;border-radius:6px;border:1px solid #2A3152;background:#0F1428;color:#F5F6FF;font-size:14px;font-weight:400}
+.fld:focus{border-color:#6257F5}
+.fld.err{border-color:#F87171}
+.code{letter-spacing:.5em;font-family:'IBM Plex Mono',monospace;font-size:18px;text-align:center;max-width:220px}
+.btn{height:40px;padding:0 16px;border-radius:6px;border:1px solid transparent;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn.pri{background:#6257F5;color:#FFFFFF}
+.btn.pri:hover{background:#5348E6}
+.btn.pri:disabled{background:#262D4F;color:#8E97BD;cursor:not-allowed}
+.btn.gh{background:transparent;border-color:#2A3152;color:#F5F6FF}
+.btn.gh:hover{background:#1A2040}
+.btn.dg{background:transparent;border-color:rgba(248,113,113,.45);color:#FCA5A5}
+.btn.dg:hover{background:rgba(248,113,113,.1)}
+.btn.link{height:auto;padding:0;border:0;background:transparent;color:#B9C8FF;text-decoration:underline;text-underline-offset:3px;font-weight:500}
+.panel{display:flex;flex-direction:column;gap:14px;padding:18px;border:1px solid #232A47;border-radius:8px;background:#11162B}
+.kv{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.req{display:flex;align-items:center;gap:8px;font-size:13px;color:#9AA3C7}
+.req.ok{color:#34D399}
+.seg{display:inline-flex;flex-wrap:wrap;gap:0;border:1px solid #2A3152;border-radius:6px;overflow:hidden}
+.seg label{display:flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;font-size:14px;cursor:pointer;border-left:1px solid #2A3152;color:#AEB6D9}
+.seg label:first-child{border-left:0}
+.seg label.on{background:#6257F5;color:#FFFFFF}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label:focus-within{outline:2px solid #8B83FF;outline-offset:-2px}
+.tg{position:relative;width:36px;height:20px;flex:none;border-radius:999px;border:0;padding:0;background:#2A3152;cursor:pointer;transition:background .15s}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#8E97BD;transition:transform .15s,background .15s}
+.tg.on{background:#6257F5}
+.tg.on::after{transform:translateX(16px);background:#FFFFFF}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #1F2643}
+.trow:last-child{border-bottom:0}
+.savebar{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.scrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:rgba(5,8,18,.66);cursor:pointer}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:10px;max-width:calc(100% - 32px);padding:12px 16px;border-radius:6px;background:#F5F6FF;color:#0B1020;font-size:14px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+@container (max-width: 1100px){
+  .layout{grid-template-columns:minmax(0,1fr);gap:20px}
+  .toc{flex-direction:row;overflow-x:auto;border-bottom:1px solid #232A47;padding-bottom:8px}
+}
+@container (max-width: 960px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{display:none}
+  .side.open{display:flex;position:fixed;top:0;left:0;bottom:0;width:300px;max-width:86%;z-index:65;overflow-y:auto;border-right:1px solid #2A3152}
+  .sidex{display:inline-flex;margin-left:auto}
+  .menubtn{display:inline-flex}
+  .crumb{display:none}
+  .top{padding:10px 16px}
+  .wrap{padding:24px 16px 48px;gap:24px}
+  .pmenu{right:12px}
+  .sec{grid-template-columns:minmax(0,1fr);gap:16px}
+}
+@container (max-width: 560px){
+  .two{grid-template-columns:minmax(0,1fr)}
+  .uname{display:none}
+  .big-av{width:60px;height:60px;font-size:22px}
+  .hero-act{width:100%}
+  .hero-act .btn{flex:1}
+}
+</style>
+</helmet>
+
+<div class="shell">
+<div class="app">
+
+  <nav class="{{sideCls}}" aria-label="Navegación principal">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><path d="M17 3c7.5 0 13 3.4 13 8.6 0 6.6-7.6 17.9-13 19.4C11.6 29.5 4 18.2 4 11.6 4 6.4 9.5 3 17 3z" fill="#6257F5"/><path d="M11 14v4M14.5 11.5v9M18 13v6M21.5 10.5v11M25 14v4" stroke="#F5F6FF" stroke-width="1.8" stroke-linecap="round"/></svg>
+      SIPE-SOUND
+      <button class="ib sidex" onClick="{{closeMenu}}" aria-label="Cerrar menú"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Resumen</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>Cursos</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Progreso</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg>Solicitudes</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Contenido</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 13l2 2 4-4"/></svg>Evaluaciones</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Mensajes</a>
+    <a class="nav" href="Main.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg>Usuarios</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16M8 4v16M12 4l4 16M17 4l3 16"/></svg>Todos los cursos</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/></svg>Docentes</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 11-5.7"/><path d="M17 14l4 4-3 3-4-4v-3z"/></svg>Cambios de nombre</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H6"/><path d="M6 3a2 2 0 0 0-2 2v3h4M8 3v16a2 2 0 1 1-4 0v-1"/><path d="M12 8h4M12 12h4"/></svg>Términos</a>
+  </nav>
+
+  <main style="min-width: 0; display: flex; flex-direction: column">
+    <header class="top">
+      <button class="ib menubtn" onClick="{{openMenu}}" aria-label="Abrir menú"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <p class="crumb" style="margin: 0; font-size: 13px; color: #9AA3C7">Cuenta <span aria-hidden="true">/</span> <span style="color: #F5F6FF">Mi cuenta</span></p>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 6px">
+        <button class="ib" aria-label="Mensajes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></button>
+        <button class="who" onClick="{{toggleProfile}}" aria-expanded="{{profileOpen}}" aria-label="Menú de la cuenta">
+          <span class="mono-av">{{ini}}</span>
+          <span class="uname" style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><span style="font-size: 14px; font-weight: 600">{{fullName}}</span><span style="font-size: 12px; color: #9AA3C7">Administrador</span></span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+      <sc-if value="{{profileOpen}}" hint-placeholder-val="{{ false }}">
+        <div class="pmenu">
+          <a class="pitem on" href="#datos" aria-current="page">Mi cuenta</a>
+          <button class="pitem" onClick="{{viewAsStudent}}">Ver como estudiante</button>
+          <button class="pitem out" onClick="{{logout}}">Cerrar sesión</button>
+        </div>
+      </sc-if>
+    </header>
+
+    <div class="wrap">
+
+      <!-- Identity -->
+      <section class="hero" aria-label="Resumen de tu cuenta">
+        <span class="big-av" aria-hidden="true">{{ini}}</span>
+        <div style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em">{{fullName}}</h1>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; font-size: 13px; color: #9AA3C7">
+            <span style="color: #D4D0FF; font-weight: 600">Administrador</span>
+            <span class="mono" style="font-size: 12px">{{email}}</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px; color: #34D399"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>{{verifiedLine}}</span>
+          </div>
+        </div>
+        <div class="hero-act" style="display: flex; gap: 10px">
+          <button class="btn gh" onClick="{{viewAsStudent}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Ver como estudiante</button>
+        </div>
+      </section>
+
+      <div class="layout">
+        <nav class="toc" aria-label="Secciones de la cuenta">
+          <a href="#datos">Datos personales</a>
+          <a href="#correo">Correo</a>
+          <a href="#clave">Contraseña</a>
+          <a href="#apariencia">Apariencia</a>
+          <a href="#avisos">Avisos</a>
+          <a href="#sesion">Sesión</a>
+        </nav>
+
+        <div style="display: flex; flex-direction: column; min-width: 0">
+
+          <!-- Datos -->
+          <section class="sec" id="datos">
+            <div>
+              <h2>Datos personales</h2>
+              <p class="desc">Así te ven los estudiantes y docentes en cursos, mensajes y evaluaciones.</p>
+            </div>
+            <div class="body">
+              <div class="two">
+                <label class="lbl">Nombre
+                  <input class="{{fnCls}}" type="text" value="{{first}}" onChange="{{onFirst}}" autocomplete="given-name">
+                </label>
+                <label class="lbl">Apellido
+                  <input class="{{lnCls}}" type="text" value="{{last}}" onChange="{{onLast}}" autocomplete="family-name">
+                </label>
+              </div>
+              <sc-if value="{{nameErr}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; color: #FCA5A5">Nombre y apellido son obligatorios.</span></sc-if>
+              <sc-if value="{{nameDirty}}" hint-placeholder-val="{{ false }}">
+                <div class="savebar">
+                  <button class="btn pri" onClick="{{saveName}}" disabled="{{nameErr}}">Guardar</button>
+                  <button class="btn gh" onClick="{{resetName}}">Descartar</button>
+                  <span style="font-size: 13px; color: #9AA3C7">Se mostrará como <strong style="color: #F5F6FF">{{previewName}}</strong></span>
+                </div>
+              </sc-if>
+            </div>
+          </section>
+
+          <!-- Correo -->
+          <section class="sec" id="correo">
+            <div>
+              <h2>Correo</h2>
+              <p class="desc">Lo usas para entrar y para recibir avisos. Para cambiarlo te pedimos tu contraseña y un código.</p>
+            </div>
+            <div class="body">
+              <div class="kv">
+                <span style="display: flex; flex-direction: column; gap: 4px">
+                  <span class="mono" style="font-size: 14px">{{email}}</span>
+                  <span style="font-size: 12px; color: #9AA3C7">{{verifiedLine}}</span>
+                </span>
+                <sc-if value="{{emailIdle}}" hint-placeholder-val="{{ true }}">
+                  <button class="btn gh" onClick="{{startEmail}}">Cambiar correo</button>
+                </sc-if>
+              </div>
+              <sc-if value="{{emailStep1}}" hint-placeholder-val="{{ false }}">
+                <div class="panel">
+                  <label class="lbl">Correo nuevo
+                    <input class="fld mono" type="email" value="{{newEmail}}" onChange="{{onNewEmail}}" placeholder="nombre@correo.com" style="font-size: 13px">
+                  </label>
+                  <label class="lbl">Tu contraseña actual
+                    <input class="fld" type="password" value="{{emailPw}}" onChange="{{onEmailPw}}" autocomplete="current-password">
+                  </label>
+                  <div class="savebar">
+                    <button class="btn pri" onClick="{{sendCode}}" disabled="{{sendDisabled}}">Enviar código</button>
+                    <button class="btn gh" onClick="{{cancelEmail}}">Cancelar</button>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{emailStep2}}" hint-placeholder-val="{{ false }}">
+                <div class="panel">
+                  <span style="font-size: 14px; line-height: 1.5">Enviamos un código de 6 dígitos a <span class="mono" style="font-size: 13px">{{newEmail}}</span>.</span>
+                  <label class="lbl">Código
+                    <input class="fld code" type="text" inputmode="numeric" maxlength="6" value="{{code}}" onChange="{{onCode}}" autocomplete="one-time-code">
+                  </label>
+                  <div class="savebar">
+                    <button class="btn pri" onClick="{{confirmEmail}}" disabled="{{codeDisabled}}">Confirmar correo</button>
+                    <button class="btn link" onClick="{{resendCode}}">Reenviar código</button>
+                    <button class="btn gh" onClick="{{cancelEmail}}" style="margin-left: auto">Cancelar</button>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </section>
+
+          <!-- Contraseña -->
+          <section class="sec" id="clave">
+            <div>
+              <h2>Contraseña</h2>
+              <p class="desc">Al cambiarla se cierran tus sesiones en otros dispositivos.</p>
+            </div>
+            <div class="body">
+              <sc-if value="{{pwClosed}}" hint-placeholder-val="{{ true }}">
+                <div class="kv">
+                  <span class="mono" style="font-size: 14px; letter-spacing: .2em; color: #9AA3C7">••••••••••</span>
+                  <button class="btn gh" onClick="{{openPw}}">Cambiar contraseña</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{pwOpen}}" hint-placeholder-val="{{ false }}">
+                <div class="panel">
+                  <label class="lbl">Contraseña actual
+                    <input class="fld" type="{{pwType}}" value="{{pwCur}}" onChange="{{onPwCur}}" autocomplete="current-password">
+                  </label>
+                  <div class="two">
+                    <label class="lbl">Nueva contraseña
+                      <input class="fld" type="{{pwType}}" value="{{pw1}}" onChange="{{onPw1}}" autocomplete="new-password">
+                    </label>
+                    <label class="lbl">Repite la nueva
+                      <input class="fld" type="{{pwType}}" value="{{pw2}}" onChange="{{onPw2}}" autocomplete="new-password">
+                    </label>
+                  </div>
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #AEB6D9; cursor: pointer">
+                    <input type="checkbox" checked="{{pwShow}}" onChange="{{togglePwShow}}" style="width: 16px; height: 16px; accent-color: #6257F5">Mostrar contraseñas
+                  </label>
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px">
+                    <sc-for list="{{reqs}}" as="r" hint-placeholder-count="4">
+                      <span class="{{r.cls}}">
+                        <sc-if value="{{r.ok}}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></sc-if>
+                        <sc-if value="{{r.no}}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="7"/></svg></sc-if>
+                        {{r.label}}
+                      </span>
+                    </sc-for>
+                  </div>
+                  <div class="savebar">
+                    <button class="btn pri" onClick="{{savePw}}" disabled="{{pwDisabled}}">Actualizar contraseña</button>
+                    <button class="btn gh" onClick="{{closePw}}">Cancelar</button>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </section>
+
+          <!-- Apariencia -->
+          <section class="sec" id="apariencia">
+            <div>
+              <h2>Apariencia</h2>
+              <p class="desc">El tema se guarda en tu cuenta y se aplica en todos tus dispositivos.</p>
+            </div>
+            <div class="body">
+              <div class="seg" role="radiogroup" aria-label="Tema">
+                <sc-for list="{{themes}}" as="t" hint-placeholder-count="3">
+                  <label class="{{t.cls}}"><input type="radio" name="tema" checked="{{t.on}}" onChange="{{t.pick}}">{{t.label}}</label>
+                </sc-for>
+              </div>
+            </div>
+          </section>
+
+          <!-- Avisos -->
+          <section class="sec" id="avisos">
+            <div>
+              <h2>Avisos por correo</h2>
+              <p class="desc">Elige qué te llega a {{email}}.</p>
+            </div>
+            <div class="body" style="gap: 0">
+              <sc-for list="{{notifs}}" as="n" hint-placeholder-count="3">
+                <div class="trow">
+                  <span style="display: flex; flex-direction: column; gap: 2px">
+                    <span style="font-size: 14px; font-weight: 600">{{n.label}}</span>
+                    <span style="font-size: 13px; color: #9AA3C7">{{n.desc}}</span>
+                  </span>
+                  <button class="{{n.cls}}" onClick="{{n.toggle}}" aria-pressed="{{n.on}}" aria-label="{{n.label}}"></button>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+
+          <!-- Sesión -->
+          <section class="sec" id="sesion">
+            <div>
+              <h2>Sesión</h2>
+              <p class="desc">Sal de SIPE-SOUND en este dispositivo.</p>
+            </div>
+            <div class="body">
+              <div><button class="btn dg" onClick="{{logout}}">Cerrar sesión</button></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+  <button class="scrim" style="z-index: 64" onClick="{{closeMenu}}" aria-label="Cerrar menú"></button>
+</sc-if>
+
+<sc-if value="{{toast}}" hint-placeholder-val="{{ false }}">
+  <div class="toast" role="status">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0E8A61" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+    {{toast}}
+  </div>
+</sc-if>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  toast(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: null }), 2800);
+  }
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  renderVals() {
+    const st = this.state || {};
+    const saved = st.saved || { first: 'Isaac', last: 'Bonilla' };
+    const first = st.first !== undefined ? st.first : saved.first;
+    const last = st.last !== undefined ? st.last : saved.last;
+    const email = st.email || 'isaacbm1802@gmail.com';
+    const verifiedLine = st.verifiedLine || 'Verificado el 28 de jul de 2026';
+    const fullName = (saved.first + ' ' + saved.last).trim();
+    const ini = ((saved.first[0] || '') + (saved.last[0] || '')).toUpperCase() || '?';
+    const fnErr = !first.trim(), lnErr = !last.trim();
+    const nameDirty = first !== saved.first || last !== saved.last;
+
+    // Email change flow
+    const emailStep = st.emailStep || 0;
+    const newEmail = st.newEmail || '';
+    const emailPw = st.emailPw || '';
+    const code = st.code || '';
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail.trim()) && newEmail.trim() !== email;
+
+    // Password flow
+    const pwOpen = !!st.pwOpen;
+    const pwCur = st.pwCur || '', pw1 = st.pw1 || '', pw2 = st.pw2 || '';
+    const reqDefs = [
+      ['Al menos 8 caracteres', pw1.length >= 8],
+      ['Una letra mayúscula', /[A-ZÁÉÍÓÚÑ]/.test(pw1)],
+      ['Al menos un número', /\d/.test(pw1)],
+      ['Las dos coinciden', pw1.length > 0 && pw1 === pw2]
+    ];
+    const reqs = reqDefs.map(r => ({ label: r[0], ok: r[1], no: !r[1], cls: 'req' + (r[1] ? ' ok' : '') }));
+    const pwReady = pwCur.length > 0 && reqDefs.every(r => r[1]);
+
+    const theme = st.theme || 'sistema';
+    const themes = [['sistema', 'Sistema'], ['claro', 'Claro'], ['oscuro', 'Oscuro']].map(t => ({ label: t[1], on: theme === t[0], cls: theme === t[0] ? 'on' : '', pick: () => { this.setState({ theme: t[0] }); this.toast('Tema: ' + t[1]); } }));
+
+    const nState = st.notifs || { solicitudes: true, mensajes: true, evaluaciones: false };
+    const notifs = [
+      ['solicitudes', 'Solicitudes de registro', 'Cuando alguien pide crear una cuenta.'],
+      ['mensajes', 'Mensajes nuevos', 'Cuando recibes un mensaje en la plataforma.'],
+      ['evaluaciones', 'Evaluaciones entregadas', 'Resumen diario de evaluaciones por revisar.']
+    ].map(n => ({
+      label: n[1], desc: n[2], on: !!nState[n[0]], cls: 'tg' + (nState[n[0]] ? ' on' : ''),
+      toggle: () => { const x = Object.assign({}, nState); x[n[0]] = !x[n[0]]; this.setState({ notifs: x }); }
+    }));
+
+    const menuOpen = !!st.menuOpen;
+    const resetEmail = { emailStep: 0, newEmail: '', emailPw: '', code: '' };
+
+    return {
+      first: first, last: last, email: email, verifiedLine: verifiedLine, fullName: fullName, ini: ini,
+      fnCls: 'fld' + (fnErr ? ' err' : ''), lnCls: 'fld' + (lnErr ? ' err' : ''),
+      nameErr: fnErr || lnErr, nameDirty: nameDirty,
+      previewName: (first.trim() + ' ' + last.trim()).trim() || '—',
+      onFirst: e => this.setState({ first: e.target.value }),
+      onLast: e => this.setState({ last: e.target.value }),
+      saveName: () => {
+        if (fnErr || lnErr) return;
+        const s = { first: first.trim(), last: last.trim() };
+        this.setState({ saved: s, first: s.first, last: s.last });
+        this.toast('Datos personales guardados');
+      },
+      resetName: () => this.setState({ first: saved.first, last: saved.last }),
+
+      emailIdle: emailStep === 0, emailStep1: emailStep === 1, emailStep2: emailStep === 2,
+      newEmail: newEmail, emailPw: emailPw, code: code,
+      sendDisabled: !emailValid || emailPw.length === 0,
+      codeDisabled: !/^\d{6}$/.test(code),
+      startEmail: () => this.setState({ emailStep: 1 }),
+      cancelEmail: () => this.setState(resetEmail),
+      onNewEmail: e => this.setState({ newEmail: e.target.value }),
+      onEmailPw: e => this.setState({ emailPw: e.target.value }),
+      onCode: e => this.setState({ code: e.target.value.replace(/\D/g, '').slice(0, 6) }),
+      sendCode: () => { if (!emailValid || !emailPw) return; this.setState({ emailStep: 2 }); this.toast('Código enviado a ' + newEmail.trim()); },
+      resendCode: () => this.toast('Te enviamos otro código'),
+      confirmEmail: () => {
+        if (!/^\d{6}$/.test(code)) return;
+        this.setState(Object.assign({ email: newEmail.trim(), verifiedLine: 'Verificado hoy' }, resetEmail));
+        this.toast('Correo actualizado');
+      },
+
+      pwOpen: pwOpen, pwClosed: !pwOpen, pwCur: pwCur, pw1: pw1, pw2: pw2, reqs: reqs,
+      pwShow: !!st.pwShow, pwType: st.pwShow ? 'text' : 'password',
+      pwDisabled: !pwReady,
+      openPw: () => this.setState({ pwOpen: true }),
+      closePw: () => this.setState({ pwOpen: false, pwCur: '', pw1: '', pw2: '', pwShow: false }),
+      onPwCur: e => this.setState({ pwCur: e.target.value }),
+      onPw1: e => this.setState({ pw1: e.target.value }),
+      onPw2: e => this.setState({ pw2: e.target.value }),
+      togglePwShow: () => this.setState({ pwShow: !st.pwShow }),
+      savePw: () => {
+        if (!pwReady) return;
+        this.setState({ pwOpen: false, pwCur: '', pw1: '', pw2: '', pwShow: false });
+        this.toast('Contraseña actualizada');
+      },
+
+      themes: themes, notifs: notifs,
+      menuOpen: menuOpen, sideCls: 'side' + (menuOpen ? ' open' : ''),
+      profileOpen: !!st.profileOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      toggleProfile: () => this.setState({ profileOpen: !st.profileOpen }),
+      viewAsStudent: () => { this.setState({ profileOpen: false }); this.toast('Vista de estudiante activada'); },
+      logout: () => { this.setState({ profileOpen: false }); this.toast('Sesión cerrada'); },
+      toast: st.toast || null
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -5,6 +5,6 @@ export {
   type DocentePorQuitar,
 } from "../cursos/components/DialogoQuitarDocente";
 export { DialogoReasignar, type CursoPorReasignar } from "../cursos/components/DialogoReasignar";
-export { useCursosDeDocente } from "../cursos/hooks";
+export { useCursosDeDocente, useReasignarCurso } from "../cursos/hooks";
 export type { CursoDeDocente, EstudianteDeCurso } from "../cursos/tipos";
 export { useDetalleUsuario } from "../usuarios/hooks";
