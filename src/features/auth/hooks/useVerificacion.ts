@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -21,6 +21,12 @@ export function useVerificacion(emailInicial: string, esperarAlEntrar: boolean) 
     mode: "onTouched",
     defaultValues: { email: emailInicial, codigo: "" },
   });
+
+  // Con el correo ya escrito (enlace del correo, registro o inicio de sesión) solo falta el código.
+  const { setFocus } = formulario;
+  useEffect(() => {
+    if (emailInicial) setFocus("codigo");
+  }, [emailInicial, setFocus]);
 
   const verificar = useMutation({
     mutationFn: verificarCorreo,
@@ -60,6 +66,8 @@ export function useVerificacion(emailInicial: string, esperarAlEntrar: boolean) 
 
   return {
     formulario,
+    /** Correo válido y código de 6 dígitos: solo entonces se puede confirmar. */
+    completo: formulario.formState.isValid,
     enviar: formulario.handleSubmit(enviar),
     pedirOtroCodigo,
     enviando: verificar.isPending,
