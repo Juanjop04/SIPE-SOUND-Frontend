@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
 import { Button, ENLACE_EN_TEXTO, Field, Input, MensajeError } from "@/shared/ui";
 import { LIMITES } from "@/shared/validacion";
@@ -6,7 +6,20 @@ import { CampoCodigo } from "../components/CampoCodigo";
 import { CorreoConfirmado } from "../components/CorreoConfirmado";
 import { ReenvioCodigo } from "../components/ReenvioCodigo";
 import { VigenciaCodigo } from "../components/VigenciaCodigo";
-import { useVerificacion } from "../hooks/useVerificacion";
+import { useVerificacion, VIGENCIA_CODIGO_SEGUNDOS } from "../hooks/useVerificacion";
+import { esquemaVerificacion } from "../schemas";
+
+/** Vigencia del código: la misma constante que usa la cuenta regresiva. */
+const VIGENCIA_MINUTOS = Math.round(VIGENCIA_CODIGO_SEGUNDOS / 60);
+const TEXTO_VIGENCIA = `${VIGENCIA_MINUTOS} ${VIGENCIA_MINUTOS === 1 ? "minuto" : "minutos"}`;
+
+const ID_AYUDA = "verificar-ayuda";
+
+/** El correo del enlace del correo (?email=): solo si es válido; si no, se ignora sin avisar. */
+function correoDelEnlace(valor: string | null): string {
+  const candidato = (valor ?? "").trim().toLowerCase();
+  return esquemaVerificacion.shape.email.safeParse(candidato).success ? candidato : "";
+}
 
 /** Lo que llega por `state` al navegar desde el registro o el inicio de sesión. */
 export interface EstadoVerificar {
@@ -19,7 +32,10 @@ export interface EstadoVerificar {
 
 export default function VerificarPage() {
   const estado = (useLocation().state ?? {}) as EstadoVerificar;
-  const v = useVerificacion(estado.email ?? "", estado.venceEnSegundos);
+  const [parametros] = useSearchParams();
+  // El state de la navegación (registro, inicio de sesión) manda sobre el parámetro.
+  const emailInicial = estado.email ?? correoDelEnlace(parametros.get("email"));
+  const v = useVerificacion(emailInicial, estado.venceEnSegundos);
   const {
     register,
     formState: { errors },
@@ -33,7 +49,8 @@ export default function VerificarPage() {
     <>
       <h1 className="font-display text-3xl font-semibold">Confirma tu correo</h1>
       <p className="mt-2 text-muted">
-        Escribe el código de 6 dígitos que te enviamos. Vence en 1 minuto y solo sirve una vez.
+        Escribe el código de 6 dígitos que te enviamos. Vence en {TEXTO_VIGENCIA} y solo sirve una
+        vez.
       </p>
 
       {estado.enCurso && (
@@ -68,7 +85,18 @@ export default function VerificarPage() {
 
         {v.errorGeneral && <MensajeError mensaje={v.errorGeneral} />}
 
-        <Button type="submit" className="w-full" cargando={v.enviando}>
+        {!v.completo && (
+          <p id={ID_AYUDA} className="-mb-2 text-sm text-muted">
+            Escribe tu correo y el código de 6 dígitos.
+          </p>
+        )}
+        <Button
+          type="submit"
+          className="w-full"
+          cargando={v.enviando}
+          disabled={!v.completo || v.enviando}
+          aria-describedby={v.completo ? undefined : ID_AYUDA}
+        >
           {v.enviando ? "Confirmando…" : "Confirmar"}
         </Button>
       </form>
