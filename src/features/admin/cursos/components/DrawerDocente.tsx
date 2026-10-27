@@ -2,6 +2,7 @@ import { formatearFecha } from "@/shared/lib/formato";
 import { Button, Drawer, EstadoVacio, MensajeError, Skeleton } from "@/shared/ui";
 import { useCursosDeDocente } from "../hooks";
 import type { CursoDeDocente, DocenteAdmin } from "../tipos";
+import type { DocentePorQuitar } from "./DialogoQuitarDocente";
 import type { CursoPorReasignar } from "./DialogoReasignar";
 
 interface DrawerDocenteProps {
@@ -10,14 +11,17 @@ interface DrawerDocenteProps {
   nombre: string;
   onCerrar: () => void;
   onReasignar: (curso: CursoPorReasignar) => void;
+  onQuitar: (curso: DocentePorQuitar) => void;
 }
 
 function FilaCurso({
   curso,
   onReasignar,
+  onQuitar,
 }: {
   curso: CursoDeDocente;
   onReasignar: (curso: CursoDeDocente) => void;
+  onQuitar: (curso: CursoDeDocente) => void;
 }) {
   return (
     <li className="flex flex-col gap-2 py-3 sm:flex-row sm:items-start sm:justify-between">
@@ -34,15 +38,28 @@ function FilaCurso({
           Código {curso.codigo_invitacion} · creado el {formatearFecha(curso.creado_en)}
         </p>
       </div>
-      <Button variante="secundario" tamano="sm" onClick={() => onReasignar(curso)}>
-        Reasignar
-      </Button>
+      <div className="flex gap-2">
+        <Button variante="secundario" tamano="sm" onClick={() => onReasignar(curso)}>
+          Reasignar
+        </Button>
+        {!curso.archivado_en && (
+          <Button variante="secundario" tamano="sm" onClick={() => onQuitar(curso)}>
+            Quitar docente
+          </Button>
+        )}
+      </div>
     </li>
   );
 }
 
 /** Cursos de un docente, activos primero y luego archivados, cada uno con "Reasignar". */
-export function DrawerDocente({ docente, nombre, onCerrar, onReasignar }: DrawerDocenteProps) {
+export function DrawerDocente({
+  docente,
+  nombre,
+  onCerrar,
+  onReasignar,
+  onQuitar,
+}: DrawerDocenteProps) {
   const { data, isPending, error, refetch } = useCursosDeDocente(docente?.id ?? null);
   return (
     <Drawer
@@ -71,6 +88,14 @@ export function DrawerDocente({ docente, nombre, onCerrar, onReasignar }: Drawer
                   nombre: c.nombre,
                   estudiantes: c.estudiantes,
                   docenteId: docente.id,
+                  docente: nombre,
+                })
+              }
+              onQuitar={(c) =>
+                onQuitar({
+                  cursoId: c.id,
+                  curso: c.nombre,
+                  estudiantes: c.estudiantes,
                   docente: nombre,
                 })
               }

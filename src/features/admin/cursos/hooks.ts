@@ -70,6 +70,13 @@ export function useReasignarCurso() {
   );
 }
 
+export function useQuitarDocente() {
+  return useAccionConAviso(
+    (datos: { cursoId: number; resumen: string }) => cursosAdminApi.quitarDocente(datos.cursoId),
+    (datos) => datos.resumen,
+  );
+}
+
 export function useRetirarEstudiante() {
   // El backend añade la sugerencia de regenerar el código del curso.
   return useAccionConAviso(
