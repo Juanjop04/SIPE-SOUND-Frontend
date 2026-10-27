@@ -108,7 +108,7 @@ export function ResumenDocentes() {
         <CifraCompacta
           etiqueta="Cursos sin docente"
           valor={cursosSinDocente}
-          colorValor={cursosSinDocente ? "text-danger" : "text-paper"}
+          colorValor={cursosSinDocente ? "text-peligro-texto" : "text-paper"}
         />
       </div>
       <p className="flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-muted">

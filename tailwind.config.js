@@ -30,6 +30,13 @@ export default {
         },
         danger: token("danger"),
         aviso: token("aviso"),
+        peligro: {
+          DEFAULT: token("peligro"),
+          hover: token("peligro-hover"),
+          texto: token("peligro-texto"),
+        },
+        "sobre-peligro": token("sobre-peligro"),
+        toast: { check: token("toast-check"), error: token("toast-error") },
         muted: token("muted"),
         paper: token("paper"),
       },

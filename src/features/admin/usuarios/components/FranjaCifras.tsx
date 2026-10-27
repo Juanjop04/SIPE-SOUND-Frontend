@@ -12,7 +12,7 @@ const CIFRAS: Cifra[] = [
   { estado: null, etiqueta: "Todas", color: "text-paper" },
   { estado: "activa", etiqueta: "Activas", color: "text-success" },
   { estado: "pendiente_verificacion", etiqueta: "Pendientes", color: "text-aviso" },
-  { estado: "suspendida", etiqueta: "Suspendidas", color: "text-danger" },
+  { estado: "suspendida", etiqueta: "Suspendidas", color: "text-peligro-texto" },
 ];
 
 interface FranjaCifrasProps {

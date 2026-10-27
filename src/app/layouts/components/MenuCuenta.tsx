@@ -111,7 +111,11 @@ export function MenuCuenta({ variante = "estudiante" }: MenuCuentaProps) {
               Ver como estudiante
             </Link>
           )}
-          <button type="button" className={`${OPCION} text-danger`} onClick={handleCerrarSesion}>
+          <button
+            type="button"
+            className={`${OPCION} text-peligro-texto`}
+            onClick={handleCerrarSesion}
+          >
             <LogOut size={16} aria-hidden="true" />
             Cerrar sesión
           </button>

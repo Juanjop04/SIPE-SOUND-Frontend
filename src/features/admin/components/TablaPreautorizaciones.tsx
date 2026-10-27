@@ -63,7 +63,7 @@ export function TablaPreautorizaciones({ filas }: { filas: Preautorizacion[] }) 
             aria-label={`Revocar la autorización de ${f.email}`}
             title="Revocar autorización"
             onClick={() => setPorRetirar(f.email)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-transparent text-accent transition-colors duration-rapida hover:bg-danger/10 hover:text-danger"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-transparent text-accent transition-colors duration-rapida hover:bg-peligro-texto/10 hover:text-peligro-texto"
           >
             <Trash2 size={17} aria-hidden="true" />
           </button>

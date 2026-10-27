@@ -87,7 +87,7 @@ export function AccionesFila({ usuario, propia, onAccion }: AccionesFilaProps) {
       </BotonIcono>
       <BotonIcono
         etiqueta={`Eliminar a ${nombre}`}
-        clase="hover:bg-danger/10 hover:text-danger"
+        clase="hover:bg-peligro-texto/10 hover:text-peligro-texto"
         disabled={propia}
         onClick={() => onAccion("eliminar", usuario)}
       >

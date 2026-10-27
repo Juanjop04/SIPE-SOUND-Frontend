@@ -17,8 +17,8 @@ const VARIANTES: Record<VarianteBoton, string> = {
   secundario: "border border-linea-fuerte text-paper hover:border-accent",
   // Con borde: un texto suelto no dice que se puede pulsar (HU-F-509).
   fantasma: "border border-linea text-paper hover:border-accent hover:bg-surface",
-  // Texto ink sobre danger: 6.3:1 (paper encima no llega a 4.5:1).
-  peligro: "bg-danger text-ink hover:bg-danger/90",
+  // Confirmación destructiva del diseño: #DC2626 con texto blanco (hover #B91C1C).
+  peligro: "bg-peligro text-sobre-peligro hover:bg-peligro-hover",
 };
 
 const TAMANOS: Record<TamanoBoton, string> = {

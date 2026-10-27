@@ -83,7 +83,7 @@ function AccionesDelCurso({ curso: c, docenteId, nombre, onReasignar, onQuitar }
           type="button"
           title="Quitar docente del curso"
           aria-label={`Quitar a ${nombre} de ${c.nombre}`}
-          className={cn(BOTON_ICONO, "hover:bg-danger/10 hover:text-danger")}
+          className={cn(BOTON_ICONO, "hover:bg-peligro-texto/10 hover:text-peligro-texto")}
           onClick={() =>
             onQuitar({
               cursoId: c.id,

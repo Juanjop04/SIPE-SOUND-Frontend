@@ -266,7 +266,7 @@ export function SeccionEliminar({
         tamano="sm"
         disabled={propia}
         onClick={onEliminar}
-        className="border-danger/50 text-danger hover:border-danger hover:bg-danger/10"
+        className="border-peligro-texto/45 text-peligro-texto hover:border-peligro-texto hover:bg-peligro-texto/10"
       >
         Eliminar
       </Button>

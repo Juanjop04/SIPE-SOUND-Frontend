@@ -14,7 +14,7 @@ import { AccionesFila, type AccionUsuario } from "./AccionesFila";
 const COLOR_ESTADO: Record<EstadoCuenta, string> = {
   pendiente_verificacion: "text-aviso",
   activa: "text-success",
-  suspendida: "text-danger",
+  suspendida: "text-peligro-texto",
 };
 
 const COLOR_ROL: Record<RolCuenta, string> = {
@@ -92,7 +92,7 @@ function CeldaActividad({ usuario: u, enviando }: Pick<FilaProps, "usuario" | "e
       <span className="font-mono text-xs text-paper">
         {u.ultimo_acceso ? formatearFecha(u.ultimo_acceso) : "Sin accesos"}
       </span>
-      <span className={cn("text-xs", envio.fallo ? "text-danger" : "text-muted")}>
+      <span className={cn("text-xs", envio.fallo ? "text-peligro-texto" : "text-muted")}>
         {hayEnvio ? envio.texto : lineaDeActividad(u)}
       </span>
     </div>

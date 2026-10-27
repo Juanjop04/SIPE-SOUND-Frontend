@@ -62,7 +62,7 @@ function Cuerpo({
         </label>
       )}
       {mensaje && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-sm text-peligro-texto">
           {mensaje}
         </p>
       )}

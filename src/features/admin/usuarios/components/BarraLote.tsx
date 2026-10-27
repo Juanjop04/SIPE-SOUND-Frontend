@@ -35,7 +35,7 @@ export function BarraLote({
       <p className="text-sm font-semibold text-paper">
         <span className="font-mono tabular-nums">{cantidad}</span> seleccionadas
         {demasiadas && (
-          <span className="font-normal text-danger">
+          <span className="font-normal text-peligro-texto">
             {" "}
             · Elige {MAXIMO_LOTE} como máximo por vez.
           </span>

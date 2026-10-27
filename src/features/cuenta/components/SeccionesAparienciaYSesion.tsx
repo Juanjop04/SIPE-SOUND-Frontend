@@ -83,7 +83,7 @@ export function SeccionSesion() {
         <Button
           variante="fantasma"
           onClick={salir}
-          className="border-danger/50 text-danger hover:border-danger hover:bg-danger/10"
+          className="border-peligro-texto/45 text-peligro-texto hover:border-peligro-texto hover:bg-peligro-texto/10"
         >
           Cerrar sesión
         </Button>

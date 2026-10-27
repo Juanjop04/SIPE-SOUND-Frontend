@@ -23,7 +23,7 @@ export type { Borrador } from "./SeccionesEdicion";
 const COLOR_ESTADO = {
   pendiente_verificacion: "text-aviso",
   activa: "text-success",
-  suspendida: "text-danger",
+  suspendida: "text-peligro-texto",
 } as const;
 
 function borradorDe(u: Detalle): Borrador {

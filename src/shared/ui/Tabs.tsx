@@ -71,7 +71,7 @@ export function Tabs({ etiqueta, pestanas, activa, onCambiar, className }: TabsP
               className={cn(
                 "-mb-px border-b-2 px-3 py-2 text-sm transition-colors duration-rapida",
                 seleccionada
-                  ? "border-accent text-paper"
+                  ? "border-primary font-semibold text-paper"
                   : "border-transparent text-muted hover:text-paper",
               )}
             >
