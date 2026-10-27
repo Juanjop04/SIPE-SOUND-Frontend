@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { TrasteDivider } from "@/shared/music";
 
 interface PaginaAtrilProps {
-  titulo: string;
-  descripcion: string;
+  titulo: ReactNode;
+  descripcion: ReactNode;
   children: ReactNode;
 }
 

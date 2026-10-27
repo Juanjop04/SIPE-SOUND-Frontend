@@ -9,6 +9,7 @@ export { ENLACE_EN_TEXTO } from "./enlace";
 export { Input, type InputProps } from "./Input";
 export { Foto, type FotoProps, type NombreFoto } from "./Foto";
 export { TarjetaCifra, type TarjetaCifraProps } from "./TarjetaCifra";
+export { CifraCompacta, type CifraCompactaProps } from "./CifraCompacta";
 export { EncabezadoPagina, type EncabezadoPaginaProps } from "./EncabezadoPagina";
 export { Textarea, type TextareaProps } from "./Textarea";
 export { Select, type SelectProps } from "./Select";

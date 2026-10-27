@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TIEMPO_CATALOGO_MS } from "@/shared/api/queryClient.js";
+import { ROL, useSession } from "@/features/auth";
 import { docenteApi, docenteKeys } from "../datos";
 import type { DatosCurso } from "../datos";
 
@@ -10,6 +11,17 @@ export function useCursos(estado: EstadoCursos) {
     queryKey: docenteKeys.lista(estado),
     queryFn: () => docenteApi.listarCursos(estado),
   });
+}
+
+/**
+ * ¿Puede crear contenido? Un docente necesita al menos un curso activo asignado por el
+ * administrador (HU-F-518); el administrador siempre puede. `cargando` evita avisar antes de saber.
+ */
+export function useTieneCursoAsignado() {
+  const { rol } = useSession();
+  const cursos = useCursos("activo");
+  if (rol === ROL.admin) return { cargando: false, puede: true };
+  return { cargando: cursos.isPending, puede: (cursos.data?.length ?? 0) > 0 };
 }
 
 export function useCurso(id: number) {
@@ -35,9 +47,6 @@ function useMutacionCursos<V, R>(accion: (variables: V) => Promise<R>) {
     },
   });
 }
-
-export const useCrearCurso = () =>
-  useMutacionCursos((datos: DatosCurso) => docenteApi.crearCurso(datos));
 
 export const useEditarCurso = (id: number) =>
   useMutacionCursos((datos: DatosCurso) => docenteApi.editarCurso(id, datos));
