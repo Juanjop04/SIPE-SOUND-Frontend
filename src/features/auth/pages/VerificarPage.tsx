@@ -5,18 +5,21 @@ import { LIMITES } from "@/shared/validacion";
 import { CampoCodigo } from "../components/CampoCodigo";
 import { CorreoConfirmado } from "../components/CorreoConfirmado";
 import { ReenvioCodigo } from "../components/ReenvioCodigo";
+import { VigenciaCodigo } from "../components/VigenciaCodigo";
 import { useVerificacion } from "../hooks/useVerificacion";
 
 /** Lo que llega por `state` al navegar desde el registro o el inicio de sesión. */
 export interface EstadoVerificar {
   email?: string;
-  /** El código acaba de enviarse: el reenvío espera un minuto. */
-  recienEnviado?: boolean;
+  /** Segundos que le quedan al código vigente (los da el registro). */
+  venceEnSegundos?: number;
+  /** El correo ya había empezado a registrarse. */
+  enCurso?: boolean;
 }
 
 export default function VerificarPage() {
   const estado = (useLocation().state ?? {}) as EstadoVerificar;
-  const v = useVerificacion(estado.email ?? "", estado.recienEnviado ?? false);
+  const v = useVerificacion(estado.email ?? "", estado.venceEnSegundos);
   const {
     register,
     formState: { errors },
@@ -30,8 +33,15 @@ export default function VerificarPage() {
     <>
       <h1 className="font-display text-3xl font-semibold">Confirma tu correo</h1>
       <p className="mt-2 text-muted">
-        Escribe el código de 6 dígitos que te enviamos. Vence en 15 minutos y solo sirve una vez.
+        Escribe el código de 6 dígitos que te enviamos. Vence en 1 minuto y solo sirve una vez.
       </p>
+
+      {estado.enCurso && (
+        <p role="status" className="mt-4 rounded-lg border border-linea bg-surface p-3 text-sm">
+          Ya tienes un registro en curso con este correo. Escribe el código que te enviamos o pide
+          uno nuevo.
+        </p>
+      )}
 
       <form onSubmit={v.enviar} noValidate className="mt-8 flex flex-col gap-5">
         <Field etiqueta="Correo electrónico" error={errors.email?.message}>
@@ -53,6 +63,8 @@ export default function VerificarPage() {
         <Field etiqueta="Código de 6 dígitos" error={errors.codigo?.message}>
           {(control) => <CampoCodigo {...control} {...register("codigo")} />}
         </Field>
+
+        <VigenciaCodigo {...v.vigencia} />
 
         {v.errorGeneral && <MensajeError mensaje={v.errorGeneral} />}
 

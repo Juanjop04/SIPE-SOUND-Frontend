@@ -12,10 +12,17 @@ export function formatearEspera(segundos: number): string {
 /**
  * Cuenta regresiva en segundos (para "Puedes pedir otro en 0:42"). `iniciar` la arranca o la
  * reinicia; mientras `restante` > 0 la acción asociada debe seguir deshabilitada.
- * Con `iniciada` la cuenta ya corre al montar (p. ej. el código acaba de salir).
+ * Con `iniciada` la cuenta ya corre al montar: `true` desde `segundos`, o un número con los
+ * segundos que faltan (p. ej. el backend dice que al código le quedan 37).
  */
-export function useCuentaRegresiva(segundos = ESPERA_REENVIO_SEGUNDOS, iniciada = false) {
-  const [restante, setRestante] = useState(iniciada ? segundos : 0);
+export function useCuentaRegresiva(
+  segundos = ESPERA_REENVIO_SEGUNDOS,
+  iniciada: boolean | number = false,
+) {
+  const [restante, setRestante] = useState(() => {
+    if (typeof iniciada === "number") return Math.max(0, iniciada);
+    return iniciada ? segundos : 0;
+  });
 
   // Temporizador: sincroniza con el reloj (sistema externo), no pide datos.
   useEffect(() => {
@@ -24,6 +31,10 @@ export function useCuentaRegresiva(segundos = ESPERA_REENVIO_SEGUNDOS, iniciada 
     return () => clearTimeout(temporizador);
   }, [restante]);
 
-  const iniciar = useCallback(() => setRestante(segundos), [segundos]);
+  // `desde` solo cuenta si es un número: así `iniciar` también sirve como manejador de clic.
+  const iniciar = useCallback(
+    (desde?: unknown) => setRestante(typeof desde === "number" ? desde : segundos),
+    [segundos],
+  );
   return { restante, activa: restante > 0, iniciar };
 }

@@ -13,7 +13,12 @@ const CAMPOS = ["nombre", "apellido", "email", "password", "acepta_terminos"] as
 export function useFormularioRegistro() {
   const { enfriando, iniciar: iniciarEnfriamiento } = useEnfriamiento();
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
-  const [exito, setExito] = useState<{ mensaje: string; email: string } | null>(null);
+  const [exito, setExito] = useState<{
+    mensaje: string;
+    email: string;
+    enCurso: boolean;
+    venceEnSegundos: number;
+  } | null>(null);
   const formulario = useForm<EntradaRegistro, unknown, DatosRegistroFormulario>({
     resolver: zodResolver(esquemaRegistro),
     mode: "onTouched",
@@ -31,14 +36,19 @@ export function useFormularioRegistro() {
     setErrorGeneral(null);
     try {
       // Solo los campos del esquema del backend: nunca `rol` ni `confirmar`.
-      const { message } = await registrar({
+      const { data, message } = await registrar({
         nombre: datos.nombre,
         apellido: datos.apellido,
         email: datos.email,
         password: datos.password,
         acepta_terminos: true,
       });
-      setExito({ mensaje: message, email: datos.email });
+      setExito({
+        mensaje: message,
+        email: datos.email,
+        enCurso: data.registro_en_curso,
+        venceEnSegundos: data.vence_en_segundos,
+      });
     } catch (error) {
       if (esDemasiadasSolicitudes(error)) iniciarEnfriamiento();
       setErrorGeneral(aplicarErroresServidor(error, formulario.setError, CAMPOS));
