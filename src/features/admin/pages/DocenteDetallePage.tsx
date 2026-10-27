@@ -132,7 +132,7 @@ export default function DocenteDetallePage() {
             contador: acciones,
             contenido:
               pestana === "actividad" ? (
-                <ActividadDelDocente docenteId={id} mensaje={mensaje} />
+                <ActividadDelDocente docenteId={id} nombre={nombre} mensaje={mensaje} />
               ) : null,
           },
           {
