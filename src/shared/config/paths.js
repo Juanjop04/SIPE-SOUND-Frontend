@@ -67,6 +67,8 @@ export const paths = Object.freeze({
   // Administración (solo rol admin, HU-F-313).
   admin: Object.freeze({
     docentes: "/admin/docentes",
+    /** Cursos, actividad y estudiantes de un docente (HU-F-519). @param {string} [id] */
+    docente: (id = ":id") => `/admin/docentes/${id}`,
     /** Cuentas: estado, verificación, suspensión y permisos (HU-F-404). */
     usuarios: "/admin/usuarios",
     /** Todos los cursos y sus estudiantes inscritos (HU-F-405). */
