@@ -1,9 +1,8 @@
-import { Link } from "react-router-dom";
-import { paths } from "@/shared/config/paths.js";
-import { Button, ENLACE_EN_TEXTO, Field, Input, MensajeError } from "@/shared/ui";
+import { Button, Field, Input, MensajeError } from "@/shared/ui";
 import { LIMITES } from "@/shared/validacion";
 import { CamposPassword } from "../components/CamposPassword";
 import { CasillaTerminos } from "../components/CasillaTerminos";
+import { EnlacesRegistro } from "../components/EnlacesRegistro";
 import { ExitoRegistro } from "../components/ExitoRegistro";
 import { useFormularioRegistro } from "../hooks/useFormularioRegistro";
 
@@ -12,8 +11,10 @@ export default function RegistroPage() {
   const {
     register,
     control,
+    watch,
     formState: { errors, isSubmitting },
   } = formulario;
+  const email = watch("email").trim().toLowerCase();
 
   if (exito) return <ExitoRegistro mensaje={exito.mensaje} email={exito.email} />;
 
@@ -75,12 +76,7 @@ export default function RegistroPage() {
         </Button>
       </form>
 
-      <p className="mt-8 text-sm text-muted">
-        ¿Ya tienes cuenta?{" "}
-        <Link to={paths.login} className={`font-medium ${ENLACE_EN_TEXTO}`}>
-          Inicia sesión
-        </Link>
-      </p>
+      <EnlacesRegistro email={email} />
     </>
   );
 }
