@@ -4,8 +4,8 @@ import { Drawer, Field, Select } from "@/shared/ui";
 import { useCrearCursoAdmin, useDocentesParaElegir } from "../hooks";
 
 /**
- * Crear un curso desde el panel del administrador (HU-F-516). Sin docente queda disponible: un
- * docente se asigna desde su panel y sus estudiantes pueden pedir entrar desde ya.
+ * Crear un curso desde el panel del administrador (HU-F-516). Sin docente queda disponible hasta
+ * que el administrador le asigne uno (HU-F-518); sus estudiantes pueden pedir entrar desde ya.
  */
 export function DrawerNuevoCurso({
   abierto,
@@ -22,10 +22,7 @@ export function DrawerNuevoCurso({
   return (
     <Drawer abierto={abierto} onCerrar={onCerrar} titulo="Nuevo curso">
       <div className="flex flex-col gap-5">
-        <Field
-          etiqueta="Docente (opcional)"
-          ayuda="Sin docente el curso queda disponible: un docente se asigna desde su panel."
-        >
+        <Field etiqueta="Docente (opcional)" ayuda="Si eliges un docente, le llegará un correo.">
           {(campo) => (
             <Select {...campo} value={docenteId} onChange={(e) => setDocenteId(e.target.value)}>
               <option value="">Sin docente (disponible)</option>

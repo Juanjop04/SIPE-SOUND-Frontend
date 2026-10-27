@@ -2,16 +2,8 @@ import { useId } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { paths } from "@/shared/config/paths.js";
 import { formatearFecha } from "@/shared/lib/formato";
-import {
-  claseBoton,
-  EstadoVacio,
-  MensajeError,
-  Select,
-  Skeleton,
-  Table,
-  type ColumnaTabla,
-} from "@/shared/ui";
-import { Autoria } from "../externos";
+import { EstadoVacio, MensajeError, Select, Skeleton, Table, type ColumnaTabla } from "@/shared/ui";
+import { Autoria, BotonCrearContenido } from "../externos";
 import { useEvaluacionesDocente } from "../api";
 import { useCursos, type Curso } from "../datos";
 import type { EstadoEvaluacion, EvaluacionDocente } from "../tipos";
@@ -197,9 +189,7 @@ export function ListaEvaluaciones({ cursoFijo }: { cursoFijo?: number }) {
           estado={estado}
           onFiltrar={filtrar}
         />
-        <Link to={nueva} className={claseBoton()}>
-          Nueva evaluación
-        </Link>
+        <BotonCrearContenido to={nueva}>Nueva evaluación</BotonCrearContenido>
       </div>
       {isPending && <Skeleton lineas={4} className="h-11 w-full" />}
       {error && <MensajeError mensaje={error.message} onReintentar={() => refetch()} />}

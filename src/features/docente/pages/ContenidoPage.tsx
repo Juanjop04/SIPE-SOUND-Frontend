@@ -1,7 +1,8 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { paths } from "@/shared/config/paths.js";
-import { EstadoVacio, MensajeError, Skeleton, Tabs, claseBoton } from "@/shared/ui";
+import { EstadoVacio, MensajeError, Skeleton, Tabs } from "@/shared/ui";
+import { BotonCrearContenido } from "../components/BotonCrearContenido";
 import { PaginaAtril } from "../components/PaginaAtril";
 import { useListadoContenido } from "../contenido/api";
 import { FiltrosContenido } from "../contenido/components/FiltrosContenido";
@@ -82,10 +83,10 @@ export default function ContenidoPage() {
           }}
           onCambiar={cambiar}
         />
-        <Link to={nuevo} className={claseBoton()}>
+        <BotonCrearContenido to={nuevo}>
           <Plus size={16} aria-hidden="true" />
           {tipo === "lecciones" ? "Nueva lección" : "Nuevo ejercicio"}
-        </Link>
+        </BotonCrearContenido>
       </div>
       <Tabs
         etiqueta="Tipo de contenido"

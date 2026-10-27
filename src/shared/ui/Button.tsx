@@ -14,11 +14,11 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 // Un nuevo estilo es una entrada del mapa, no un if (contrato 02 §4, "O").
 const VARIANTES: Record<VarianteBoton, string> = {
   primario: "bg-primary text-sobre-primary hover:bg-primary-hover",
-  secundario: "border border-linea-fuerte text-paper hover:border-accent",
+  secundario: "border border-linea-control text-paper hover:border-primary",
   // Con borde: un texto suelto no dice que se puede pulsar (HU-F-509).
-  fantasma: "border border-linea text-paper hover:border-accent hover:bg-surface",
-  // Texto ink sobre danger: 6.3:1 (paper encima no llega a 4.5:1).
-  peligro: "bg-danger text-ink hover:bg-danger/90",
+  fantasma: "border border-linea-control text-paper hover:bg-surface-2",
+  // Confirmación destructiva del diseño: #DC2626 con texto blanco (hover #B91C1C).
+  peligro: "bg-peligro text-sobre-peligro hover:bg-peligro-hover",
 };
 
 const TAMANOS: Record<TamanoBoton, string> = {

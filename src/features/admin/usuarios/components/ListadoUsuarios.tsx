@@ -1,17 +1,27 @@
 import { Button, EstadoVacio, MensajeError, Paginacion, Skeleton } from "@/shared/ui";
 import { useUsuarios } from "../hooks";
-import type { FiltrosUsuarios, Usuario } from "../tipos";
+import type { FiltrosUsuarios, RolCuenta, Usuario } from "../tipos";
 import type { AccionUsuario } from "./AccionesFila";
+import { BarraLote } from "./BarraLote";
 import { TablaUsuarios } from "./TablaUsuarios";
 
 interface ListadoUsuariosProps {
   filtros: FiltrosUsuarios;
   hayFiltros: boolean;
-  seleccion: ReadonlySet<string>;
+  seleccion: ReadonlyMap<string, Usuario>;
+  miId: string | undefined;
+  editandoId: string | null;
   enviando: ReadonlySet<string>;
-  onAlternar: (id: string) => void;
-  onElegirPagina: (ids: string[], marcar: boolean) => void;
+  loteOcupado: boolean;
+  onAlternar: (usuario: Usuario) => void;
+  onElegirPagina: (usuarios: Usuario[], marcar: boolean) => void;
   onAccion: (accion: AccionUsuario, usuario: Usuario) => void;
+  onCambiarRol: (usuario: Usuario, rol: RolCuenta) => void;
+  onRolEnLote: (rol: RolCuenta) => void;
+  onActivarEnLote: () => void;
+  onSuspenderEnLote: () => void;
+  onReenviarEnLote: () => void;
+  onLimpiarSeleccion: () => void;
   onPagina: (pagina: number) => void;
   onQuitarFiltros: () => void;
 }
@@ -23,10 +33,19 @@ export function ListadoUsuarios({
   filtros,
   hayFiltros,
   seleccion,
+  miId,
+  editandoId,
   enviando,
+  loteOcupado,
   onAlternar,
   onElegirPagina,
   onAccion,
+  onCambiarRol,
+  onRolEnLote,
+  onActivarEnLote,
+  onSuspenderEnLote,
+  onReenviarEnLote,
+  onLimpiarSeleccion,
   onPagina,
   onQuitarFiltros,
 }: ListadoUsuariosProps) {
@@ -44,11 +63,11 @@ export function ListadoUsuarios({
   if (!data || data.data.length === 0) {
     return (
       <EstadoVacio
-        titulo="No hay cuentas con estos filtros."
+        titulo="Ninguna cuenta coincide con la búsqueda."
         accion={
           hayFiltros ? (
             <Button variante="secundario" onClick={onQuitarFiltros}>
-              Quitar filtros
+              Limpiar filtros
             </Button>
           ) : undefined
         }
@@ -56,27 +75,36 @@ export function ListadoUsuarios({
     );
   }
 
-  const ids = data.data.map((u) => u.id);
-  const todas = ids.every((id) => seleccion.has(id));
   return (
-    <div className="flex flex-col gap-3">
-      <label className="flex w-fit items-center gap-2 text-sm text-muted">
-        <input
-          type="checkbox"
-          checked={todas}
-          onChange={() => onElegirPagina(ids, !todas)}
-          className="h-4 w-4 accent-primary"
+    <section
+      aria-label="Lista de usuarios"
+      className="overflow-hidden rounded-caja border border-linea bg-surface"
+    >
+      {seleccion.size > 0 && (
+        <BarraLote
+          cantidad={seleccion.size}
+          ocupada={loteOcupado}
+          onRol={onRolEnLote}
+          onActivar={onActivarEnLote}
+          onSuspender={onSuspenderEnLote}
+          onReenviar={onReenviarEnLote}
+          onLimpiar={onLimpiarSeleccion}
         />
-        Elegir las {ids.length} cuentas de esta página
-      </label>
+      )}
       <TablaUsuarios
         usuarios={data.data}
         seleccion={seleccion}
+        miId={miId}
+        editandoId={editandoId}
         enviando={enviando}
         onAlternar={onAlternar}
+        onElegirPagina={onElegirPagina}
         onAccion={onAccion}
+        onCambiarRol={onCambiarRol}
       />
-      <Paginacion meta={data.meta} onPagina={onPagina} />
-    </div>
+      <div className="border-t border-linea px-4 py-3">
+        <Paginacion meta={data.meta} onPagina={onPagina} />
+      </div>
+    </section>
   );
 }

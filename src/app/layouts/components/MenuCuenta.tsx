@@ -1,11 +1,11 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Eye, LogOut, User } from "lucide-react";
 import { puedeUsarAtril, useSession } from "@/features/auth";
 import { paths } from "@/shared/config/paths.js";
 
 const OPCION =
-  "block w-full rounded-md px-3 py-2 text-left text-sm text-muted transition-colors duration-rapida hover:bg-surface hover:text-paper";
+  "flex min-h-10 w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm text-paper transition-colors duration-rapida hover:bg-surface";
 
 const ETIQUETA_ROL = {
   estudiante: "Estudiante",
@@ -27,6 +27,10 @@ export function MenuCuenta({ variante = "estudiante" }: MenuCuentaProps) {
   const boton = useRef<HTMLButtonElement>(null);
   const idMenu = useId();
   const enAtril = variante === "atril";
+  const nombre = [perfil?.nombre, perfil?.apellido].filter(Boolean).join(" ") || usuario?.email;
+  const iniciales =
+    `${perfil?.nombre?.[0] ?? ""}${perfil?.apellido?.[0] ?? ""}`.toUpperCase() ||
+    (usuario?.email?.[0] ?? "?").toUpperCase();
 
   // Se cierra al hacer clic fuera o con Esc (el foco vuelve al botón).
   useEffect(() => {
@@ -61,20 +65,34 @@ export function MenuCuenta({ variante = "estudiante" }: MenuCuentaProps) {
         aria-expanded={abierto}
         aria-controls={idMenu}
         onClick={() => setAbierto((valor) => !valor)}
-        className="inline-flex h-10 max-w-[8rem] items-center gap-1 text-sm text-muted transition-colors duration-rapida hover:text-paper sm:max-w-[14rem]"
+        aria-label="Menú de la cuenta"
+        className="inline-flex min-h-11 items-center gap-2.5 rounded-md p-1 pr-2 text-sm text-paper transition-colors duration-rapida hover:bg-surface"
       >
-        <span className="flex min-w-0 flex-col items-end text-right leading-tight">
-          <span className="w-full truncate">{perfil?.nombre ?? usuario?.email}</span>
-          {enAtril && rol && <span className="text-xs">{ETIQUETA_ROL[rol]}</span>}
+        <span
+          aria-hidden="true"
+          className="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-md bg-accent text-[13px] font-bold text-ink"
+        >
+          {iniciales}
         </span>
-        <ChevronDown size={16} aria-hidden="true" className="shrink-0" />
+        <span className="hidden min-w-0 max-w-[14rem] flex-col items-start leading-tight min-[561px]:flex">
+          <span className="w-full truncate font-semibold">{nombre}</span>
+          {rol && <span className="text-xs text-muted">{ETIQUETA_ROL[rol]}</span>}
+        </span>
+        <ChevronDown size={16} aria-hidden="true" className="shrink-0 text-muted" />
       </button>
       {abierto && (
         <div
           id={idMenu}
-          className="absolute right-0 top-full z-50 mt-2 w-56 rounded-caja border border-linea bg-surface-2 p-1 shadow-dialogo"
+          className="absolute right-0 top-full z-50 mt-2 w-60 rounded-caja border border-linea bg-surface-2 p-1.5 shadow-dialogo"
         >
+          <div className="mb-1.5 flex flex-col gap-0.5 border-b border-linea px-3 pb-3 pt-2">
+            <span className="text-sm font-semibold text-paper">{nombre}</span>
+            <span className="break-all font-mono text-xs text-muted">
+              {perfil?.email ?? usuario?.email}
+            </span>
+          </div>
           <Link to={paths.cuenta} className={OPCION} onClick={() => setAbierto(false)}>
+            <User size={16} aria-hidden="true" />
             Mi cuenta
           </Link>
           {!enAtril && !puedeUsarAtril(rol) && (
@@ -89,10 +107,16 @@ export function MenuCuenta({ variante = "estudiante" }: MenuCuentaProps) {
           )}
           {enAtril && (
             <Link to={paths.inicio} className={OPCION} onClick={() => setAbierto(false)}>
+              <Eye size={16} aria-hidden="true" />
               Ver como estudiante
             </Link>
           )}
-          <button type="button" className={OPCION} onClick={handleCerrarSesion}>
+          <button
+            type="button"
+            className={`${OPCION} text-peligro-texto`}
+            onClick={handleCerrarSesion}
+          >
+            <LogOut size={16} aria-hidden="true" />
             Cerrar sesión
           </button>
         </div>

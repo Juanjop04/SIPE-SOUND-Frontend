@@ -13,7 +13,6 @@ export const docenteApi = {
   resumen: (): Promise<ResumenDocente> => http.get("/docente/resumen"),
   listarCursos: (estado: "activo" | "archivado"): Promise<Curso[]> => http.get(CURSOS, { estado }),
   obtenerCurso: (id: number): Promise<CursoDetalle> => http.get(`${CURSOS}/${id}`),
-  crearCurso: (datos: DatosCurso): ConMensaje<Curso> => http.conMensaje("POST", CURSOS, datos),
   editarCurso: (id: number, datos: DatosCurso): ConMensaje<Curso> =>
     http.conMensaje("PATCH", `${CURSOS}/${id}`, datos),
   archivarCurso: (id: number): ConMensaje<Curso> => http.conMensaje("DELETE", `${CURSOS}/${id}`),

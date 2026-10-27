@@ -34,7 +34,7 @@ export function PanelModal({
       aria-labelledby={idTitulo}
       aria-describedby={descripcion ? idDescripcion : undefined}
       onKeyDown={atraparFoco}
-      className={cn("bg-surface-2 p-0 text-paper backdrop:bg-ink/80", className)}
+      className={cn("bg-surface-2 p-0 text-paper backdrop:bg-ink/70", className)}
     >
       {abierto && (
         <div className="flex h-full flex-col gap-4 p-6">

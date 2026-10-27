@@ -3,6 +3,8 @@ import { formatearFecha } from "@/shared/lib/formato";
 import { Button, Drawer, EstadoVacio, MensajeError, Paginacion, Skeleton } from "@/shared/ui";
 import { useEstudiantesDeCurso } from "../hooks";
 import type { CursoAdmin } from "../tipos";
+import { DialogoQuitarDocente, type DocentePorQuitar } from "./DialogoQuitarDocente";
+import { DialogoReasignar, type CursoPorReasignar } from "./DialogoReasignar";
 import { DialogoRetirar, type RetiroPendiente } from "./DialogoRetirar";
 
 const nombreDe = (p: { nombre: string; apellido?: string | null }) =>
@@ -70,6 +72,56 @@ function descripcionDe(curso: CursoAdmin): string {
   return `${docente} · código ${curso.codigo_invitacion}`;
 }
 
+/** Asignar, reasignar o quitar al docente del curso (solo el administrador, HU-F-518). */
+function AccionesDocente({ curso, onHecho }: { curso: CursoAdmin; onHecho: () => void }) {
+  const [asignando, setAsignando] = useState<CursoPorReasignar | null>(null);
+  const [quitando, setQuitando] = useState<DocentePorQuitar | null>(null);
+  const docente = curso.docente
+    ? nombreDe({ nombre: curso.docente, apellido: curso.docente_apellido })
+    : null;
+  return (
+    <div className="mb-4 flex flex-wrap gap-3">
+      <Button
+        variante="secundario"
+        tamano="sm"
+        onClick={() =>
+          setAsignando({
+            id: curso.id,
+            nombre: curso.nombre,
+            estudiantes: curso.estudiantes,
+            docenteId: curso.docente_id,
+            docente,
+          })
+        }
+      >
+        {docente ? "Reasignar" : "Asignar docente"}
+      </Button>
+      {docente && (
+        <Button
+          variante="secundario"
+          tamano="sm"
+          onClick={() =>
+            setQuitando({
+              cursoId: curso.id,
+              curso: curso.nombre,
+              estudiantes: curso.estudiantes,
+              docente,
+            })
+          }
+        >
+          Quitar docente
+        </Button>
+      )}
+      <DialogoReasignar curso={asignando} onCerrar={() => setAsignando(null)} onHecho={onHecho} />
+      <DialogoQuitarDocente
+        quitar={quitando}
+        onCerrar={() => setQuitando(null)}
+        onHecho={onHecho}
+      />
+    </div>
+  );
+}
+
 export function DetalleCurso({ curso, onCerrar }: DetalleCursoProps) {
   return (
     <Drawer
@@ -79,6 +131,7 @@ export function DetalleCurso({ curso, onCerrar }: DetalleCursoProps) {
       titulo={curso ? curso.nombre : "Curso"}
       descripcion={curso ? descripcionDe(curso) : undefined}
     >
+      {curso && !curso.archivado_en && <AccionesDocente curso={curso} onHecho={onCerrar} />}
       {curso && <Estudiantes key={curso.id} curso={curso} />}
     </Drawer>
   );

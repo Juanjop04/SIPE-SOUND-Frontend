@@ -6,19 +6,30 @@
 :root {
   /* Paleta del rediseño (HU-F-320, maqueta aprobada con ajustes AA). Capas: página → barras → tarjetas → lo que flota. */
   --color-ink: 11 16 32; /* #0B1020 · fondo de la página */
-  --color-ink-2: 16 22 43; /* #10162B · barra lateral, encabezado, barras fijas, pistas de progreso */
-  --color-surface: 23 29 51; /* #171D33 · tarjetas, tablas, controles (siempre con borde linea) */
-  --color-surface-2: 31 39 68; /* #1F2744 · lo que flota: Drawer, Dialog, menús, avisos */
-  --color-linea: 58 70 115; /* #3A4673 · bordes de tarjetas y divisores */
-  --color-linea-fuerte: 107 120 168; /* #6B78A8 · bordes de controles (≥ 3:1 en toda capa) */
+  --color-ink-2: 15 20 40; /* #0F1428 · campos, encabezado de tabla, barras fijas, pistas de progreso */
+  --color-surface: 17 22 43; /* #11162B · tarjetas, tablas, panel lateral de edición (siempre con borde linea) */
+  --color-surface-2: 23 29 51; /* #171D33 · lo que flota: popups, menús, ítem activo del menú */
+  --color-linea: 35 42 71; /* #232A47 · bordes de tarjetas, tablas y divisores */
+  --color-linea-fuerte: 107 120 168; /* #6B78A8 · trazos que hay que leer (ChordDiagram, gráficos): ≥ 3:1 */
+  --color-linea-control: 42 49 82; /* #2A3152 · bordes de campos y botones secundarios (decisión del diseño) */
+  --color-foco: 139 131 255; /* #8B83FF · contorno de foco */
   --color-primary: 98 87 245; /* #6257F5 · fondo de botón y relleno de progreso; nunca texto */
   --color-primary-hover: 83 72 230; /* #5348E6 · más oscuro: el texto del botón gana contraste */
   --color-primary-claro: 154 148 250; /* #9A94FA · violeta legible como texto o trazo */
   --color-accent: 185 200 255; /* #B9C8FF · lavanda: enlaces, foco, íconos, gráficos */
   --color-success: 52 211 153; /* #34D399 · verde: solo logro (completado, aprobado) */
   --color-suena: 245 185 66; /* #F5B942 · ámbar: solo la cuerda que suena */
-  --color-danger: 247 112 122; /* #F7707A · errores y acciones destructivas */
-  --color-muted: 174 182 216; /* #AEB6D8 · texto secundario */
+  --color-danger: 252 165 165; /* #FCA5A5 · errores, suspendida y texto destructivo */
+  /* Confirmación destructiva (botón rojo de los popups, #DC2626) y su texto/borde sobre superficies oscuras. */
+  --color-peligro: 220 38 38; /* #DC2626 */
+  --color-peligro-hover: 185 28 28; /* #B91C1C */
+  --color-sobre-peligro: 255 255 255;
+  --color-peligro-texto: 252 165 165; /* #FCA5A5 · suspendida, errores y papelera */
+  /* Aviso (toast): superficie clara con texto oscuro; sus acentos. */
+  --color-toast-check: 14 138 97; /* #0E8A61 */
+  --color-toast-error: 185 28 28; /* #B91C1C */
+  --color-aviso: 251 191 36; /* #FBBF24 · pendiente o por completar (texto; ≥ 9 sobre toda capa) */
+  --color-muted: 154 163 199; /* #9AA3C7 · metadatos, etiquetas y ayudas */
   --color-paper: 245 246 255; /* #F5F6FF · texto principal */
   /* Texto sobre un fondo primary (botón, ítem activo). */
   --color-sobre-primary: 245 246 255;
@@ -28,10 +39,10 @@
   --color-logro-inicio: 38 135 109; /* success al 60 % sobre ink-2 · 4.07 */
   --color-logro-fin: 52 211 153; /* success · 9.32 */
   /* Barra lateral del estudiante: en el tema oscuro es la capa ink-2. */
-  --color-barra: 16 22 43;
+  --color-barra: 11 16 32;
   --color-barra-texto: 245 246 255;
   --color-barra-texto-2: 174 182 216;
-  --color-barra-hover: 31 39 68;
+  --color-barra-hover: 20 26 46;
   /* Sombra de diálogos y menús (la única del sistema). */
   --color-sombra: 11 16 32;
   color-scheme: dark;
@@ -48,6 +59,8 @@
   --color-surface-2: 255 255 255; /* #FFFFFF · lo que flota (con sombra) */
   --color-linea: 217 212 242; /* #D9D4F2 · bordes de tarjetas y divisores */
   --color-linea-fuerte: 123 117 168; /* #7B75A8 · bordes de controles (≥ 3.39) */
+  --color-linea-control: 123 117 168; /* igual que linea-fuerte: en claro el borde de control se mantiene AA */
+  --color-foco: 76 51 201; /* #4C33C9 */
   --color-primary: 91 61 235; /* #5B3DEB · violeta: botones e indicadores */
   --color-primary-hover: 74 45 212; /* #4A2DD4 */
   --color-primary-claro: 74 45 212; /* #4A2DD4 · violeta como texto (≥ 6.41) */
@@ -55,6 +68,13 @@
   --color-success: 8 113 77; /* #08714D · verde legible como texto (≥ 4.82); #19B981 daba 2.53 */
   --color-suena: 168 108 5; /* #A86C05 · ámbar de la cuerda que suena (≥ 3.91) */
   --color-danger: 184 43 54; /* #B82B36 · errores (≥ 4.88) */
+  --color-peligro: 184 43 54; /* #B82B36 */
+  --color-peligro-hover: 154 31 42; /* #9A1F2A */
+  --color-sobre-peligro: 255 255 255;
+  --color-peligro-texto: 184 43 54; /* #B82B36 · ≥ 4.88 */
+  --color-toast-check: 52 211 153; /* sobre el aviso oscuro del tema claro */
+  --color-toast-error: 252 165 165;
+  --color-aviso: 138 90 0; /* #8A5A00 · pendiente o por completar (≥ 4.63 sobre toda capa) */
   --color-muted: 79 88 128; /* #4F5880 · texto secundario (≥ 5.52) */
   --color-paper: 33 27 80; /* #211B50 · texto principal (≥ 12.55) */
   --color-sobre-primary: 255 255 255; /* blanco sobre #5B3DEB · 6.34 */

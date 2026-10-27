@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Usuarios · SIPE-SOUND</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B1020}
+*{box-sizing:border-box}
+a{color:#B9C8FF}a:hover{color:#F5F6FF}
+button,input,select{font-family:inherit;font-size:inherit}
+:focus-visible{outline:2px solid #8B83FF;outline-offset:2px}
+.shell{container-type:inline-size;min-height:100vh;background:#0B1020;color:#F5F6FF;font-family:'IBM Plex Sans',system-ui,sans-serif}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+.side{display:flex;flex-direction:column;gap:2px;padding:18px 12px;border-right:1px solid #1C2240;background:#0B1020}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 10px 22px;font-weight:700;letter-spacing:.08em;font-size:15px}
+.nav{display:flex;align-items:center;gap:12px;min-height:40px;padding:8px 10px;border-radius:6px;color:#AEB6D9;text-decoration:none;font-size:14px}
+.nav:hover{background:#141A2E;color:#F5F6FF}
+.nav.on{background:#171D33;color:#F5F6FF;font-weight:600}
+.nav.on svg{color:#8B83FF}
+.sidex{display:none}
+.top{position:relative;display:flex;align-items:center;gap:12px;padding:12px 32px;border-bottom:1px solid #1C2240}
+.menubtn{display:none}
+.ib{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:none;border-radius:6px;border:1px solid transparent;background:transparent;color:#B9C8FF;cursor:pointer;padding:0}
+.ib:hover{background:#1E2442;color:#F5F6FF}
+.ib.ok:hover{color:#34D399}
+.ib.danger:hover{color:#FCA5A5;background:rgba(248,113,113,.1)}
+.ib:disabled{opacity:.3;cursor:not-allowed}
+.ib.cur{border-color:#2A3152;background:#171D33;color:#F5F6FF}
+.who{display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 6px 4px 4px;border:0;border-radius:6px;background:transparent;color:#F5F6FF;cursor:pointer}
+.who:hover{background:#141A2E}
+.mono-av{width:34px;height:34px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:#B9C8FF;color:#0B1020;font-weight:700;font-size:13px;flex:none}
+.pmenu{position:absolute;right:24px;top:64px;z-index:40;width:240px;background:#171D33;border:1px solid #2A3152;border-radius:8px;padding:6px;display:flex;flex-direction:column;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.pmhead{padding:10px 10px 12px;border-bottom:1px solid #2A3152;margin-bottom:6px;display:flex;flex-direction:column;gap:2px}
+.pitem{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:8px 10px;border:0;border-radius:5px;background:transparent;color:#F5F6FF;text-decoration:none;font-size:14px;text-align:left;cursor:pointer}
+.pitem:hover{background:#222947;color:#F5F6FF}
+.pitem.out{color:#FCA5A5}
+.pad{width:100%;max-width:1360px;padding:32px 32px 56px;display:flex;flex-direction:column;gap:22px}
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.tabs{display:none;gap:2px;border-bottom:1px solid #232A47;overflow-x:auto}
+.tab{flex:none;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;margin-bottom:-1px;border:0;border-bottom:2px solid transparent;background:transparent;color:#9AA3C7;font-size:14px;cursor:pointer}
+.tab:hover{color:#F5F6FF}
+.tab.on{color:#F5F6FF;font-weight:600;border-bottom-color:#6257F5}
+.tab .n{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:400;color:#9AA3C7}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,190px));gap:8px}
+.stat{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 14px;border:1px solid #232A47;border-radius:6px;background:#11162B;color:#F5F6FF;text-align:left;cursor:pointer}
+.stat:hover{border-color:#3A4270}
+.stat.on{border-color:#6257F5;background:rgba(98,87,245,.1)}
+.stat .sl{font-size:13px;font-weight:500;color:#AEB6D9}
+.stat.on .sl{color:#F5F6FF}
+.stat .n{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500;line-height:1.2}
+.n-todos{color:#F5F6FF}.n-activa{color:#34D399}.n-pendiente{color:#FBBF24}.n-suspendida{color:#FCA5A5}
+.ib.edit{color:#CFCBFF;border-color:#2A3152}
+.ib.edit:hover{background:#6257F5;border-color:#6257F5;color:#FFFFFF}
+.btn.dgf{background:#DC2626;color:#FFFFFF}
+.btn.dgf:hover{background:#B91C1C}
+.filters{display:grid;grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr));gap:12px;align-items:end}
+.lbl{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:13px;font-weight:600}
+.fld,.fsel{width:100%;height:42px;padding:0 12px;border-radius:6px;border:1px solid #2A3152;background:#0F1428;color:#F5F6FF;font-size:14px;font-weight:400}
+.fsel{appearance:none;-webkit-appearance:none;padding-right:34px;cursor:pointer}
+.fld:focus,.fsel:focus{border-color:#6257F5}
+.fld.err{border-color:#F87171}
+.fld:disabled{opacity:.6}
+.selw{position:relative;display:block}
+.selw svg{position:absolute;right:10px;top:50%;margin-top:-8px;pointer-events:none}
+.rsel{appearance:none;-webkit-appearance:none;width:100%;height:36px;padding:0 30px 0 10px;border-radius:6px;border:1px solid #2A3152;background:#0F1428;color:#F5F6FF;font-size:13px;cursor:pointer}
+.rsel.r-admin{border-color:rgba(98,87,245,.75);color:#D4D0FF}
+.rsel.r-docente{border-color:rgba(185,200,255,.4);color:#B9C8FF}
+.rsel:disabled{opacity:.55;cursor:not-allowed}
+.tbox{border:1px solid #232A47;border-radius:8px;background:#11162B;overflow:hidden}
+.tscroll{overflow-x:auto}
+.tbl{min-width:1040px}
+.trow{display:grid;grid-template-columns:28px minmax(210px,1.5fr) 168px 108px 150px 150px 150px;gap:16px;align-items:center;padding:12px 16px;border-top:1px solid #1F2643}
+.thead{border-top:0;padding-top:10px;padding-bottom:10px;background:#0E1326;font-size:12px;font-weight:600;color:#9AA3C7}
+.trow.b:hover{background:#151B33}
+.trow.b.sel{background:rgba(98,87,245,.08)}
+.trow.b.ed{background:rgba(98,87,245,.14)}
+.c-who{display:flex;flex-direction:column;gap:3px;min-width:0}
+.nm{all:unset;cursor:pointer;font-size:14px;font-weight:600;color:#F5F6FF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nm:hover{text-decoration:underline;text-underline-offset:3px}
+.nm:focus-visible{outline:2px solid #8B83FF;outline-offset:2px}
+.em{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#9AA3C7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.miss{font-size:11px;font-weight:600;color:#FBBF24;margin-left:8px}
+.c-acty{display:flex;flex-direction:column;gap:3px;font-size:13px}
+.c-perm{display:flex;flex-direction:column;gap:8px}
+.perm{display:flex;align-items:center;gap:8px;font-size:12px;color:#AEB6D9}
+.c-act{display:flex;align-items:center;justify-content:flex-end;gap:2px}
+.st{font-size:13px;font-weight:600}
+.st-activa{color:#34D399}.st-pendiente{color:#FBBF24}.st-suspendida{color:#FCA5A5}
+.cb{width:18px;height:18px;margin:0;accent-color:#6257F5;cursor:pointer}
+.tg{position:relative;width:36px;height:20px;flex:none;border-radius:999px;border:0;padding:0;background:#2A3152;cursor:pointer;transition:background .15s}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#8E97BD;transition:transform .15s,background .15s}
+.tg.on{background:#6257F5}
+.tg.on::after{transform:translateX(16px);background:#FFFFFF}
+.tg:disabled{opacity:.4;cursor:not-allowed}
+.btn{height:40px;padding:0 16px;border-radius:6px;border:1px solid transparent;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn.pri{background:#6257F5;color:#FFFFFF}
+.btn.pri:hover{background:#5348E6}
+.btn.pri:disabled{background:#262D4F;color:#8E97BD;cursor:not-allowed}
+.btn.gh{background:transparent;border-color:#2A3152;color:#F5F6FF}
+.btn.gh:hover{background:#1A2040}
+.btn.dg{background:transparent;border-color:rgba(248,113,113,.45);color:#FCA5A5}
+.btn.dg:hover{background:rgba(248,113,113,.1)}
+.btn.dg:disabled{opacity:.4;cursor:not-allowed}
+.btn.sm{height:34px;padding:0 12px;font-size:13px}
+.ebtn{height:32px;padding:0 12px;margin-left:4px;border-radius:6px;border:1px solid #3A4270;background:transparent;color:#F5F6FF;font-size:13px;font-weight:600;cursor:pointer}
+.ebtn:hover{border-color:#6257F5;background:#6257F5}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #232A47}
+.bar.sel{background:rgba(98,87,245,.12)}
+.bar.warn{background:rgba(248,113,113,.08)}
+.scrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:rgba(5,8,18,.66);cursor:pointer}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:520px;max-width:100%;z-index:55;overflow-y:auto;background:#11162B;border-left:1px solid #2A3152;display:flex;flex-direction:column}
+.dsec{display:flex;flex-direction:column;gap:12px;padding:22px 24px;border-top:1px solid #1F2643}
+.dh{margin:0;font-size:13px;font-weight:600;color:#B9C8FF}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ropt{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid #232A47;border-radius:6px;cursor:pointer}
+.ropt:hover{border-color:#3A4270}
+.ropt.on{border-color:#6257F5;background:rgba(98,87,245,.08)}
+.ropt input{margin:3px 0 0;width:16px;height:16px;accent-color:#6257F5}
+.mwrap{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{position:relative;width:100%;max-width:500px;max-height:100%;overflow-y:auto;background:#171D33;border:1px solid #2A3152;border-radius:10px;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.chg{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px;border-radius:6px;background:#0F1428;border:1px solid #232A47}
+.rtag{font-size:13px;font-weight:600;padding:4px 10px;border-radius:4px;background:#1E2442;color:#AEB6D9}
+.rtag.to{background:#6257F5;color:#FFFFFF}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:10px;max-width:calc(100% - 32px);padding:12px 16px;border-radius:6px;background:#F5F6FF;color:#0B1020;font-size:14px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+@container (max-width: 1100px){
+  .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .f-search{grid-column:1/-1}
+}
+@container (max-width: 960px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{display:none}
+  .side.open{display:flex;position:fixed;top:0;left:0;bottom:0;width:300px;max-width:86%;z-index:65;overflow-y:auto;border-right:1px solid #2A3152}
+  .sidex{display:inline-flex;margin-left:auto}
+  .menubtn{display:inline-flex}
+  .crumb,.themes{display:none}
+  .top{padding:10px 16px}
+  .pad{padding:20px 16px 40px}
+  .pmenu{right:12px}
+}
+@container (max-width: 820px){
+  .stats{display:none}
+  .tabs{display:flex}
+  .tbl{min-width:0}
+  .thead{display:none}
+  .trow{grid-template-columns:24px minmax(0,1fr) auto;grid-template-areas:"cb who st" ". acty acty" ". role role" ". perm perm" ". act act";gap:12px;padding:16px}
+  .c-cb{grid-area:cb;align-self:start;padding-top:2px}
+  .c-who{grid-area:who}
+  .c-st{grid-area:st;align-self:start}
+  .c-acty{grid-area:acty;flex-direction:row;flex-wrap:wrap;gap:4px 16px}
+  .c-role{grid-area:role}
+  .c-perm{grid-area:perm;flex-direction:row;flex-wrap:wrap;gap:12px 24px}
+  .c-act{grid-area:act;justify-content:flex-start;flex-wrap:wrap}
+  .ebtn{margin-left:0;height:36px}
+}
+@container (max-width: 560px){
+  .filters{grid-template-columns:minmax(0,1fr)}
+  .two{grid-template-columns:minmax(0,1fr)}
+  .drawer .dsec{padding:20px 16px}
+  .uname{display:none}
+  h1{font-size:26px !important}
+}
+</style>
+</helmet>
+
+<div class="shell">
+<div class="app">
+
+  <!-- Sidebar -->
+  <nav class="{{sideCls}}" aria-label="Navegación principal">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><path d="M17 3c7.5 0 13 3.4 13 8.6 0 6.6-7.6 17.9-13 19.4C11.6 29.5 4 18.2 4 11.6 4 6.4 9.5 3 17 3z" fill="#6257F5"/><path d="M11 14v4M14.5 11.5v9M18 13v6M21.5 10.5v11M25 14v4" stroke="#F5F6FF" stroke-width="1.8" stroke-linecap="round"/></svg>
+      SIPE-SOUND
+      <button class="ib sidex" onClick="{{closeMenu}}" aria-label="Cerrar menú"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Resumen</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>Cursos</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Progreso</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg>Solicitudes</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Contenido</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 13l2 2 4-4"/></svg>Evaluaciones</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Mensajes</a>
+    <a class="nav on" href="#" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg>Usuarios</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16M8 4v16M12 4l4 16M17 4l3 16"/></svg>Todos los cursos</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/></svg>Docentes</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 11-5.7"/><path d="M17 14l4 4-3 3-4-4v-3z"/></svg>Cambios de nombre</a>
+    <a class="nav" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H6"/><path d="M6 3a2 2 0 0 0-2 2v3h4M8 3v16a2 2 0 1 1-4 0v-1"/><path d="M12 8h4M12 12h4"/></svg>Términos</a>
+  </nav>
+
+  <main style="min-width: 0; display: flex; flex-direction: column">
+
+    <!-- Top bar -->
+    <header class="top">
+      <button class="ib menubtn" onClick="{{openMenu}}" aria-label="Abrir menú"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <p class="crumb" style="margin: 0; font-size: 13px; color: #9AA3C7">Administración <span aria-hidden="true">/</span> <span style="color: #F5F6FF">Usuarios</span></p>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 6px">
+        <div class="themes" style="display: flex; gap: 2px">
+          <button class="ib cur" aria-label="Tema del sistema"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+          <button class="ib" aria-label="Tema claro"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+          <button class="ib" aria-label="Tema oscuro"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg></button>
+        </div>
+        <button class="ib" aria-label="Mensajes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></button>
+        <button class="who" onClick="{{toggleProfile}}" aria-expanded="{{profileOpen}}" aria-label="Menú de la cuenta">
+          <span class="mono-av">IB</span>
+          <span class="uname" style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><span style="font-size: 14px; font-weight: 600">Isaac Bonilla</span><span style="font-size: 12px; color: #9AA3C7">Administrador</span></span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+      <sc-if value="{{profileOpen}}" hint-placeholder-val="{{ false }}">
+        <div class="pmenu">
+          <div class="pmhead">
+            <span style="font-size: 14px; font-weight: 600">Isaac Bonilla</span>
+            <span class="mono" style="font-size: 12px; color: #9AA3C7">isaacbm1802@gmail.com</span>
+          </div>
+          <a class="pitem" href="MiCuenta.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Mi cuenta</a>
+          <button class="pitem" onClick="{{viewAsStudent}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Ver como estudiante</button>
+          <button class="pitem out" onClick="{{logout}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 17l5-5-5-5M15 12H3"/></svg>Cerrar sesión</button>
+        </div>
+      </sc-if>
+    </header>
+
+    <div class="pad">
+
+      <div class="head">
+        <div style="display: flex; flex-direction: column; gap: 6px; max-width: 620px">
+          <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -.01em">Usuarios <span class="mono" style="font-size: 18px; font-weight: 400; color: #9AA3C7">{{counts.total}}</span></h1>
+          <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #AEB6D9">Edita los datos de cada cuenta, asigna su rol y controla su acceso.</p>
+        </div>
+        <button class="btn gh"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Exportar CSV</button>
+      </div>
+
+      <!-- Status filter cards -->
+      <div class="stats" role="group" aria-label="Filtrar por estado">
+        <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+          <button class="{{t.cls}}" aria-pressed="{{t.on}}" onClick="{{t.pick}}">
+            <span class="{{t.numCls}}">{{t.n}}</span>
+            <span class="sl">{{t.label}}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <!-- Status tabs (phones) -->
+      <div class="tabs" role="group" aria-label="Filtrar por estado">
+        <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+          <button class="{{t.tabCls}}" aria-pressed="{{t.on}}" onClick="{{t.pick}}">{{t.label}}<span class="n">{{t.n}}</span></button>
+        </sc-for>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <label class="lbl f-search">Buscar
+          <span class="selw">
+            <input class="fld" type="search" placeholder="Nombre, apellido o correo" value="{{q}}" onChange="{{onSearch}}" style="padding-left: 38px">
+            <svg style="left: 12px; right: auto" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </span>
+        </label>
+        <label class="lbl">Rol
+          <span class="selw">
+            <select class="fsel" value="{{roleF}}" onChange="{{onRoleF}}">
+              <option value="todos">Todos los roles</option>
+              <option value="estudiante">Estudiantes ({{counts.est}})</option>
+              <option value="docente">Docentes ({{counts.doc}})</option>
+              <option value="admin">Administradores ({{counts.adm}})</option>
+            </select>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+        </label>
+        <label class="lbl">Cambio de nombre
+          <span class="selw">
+            <select class="fsel" value="{{nameF}}" onChange="{{onNameF}}">
+              <option value="todos">Cualquiera</option>
+              <option value="editable">Permitido</option>
+              <option value="bloqueado">Bloqueado</option>
+            </select>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+        </label>
+        <label class="lbl">Ordenar por
+          <span class="selw">
+            <select class="fsel" value="{{sort}}" onChange="{{onSort}}">
+              <option value="nombre">Nombre</option>
+              <option value="apellido">Apellido</option>
+              <option value="acceso">Último acceso</option>
+              <option value="rol">Rol</option>
+            </select>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+        </label>
+      </div>
+
+      <!-- Table -->
+      <section class="tbox" aria-label="Lista de usuarios">
+
+        <sc-if value="{{hasSel}}" hint-placeholder-val="{{ false }}">
+          <div class="bar sel">
+            <span style="font-size: 14px; font-weight: 600"><span class="mono">{{selCount}}</span> seleccionadas</span>
+            <span class="selw" style="width: 180px">
+              <select class="rsel" value="" onChange="{{bulkRole}}" aria-label="Cambiar rol de las cuentas seleccionadas">
+                <option value="">Cambiar rol a…</option>
+                <option value="estudiante">Estudiante</option>
+                <option value="docente">Docente</option>
+                <option value="admin">Administrador</option>
+              </select>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+            <button class="btn gh sm" onClick="{{bulkActivate}}">Activar</button>
+            <button class="btn gh sm" onClick="{{bulkSuspend}}">Suspender</button>
+            <button class="btn gh sm" onClick="{{bulkResend}}">Reenviar código</button>
+            <button class="btn gh sm" onClick="{{clearSel}}" style="margin-left: auto">Quitar selección</button>
+          </div>
+        </sc-if>
+
+
+        <div class="tscroll">
+          <div class="tbl">
+            <div class="trow thead">
+              <span class="c-cb"><input class="cb" type="checkbox" checked="{{allChecked}}" onChange="{{toggleAll}}" aria-label="Elegir todas las cuentas visibles"></span>
+              <span>Nombre y correo</span>
+              <span>Rol</span>
+              <span>Estado</span>
+              <span>Actividad</span>
+              <span>Permisos</span>
+              <span style="text-align: right">Acciones</span>
+            </div>
+
+            <sc-for list="{{rows}}" as="u" hint-placeholder-count="8">
+              <div class="{{u.rowCls}}">
+                <span class="c-cb"><input class="cb" type="checkbox" checked="{{u.checked}}" onChange="{{u.onCheck}}" aria-label="Elegir a {{u.full}}"></span>
+                <span class="c-who">
+                  <span style="display: flex; align-items: baseline; min-width: 0">
+                    <button class="nm" onClick="{{u.edit}}">{{u.full}}</button>
+                    <sc-if value="{{u.missingLast}}" hint-placeholder-val="{{ false }}"><span class="miss">Sin apellido</span></sc-if>
+                  </span>
+                  <span class="em">{{u.email}}</span>
+                </span>
+                <span class="c-role selw">
+                  <select class="{{u.rselCls}}" value="{{u.role}}" onChange="{{u.onRole}}" disabled="{{u.self}}" aria-label="Rol de {{u.full}}">
+                    <option value="estudiante">Estudiante</option>
+                    <option value="docente">Docente</option>
+                    <option value="admin">Administrador</option>
+                  </select>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </span>
+                <span class="c-st"><span class="{{u.stCls}}">{{u.stLabel}}</span></span>
+                <span class="c-acty">
+                  <span class="mono" style="color: #F5F6FF; font-size: 12px">{{u.access}}</span>
+                  <span style="color: #9AA3C7; font-size: 12px">{{u.codeLine}}</span>
+                </span>
+                <span class="c-perm">
+                  <span class="perm"><button class="{{u.actCls}}" onClick="{{u.toggleActive}}" disabled="{{u.self}}" aria-pressed="{{u.active}}" aria-label="Cuenta activa de {{u.full}}"></button>Cuenta activa</span>
+                  <span class="perm"><button class="{{u.nameCls}}" onClick="{{u.toggleName}}" disabled="{{u.nameLocked}}" aria-pressed="{{u.nameEditable}}" aria-label="Permitir cambio de nombre a {{u.full}}"></button>{{u.nameLabel}}</span>
+                </span>
+                <span class="c-act">
+                  <sc-if value="{{u.pending}}" hint-placeholder-val="{{ false }}">
+                    <button class="ib" onClick="{{u.resend}}" title="Reenviar código" aria-label="Reenviar código a {{u.full}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+                    <button class="ib ok" onClick="{{u.verify}}" title="Verificar manualmente" aria-label="Verificar a {{u.full}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button>
+                  </sc-if>
+                  <button class="ib edit" onClick="{{u.edit}}" title="Editar usuario" aria-label="Editar a {{u.full}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></button>
+                  <button class="ib danger" onClick="{{u.askDelete}}" disabled="{{u.self}}" title="Eliminar cuenta" aria-label="Eliminar a {{u.full}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+                </span>
+              </div>
+            </sc-for>
+
+            <sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 44px 20px; border-top: 1px solid #1F2643; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+                <span style="font-size: 15px; font-weight: 600">Ninguna cuenta coincide con la búsqueda</span>
+                <button class="btn gh sm" onClick="{{resetFilters}}">Limpiar filtros</button>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-top: 1px solid #1F2643">
+          <span class="mono" style="font-size: 12px; color: #9AA3C7">{{shown}} de {{counts.total}} cuentas</span>
+          <div style="display: flex; gap: 8px">
+            <button class="btn gh sm" disabled="{{ true }}" style="opacity: .45; cursor: not-allowed">Anterior</button>
+            <button class="btn gh sm" disabled="{{ true }}" style="opacity: .45; cursor: not-allowed">Siguiente</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Mobile menu scrim -->
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+  <button class="scrim" style="z-index: 64" onClick="{{closeMenu}}" aria-label="Cerrar menú"></button>
+</sc-if>
+
+<!-- Edit drawer -->
+<sc-if value="{{d}}" hint-placeholder-val="{{ false }}">
+  <button class="scrim" style="z-index: 50" onClick="{{closeEdit}}" aria-label="Cerrar edición"></button>
+  <aside class="drawer" aria-label="Editar usuario">
+    <div style="display: flex; align-items: center; gap: 12px; padding: 16px 24px">
+      <h2 style="margin: 0; font-size: 17px; font-weight: 700">Editar usuario</h2>
+      <button class="ib" onClick="{{closeEdit}}" aria-label="Cerrar" style="margin-left: auto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+
+    <div class="dsec" style="gap: 6px">
+      <span style="font-size: 20px; font-weight: 700">{{d.full}}</span>
+      <span style="display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: #9AA3C7">
+        <span class="{{d.stCls}}">{{d.stLabel}}</span>
+        <span>{{d.roleLabel}}</span>
+        <span class="mono" style="font-size: 12px">Último acceso: {{d.access}}</span>
+      </span>
+      <sc-if value="{{d.self}}" hint-placeholder-val="{{ false }}">
+        <p style="margin: 10px 0 0; font-size: 13px; line-height: 1.5; color: #D6DDFF">Es tu cuenta: puedes editar tus datos, pero no cambiar tu rol, suspenderte ni eliminarte.</p>
+      </sc-if>
+    </div>
+
+    <div class="dsec">
+      <h3 class="dh">Datos personales</h3>
+      <div class="two">
+        <label class="lbl">Nombre
+          <input class="{{fnCls}}" type="text" value="{{d.first}}" onChange="{{onFirst}}" autocomplete="given-name">
+          <sc-if value="{{fnErr}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 400; color: #FCA5A5">Escribe el nombre.</span></sc-if>
+        </label>
+        <label class="lbl">Apellido
+          <input class="{{lnCls}}" type="text" value="{{d.last}}" onChange="{{onLast}}" autocomplete="family-name">
+          <sc-if value="{{lnErr}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 400; color: #FCA5A5">Escribe el apellido.</span></sc-if>
+        </label>
+      </div>
+      <label class="lbl">Correo electrónico
+        <input class="{{emCls}}" type="email" value="{{d.email}}" onChange="{{onEmail}}" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px">
+        <sc-if value="{{emErr}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 400; color: #FCA5A5">Escribe un correo válido, por ejemplo nombre@correo.com.</span></sc-if>
+        <sc-if value="{{emChanged}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 400; color: #FBBF24">Al guardar se enviará un código para verificar el correo nuevo.</span></sc-if>
+      </label>
+    </div>
+
+    <div class="dsec">
+      <h3 class="dh">Rol</h3>
+      <sc-for list="{{roleOpts}}" as="r" hint-placeholder-count="3">
+        <label class="{{r.cls}}">
+          <input type="radio" name="rol-edicion" checked="{{r.on}}" onChange="{{r.pick}}" disabled="{{d.self}}">
+          <span style="display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 14px; font-weight: 600">{{r.label}}</span>
+            <span style="font-size: 13px; line-height: 1.45; color: #AEB6D9">{{r.desc}}</span>
+          </span>
+        </label>
+      </sc-for>
+      <sc-if value="{{roleChanged}}" hint-placeholder-val="{{ false }}">
+        <span style="font-size: 12px; color: #FBBF24">Te pediremos confirmar el cambio de rol al guardar.</span>
+      </sc-if>
+    </div>
+
+    <div class="dsec" style="gap: 0">
+      <h3 class="dh" style="margin-bottom: 6px">Acceso</h3>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid #1F2643">
+        <span style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 14px; font-weight: 600">Cuenta activa</span>
+          <span style="font-size: 13px; color: #9AA3C7">Apagada, la cuenta queda suspendida y no puede entrar.</span>
+        </span>
+        <button class="{{dActCls}}" onClick="{{dToggleActive}}" disabled="{{d.self}}" aria-pressed="{{d.active}}" aria-label="Cuenta activa"></button>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0">
+        <span style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 14px; font-weight: 600">Permitir cambio de nombre</span>
+          <span style="font-size: 13px; color: #9AA3C7">{{dNameDesc}}</span>
+        </span>
+        <button class="{{dNameCls}}" onClick="{{dToggleName}}" disabled="{{dNameLocked}}" aria-pressed="{{d.nameEditable}}" aria-label="Permitir cambio de nombre"></button>
+      </div>
+    </div>
+
+    <sc-if value="{{d.pending}}" hint-placeholder-val="{{ false }}">
+      <div class="dsec">
+        <h3 class="dh" style="color: #FBBF24">Correo sin verificar</h3>
+        <span style="font-size: 13px; color: #D9DDF0">Último código enviado {{d.codeLower}}.</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <button class="btn gh sm" onClick="{{dResend}}">Reenviar código</button>
+          <button class="btn gh sm" onClick="{{dVerify}}" style="color: #34D399; border-color: rgba(52,211,153,.45)">Verificar manualmente</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <div class="dsec" style="flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between">
+      <span style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 14px; font-weight: 600">Eliminar cuenta</span>
+        <span style="font-size: 13px; color: #9AA3C7">Borra la cuenta y todo su progreso.</span>
+      </span>
+      <button class="btn dg sm" onClick="{{dAskDelete}}" disabled="{{d.self}}">Eliminar</button>
+    </div>
+
+    <div style="position: sticky; bottom: 0; margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 14px 24px; background: #11162B; border-top: 1px solid #2A3152">
+      <span style="flex: 1 1 140px; font-size: 13px; color: #9AA3C7">{{dirtyLabel}}</span>
+      <button class="btn gh" onClick="{{closeEdit}}">Cancelar</button>
+      <button class="btn pri" onClick="{{save}}" disabled="{{saveDisabled}}">Guardar cambios</button>
+    </div>
+  </aside>
+</sc-if>
+
+<!-- Suspend confirmation -->
+<sc-if value="{{ps}}" hint-placeholder-val="{{ false }}">
+  <div class="mwrap">
+    <button class="scrim" style="position: absolute" onClick="{{cancelSuspend}}" aria-label="Cancelar suspensión"></button>
+    <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="titulo-suspender">
+      <div style="padding: 22px 24px 0; display: flex; flex-direction: column; gap: 14px">
+        <h2 id="titulo-suspender" style="margin: 0; font-size: 19px; font-weight: 700">{{ps.title}}</h2>
+        <sc-if value="{{ps.single}}" hint-placeholder-val="{{ true }}">
+          <div class="chg" style="flex-direction: column; align-items: flex-start; gap: 4px">
+            <span style="font-size: 15px; font-weight: 600">{{ps.name}}</span>
+            <span class="mono" style="font-size: 12px; color: #9AA3C7">{{ps.email}}</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ps.multi}}" hint-placeholder-val="{{ false }}">
+          <span style="font-size: 13px; line-height: 1.6; color: #AEB6D9">{{ps.names}}</span>
+        </sc-if>
+        <p style="margin: 0; font-size: 14px; line-height: 1.55; color: #D9DDF0">No podrá iniciar sesión ni ver sus cursos hasta que la reactives. Su progreso se conserva.</p>
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; padding: 4px 0">
+          <input class="cb" type="checkbox" checked="{{ps.notify}}" onChange="{{toggleSuspendNotify}}">
+          Avisar por correo de la suspensión
+        </label>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 20px 24px 22px">
+        <button class="btn gh" onClick="{{cancelSuspend}}">Cancelar</button>
+        <button class="btn dgf" onClick="{{confirmSuspend}}">Sí, suspender</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- Delete confirmation -->
+<sc-if value="{{confirmUser}}" hint-placeholder-val="{{ false }}">
+  <div class="mwrap">
+    <button class="scrim" style="position: absolute" onClick="{{cancelDelete}}" aria-label="Cancelar eliminación"></button>
+    <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="titulo-borrar">
+      <div style="padding: 22px 24px 0; display: flex; flex-direction: column; gap: 14px">
+        <h2 id="titulo-borrar" style="margin: 0; font-size: 19px; font-weight: 700">¿Eliminar esta cuenta?</h2>
+        <div class="chg" style="flex-direction: column; align-items: flex-start; gap: 4px">
+          <span style="font-size: 15px; font-weight: 600">{{confirmUser.full}}</span>
+          <span class="mono" style="font-size: 12px; color: #9AA3C7">{{confirmUser.email}} · {{confirmUser.role}}</span>
+        </div>
+        <p style="margin: 0; font-size: 14px; line-height: 1.55; color: #D9DDF0">Se borrará la cuenta con su progreso, evaluaciones y mensajes. Esta acción no se puede deshacer.</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 20px 24px 22px">
+        <button class="btn gh" onClick="{{cancelDelete}}">Cancelar</button>
+        <button class="btn dgf" onClick="{{doDelete}}">Sí, eliminar cuenta</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- Role change confirmation -->
+<sc-if value="{{pr}}" hint-placeholder-val="{{ false }}">
+  <div class="mwrap">
+    <button class="scrim" style="position: absolute" onClick="{{cancelRole}}" aria-label="Cancelar cambio de rol"></button>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-rol">
+      <div style="padding: 22px 24px 0; display: flex; flex-direction: column; gap: 14px">
+        <h2 id="titulo-rol" style="margin: 0; font-size: 19px; font-weight: 700">{{pr.title}}</h2>
+        <sc-if value="{{pr.single}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <span style="font-size: 14px; line-height: 1.5; color: #D9DDF0"><strong style="color: #F5F6FF">{{pr.name}}</strong> <span class="mono" style="font-size: 12px; color: #9AA3C7">{{pr.email}}</span></span>
+            <div class="chg">
+              <span class="rtag">{{pr.from}}</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA3C7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="pasa a" role="img"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span class="rtag to">{{pr.to}}</span>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{pr.multi}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <span style="font-size: 14px; line-height: 1.5; color: #D9DDF0"><span class="mono">{{pr.count}}</span> cuentas pasarán a <span class="rtag to">{{pr.to}}</span></span>
+            <span style="font-size: 13px; line-height: 1.6; color: #AEB6D9">{{pr.names}}</span>
+          </div>
+        </sc-if>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-size: 13px; font-weight: 600; color: #B9C8FF">Qué cambia</span>
+          <sc-for list="{{pr.changes}}" as="c" hint-placeholder-count="2">
+            <span style="display: flex; gap: 10px; font-size: 14px; line-height: 1.5; color: #D9DDF0"><span aria-hidden="true" style="color: #6E78A8">—</span>{{c.text}}</span>
+          </sc-for>
+        </div>
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; padding: 4px 0">
+          <input class="cb" type="checkbox" checked="{{pr.notify}}" onChange="{{toggleNotify}}">
+          Avisar por correo del cambio
+        </label>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 20px 24px 22px">
+        <button class="btn gh" onClick="{{cancelRole}}">Cancelar</button>
+        <button class="btn pri" onClick="{{confirmRole}}">{{pr.cta}}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{toast}}" hint-placeholder-val="{{ false }}">
+  <div class="toast" role="status">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0E8A61" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+    {{toast}}
+  </div>
+</sc-if>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"vista":{"editor":"enum","options":["tabla","editar","confirmarRol","confirmarSuspension"],"default":"tabla"},"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  seed() {
+    return [
+      { id: 'u1', first: 'Docente', last: 'de Prueba', email: 'docente.prueba@example.com', role: 'docente', status: 'activa', code: '', access: '27 oct 2026', accessN: 2, active: true, nameEditable: false },
+      { id: 'u2', first: 'isaac', last: 'mesa', email: 'isaac2010bonillam@gmail.com', role: 'estudiante', status: 'pendiente', code: 'Hace 3 horas', access: '26 oct 2026', accessN: 1, active: true, nameEditable: false },
+      { id: 'u3', first: 'Isaac', last: 'Bonilla', email: 'isaacbm1802@gmail.com', role: 'admin', status: 'activa', code: '', access: '27 oct 2026', accessN: 2, active: true, nameEditable: true, self: true },
+      { id: 'u4', first: 'Juanjo', last: 'Pajón', email: 'juanjose.pajoncalle@gmail.com', role: 'docente', status: 'activa', code: '', access: '27 oct 2026', accessN: 2, active: true, nameEditable: false },
+      { id: 'u5', first: 'Kike', last: 'Rappi', email: 'pikario2.dario@gmail.com', role: 'estudiante', status: 'activa', code: '', access: '18 oct 2026', accessN: 0, active: false, suspendedOn: '20 oct 2026', nameEditable: false },
+      { id: 'u6', first: 'KIKE', last: 'VENECO', email: 'estudiante.prueba@example.com', role: 'estudiante', status: 'activa', code: '', access: '26 oct 2026', accessN: 1, active: true, nameEditable: true },
+      { id: 'u7', first: 'pajoncito', last: 'playonero', email: 'jjpajon0405@gmail.com', role: 'estudiante', status: 'activa', code: '', access: '27 oct 2026', accessN: 2, active: true, nameEditable: false },
+      { id: 'u8', first: 'Pajoncito', last: '', email: 'juanjop0405@gmail.com', role: 'estudiante', status: 'activa', code: '', access: '26 oct 2026', accessN: 1, active: true, nameEditable: false },
+      { id: 'u9', first: 'playoneitor', last: '', email: 'edwardplayonero@gmail.com', role: 'estudiante', status: 'activa', code: '', access: '26 oct 2026', accessN: 1, active: true, nameEditable: false },
+      { id: 'u10', first: 'regiregi', last: 'goat', email: 'reginopm0897@gmail.com', role: 'estudiante', status: 'activa', code: '', access: 'Nunca', accessN: 0, active: true, nameEditable: false },
+      { id: 'u11', first: 'valentina', last: 'giraldo', email: 'valentinagiraldotabares15@gmail.com', role: 'estudiante', status: 'pendiente', code: 'Hace 9 horas', access: 'Nunca', accessN: 0, active: true, nameEditable: false }
+    ];
+  }
+  users() { return (this.state && this.state.users) || this.seed(); }
+  patch(id, p) {
+    this.setState({ users: this.users().map(u => u.id === id ? Object.assign({}, u, p) : u) });
+  }
+  toast(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: null }), 2800);
+  }
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  renderVals() {
+    const st = this.state || {};
+    const users = this.users();
+    const vista = this.props.vista || 'tabla';
+    const RL = { estudiante: 'Estudiante', docente: 'Docente', admin: 'Administrador' };
+    const SL = { activa: 'Activa', pendiente: 'Pendiente', suspendida: 'Suspendida' };
+    const full = u => (u.first + ' ' + u.last).trim();
+    const statusOf = u => !u.active ? 'suspendida' : u.status;
+    const canRename = u => u.role === 'admin' || !!u.nameEditable;
+    const cmp = (a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' });
+
+    const q = st.q || '';
+    const roleF = st.roleF || 'todos';
+    const statusF = st.statusF || 'todos';
+    const nameF = st.nameF || 'todos';
+    const sort = st.sort || 'nombre';
+    const sel = st.sel || {};
+
+    const counts = {
+      total: users.length,
+      est: users.filter(u => u.role === 'estudiante').length,
+      doc: users.filter(u => u.role === 'docente').length,
+      adm: users.filter(u => u.role === 'admin').length,
+      act: users.filter(u => statusOf(u) === 'activa').length,
+      pen: users.filter(u => statusOf(u) === 'pendiente').length,
+      sus: users.filter(u => statusOf(u) === 'suspendida').length
+    };
+
+    const ql = q.toLowerCase().trim();
+    let list = users.filter(u =>
+      (!ql || (full(u) + ' ' + u.email).toLowerCase().indexOf(ql) >= 0) &&
+      (roleF === 'todos' || u.role === roleF) &&
+      (statusF === 'todos' || statusOf(u) === statusF) &&
+      (nameF === 'todos' || (nameF === 'editable') === canRename(u))
+    );
+    const order = { admin: 0, docente: 1, estudiante: 2 };
+    list = list.slice().sort((a, b) => {
+      if (sort === 'apellido') return cmp(a.last || '~', b.last || '~') || cmp(a.first, b.first);
+      if (sort === 'acceso') return b.accessN - a.accessN || cmp(full(a), full(b));
+      if (sort === 'rol') return order[a.role] - order[b.role] || cmp(full(a), full(b));
+      return cmp(full(a), full(b));
+    });
+
+    // Role-change confirmation request
+    const askRole = (ids, to, fromDraft) => {
+      const ok = ids.filter(id => { const u = users.find(x => x.id === id); return u && !u.self && (fromDraft || u.role !== to); });
+      if (!ok.length) { this.toast('Ninguna cuenta cambia de rol'); return; }
+      this.setState({ pendingRole: { ids: ok, to: to, fromDraft: !!fromDraft, notify: true } });
+    };
+
+    // Editing
+    const editingId = st.editingId !== undefined ? st.editingId : (vista === 'editar' ? 'u8' : null);
+    const eu = users.find(u => u.id === editingId) || null;
+    const draft = eu ? (st.draft && st.draft.id === eu.id ? st.draft : Object.assign({}, eu)) : null;
+    const setDraft = p => this.setState({ draft: Object.assign({}, draft, p) });
+    const openEdit = u => this.setState({ editingId: u.id, draft: Object.assign({}, u), confirmId: null });
+    const closeEdit = () => this.setState({ editingId: null, draft: null });
+
+    const rows = list.map(u => {
+      const s = statusOf(u);
+      return {
+        id: u.id, full: full(u) || '(sin nombre)', email: u.email, role: u.role, self: !!u.self,
+        active: !!u.active, nameEditable: canRename(u), nameLocked: !!u.self || u.role === 'admin',
+        missingLast: !u.last.trim(),
+        rselCls: 'rsel r-' + u.role,
+        stCls: 'st st-' + s, stLabel: SL[s],
+        access: u.access === 'Nunca' ? 'Sin accesos' : u.access,
+        codeLine: s === 'suspendida' ? 'Suspendida ' + (u.suspendedOn ? 'el ' + u.suspendedOn : 'hoy') : (u.code ? 'Código ' + u.code.toLowerCase() : (s === 'pendiente' ? 'Sin código enviado' : 'Correo verificado')),
+        pending: s === 'pendiente',
+        checked: !!sel[u.id],
+        rowCls: 'trow b' + (u.id === editingId ? ' ed' : (sel[u.id] ? ' sel' : '')),
+        actCls: 'tg' + (u.active ? ' on' : ''),
+        nameCls: 'tg' + (canRename(u) ? ' on' : ''),
+        nameLabel: u.role === 'admin' ? 'Nombre editable' : (u.nameEditable ? 'Cambio de nombre' : 'Nombre bloqueado'),
+        onCheck: () => { const n = Object.assign({}, sel); if (n[u.id]) delete n[u.id]; else n[u.id] = true; this.setState({ sel: n }); },
+        onRole: e => { const v = e.target.value; if (u.self || v === u.role) return; askRole([u.id], v, false); },
+        toggleActive: () => {
+          if (u.self) return;
+          if (u.active) { this.setState({ pendingSuspend: { ids: [u.id], fromDraft: false, notify: true } }); return; }
+          this.patch(u.id, { active: true }); this.toast('Cuenta de ' + full(u) + ' reactivada');
+        },
+        toggleName: () => { if (u.self || u.role === 'admin') return; this.patch(u.id, { nameEditable: !u.nameEditable }); this.toast(u.nameEditable ? 'Cambio de nombre bloqueado' : 'Cambio de nombre permitido'); },
+        resend: () => { this.patch(u.id, { code: 'Hace un momento' }); this.toast('Código reenviado a ' + u.email); },
+        verify: () => { this.patch(u.id, { status: 'activa', code: '' }); this.toast(full(u) + ' quedó verificado'); },
+        edit: () => openEdit(u),
+        askDelete: () => this.setState({ confirmId: u.id })
+      };
+    });
+
+    const visibleIds = list.filter(u => !u.self).map(u => u.id);
+    const selIds = Object.keys(sel).filter(id => sel[id] && users.some(u => u.id === id));
+    const allChecked = visibleIds.length > 0 && visibleIds.every(id => sel[id]);
+    const bulk = (fn, msg) => {
+      const ids = selIds.filter(id => !users.find(u => u.id === id).self);
+      this.setState({ users: users.map(u => ids.indexOf(u.id) >= 0 ? Object.assign({}, u, fn(u)) : u), sel: {} });
+      this.toast(msg.replace('{n}', ids.length));
+    };
+
+    const tabDef = [
+      ['todos', 'Todas', counts.total, counts.est + ' estudiantes · ' + counts.doc + ' docentes · ' + counts.adm + ' admin'],
+      ['activa', 'Activas', counts.act, 'Con acceso a la plataforma'],
+      ['pendiente', 'Pendientes', counts.pen, 'Esperan verificar el correo'],
+      ['suspendida', 'Suspendidas', counts.sus, 'Sin acceso por ahora']
+    ];
+    const tabs = tabDef.map(t => ({
+      label: t[1], n: t[2], desc: t[3], on: statusF === t[0],
+      cls: 'stat' + (statusF === t[0] ? ' on' : ''), tabCls: 'tab' + (statusF === t[0] ? ' on' : ''), numCls: 'n n-' + t[0],
+      pick: () => this.setState({ statusF: statusF === t[0] ? 'todos' : t[0] })
+    }));
+
+    const confirmUser0 = users.find(u => u.id === st.confirmId) || null;
+    const confirmUser = confirmUser0 ? { full: full(confirmUser0), email: confirmUser0.email, role: RL[confirmUser0.role] } : null;
+
+    // Draft view model
+    let d = null, extra = {};
+    const applyDraft = () => {
+      if (!draft) return;
+      const em = draft.email.trim();
+      const p = { first: draft.first.trim(), last: draft.last.trim(), email: em, role: draft.role, active: draft.active, nameEditable: draft.role === 'admin' ? true : draft.nameEditable };
+      if (em !== eu.email) { p.status = 'pendiente'; p.code = 'Hace un momento'; }
+      return p;
+    };
+    if (draft) {
+      const s = statusOf(draft);
+      d = Object.assign({}, draft, {
+        full: full(draft) || '(sin nombre)',
+        stCls: 'st st-' + s, stLabel: SL[s], roleLabel: RL[eu.role],
+        pending: draft.status === 'pendiente',
+        self: !!draft.self,
+        nameEditable: draft.role === 'admin' || !!draft.nameEditable,
+        codeLower: draft.code ? draft.code.toLowerCase() : 'hace un momento'
+      });
+      const fnErr = !draft.first.trim();
+      const lnErr = !draft.last.trim();
+      const emErr = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(draft.email.trim());
+      const dirty = ['first', 'last', 'email', 'role', 'active', 'nameEditable'].some(k => draft[k] !== eu[k]);
+      const roleChanged = draft.role !== eu.role;
+      extra = {
+        fnErr: fnErr, lnErr: lnErr, emErr: emErr, roleChanged: roleChanged,
+        fnCls: 'fld' + (fnErr ? ' err' : ''),
+        lnCls: 'fld' + (lnErr ? ' err' : ''),
+        emCls: 'fld' + (emErr ? ' err' : ''),
+        emChanged: !emErr && draft.email.trim() !== eu.email,
+        dirtyLabel: dirty ? 'Hay cambios sin guardar' : 'Sin cambios',
+        saveDisabled: !dirty || fnErr || lnErr || emErr,
+        roleOpts: [
+          { id: 'estudiante', label: 'Estudiante', desc: 'Toma cursos, presenta evaluaciones y ve su progreso.' },
+          { id: 'docente', label: 'Docente', desc: 'Crea contenido y califica en los cursos que tiene a cargo.' },
+          { id: 'admin', label: 'Administrador', desc: 'Gestiona usuarios, roles, cursos y configuración.' }
+        ].map(r => Object.assign(r, { on: draft.role === r.id, cls: 'ropt' + (draft.role === r.id ? ' on' : ''), pick: () => setDraft(r.id !== 'admin' && eu.role === 'admin' ? { role: r.id, nameEditable: false } : (r.id === 'admin' ? { role: r.id } : { role: r.id, nameEditable: eu.role === 'admin' ? false : eu.nameEditable })) })),
+        dActCls: 'tg' + (draft.active ? ' on' : ''),
+        dNameCls: 'tg' + (draft.role === 'admin' || draft.nameEditable ? ' on' : ''),
+        dNameLocked: draft.role === 'admin',
+        dNameDesc: draft.role === 'admin' ? 'Los administradores siempre pueden cambiar su nombre.' : 'El usuario podrá corregir su nombre y apellido.',
+        onFirst: e => setDraft({ first: e.target.value }),
+        onLast: e => setDraft({ last: e.target.value }),
+        onEmail: e => setDraft({ email: e.target.value }),
+        dToggleActive: () => { if (!draft.self) setDraft({ active: !draft.active }); },
+        dToggleName: () => { if (draft.role !== 'admin') setDraft({ nameEditable: !draft.nameEditable }); },
+        dResend: () => { this.patch(eu.id, { code: 'Hace un momento' }); setDraft({ code: 'Hace un momento' }); this.toast('Código reenviado a ' + eu.email); },
+        dVerify: () => { this.patch(eu.id, { status: 'activa', code: '' }); setDraft({ status: 'activa', code: '' }); this.toast(full(eu) + ' quedó verificado'); },
+        dAskDelete: () => this.setState({ confirmId: eu.id, editingId: null, draft: null }),
+        save: () => {
+          if (roleChanged && !eu.self) { askRole([eu.id], draft.role, true); return; }
+          if (!draft.active && eu.active && !eu.self) { this.setState({ pendingSuspend: { ids: [eu.id], fromDraft: true, notify: true } }); return; }
+          const p = applyDraft();
+          this.setState({ users: users.map(u => u.id === eu.id ? Object.assign({}, u, p) : u), editingId: null, draft: null });
+          this.toast('Cambios guardados para ' + full(p));
+        }
+      };
+    }
+
+    // Role confirmation view model
+    const pending0 = st.pendingRole !== undefined ? st.pendingRole : (vista === 'confirmarRol' ? { ids: ['u4'], to: 'admin', fromDraft: false, notify: true } : null);
+    let pr = null;
+    if (pending0) {
+      const targets = pending0.ids.map(id => users.find(u => u.id === id)).filter(Boolean);
+      const to = pending0.to;
+      const one = targets[0];
+      const fromRole = targets.length === 1 && one ? one.role : null;
+      const changes = {
+        admin: ['Podrá gestionar usuarios, cambiar roles y suspender cuentas.', 'Tendrá acceso a todos los cursos, contenidos y a la configuración.', 'Podrá cambiar su nombre sin pedir permiso.'],
+        docente: ['Podrá crear contenido y calificar evaluaciones en sus cursos.', 'No podrá gestionar usuarios ni la configuración.'],
+        estudiante: ['Solo verá los cursos en los que esté inscrito.', 'Pierde la creación de contenido y las calificaciones.']
+      }[to].slice();
+      if (fromRole === 'admin') changes.push('Dejará de ver el panel de administración.');
+      if (fromRole === 'admin' || (targets.length > 1 && to !== 'admin' && targets.some(u => u.role === 'admin'))) changes.push('El cambio de nombre quedará bloqueado; puedes permitirlo de nuevo después.');
+      if (pending0.fromDraft && draft && eu && !draft.active && eu.active) changes.push('La cuenta también quedará suspendida.');
+      const names = targets.slice(0, 5).map(full).join(', ') + (targets.length > 5 ? ' y ' + (targets.length - 5) + ' más' : '');
+      pr = {
+        title: targets.length === 1 ? 'Confirmar cambio de rol' : 'Cambiar el rol de ' + targets.length + ' cuentas',
+        single: targets.length === 1, multi: targets.length > 1,
+        name: one ? full(one) : '', email: one ? one.email : '',
+        from: fromRole ? RL[fromRole] : '', to: RL[to], count: targets.length, names: names,
+        changes: changes.map(t => ({ text: t })),
+        notify: pending0.notify !== false,
+        cta: to === 'admin' ? 'Sí, hacer administrador' : 'Confirmar cambio'
+      };
+    }
+    const cancelRole = () => this.setState({ pendingRole: null });
+    const confirmRole = () => {
+      if (!pending0) return;
+      const to = pending0.to, ids = pending0.ids;
+      const tail = pending0.notify !== false ? ' · se envió un aviso por correo' : '';
+      if (pending0.fromDraft && draft) {
+        const p = applyDraft();
+        p.role = to;
+        if (to === 'admin') p.nameEditable = true;
+        else if (eu.role === 'admin') p.nameEditable = false;
+        this.setState({ users: users.map(u => u.id === eu.id ? Object.assign({}, u, p) : u), pendingRole: null, editingId: null, draft: null });
+        this.toast(full(p) + ' ahora es ' + RL[to] + tail);
+        return;
+      }
+      this.setState({ users: users.map(u => ids.indexOf(u.id) >= 0 ? Object.assign({}, u, { role: to, nameEditable: to === 'admin' ? true : (u.role === 'admin' ? false : u.nameEditable) }) : u), pendingRole: null, sel: {} });
+      const one = users.find(u => u.id === ids[0]);
+      this.toast((ids.length === 1 && one ? full(one) + ' ahora es ' + RL[to] : ids.length + ' cuentas ahora son ' + RL[to]) + tail);
+    };
+
+    // Suspend confirmation view model
+    const ps0 = st.pendingSuspend !== undefined ? st.pendingSuspend : (vista === 'confirmarSuspension' ? { ids: ['u7'], fromDraft: false, notify: true } : null);
+    let ps = null;
+    if (ps0) {
+      const tg = ps0.ids.map(id => users.find(u => u.id === id)).filter(Boolean);
+      ps = {
+        single: tg.length === 1, multi: tg.length > 1, count: tg.length,
+        name: tg[0] ? full(tg[0]) : '', email: tg[0] ? tg[0].email : '',
+        names: tg.slice(0, 5).map(full).join(', ') + (tg.length > 5 ? ' y ' + (tg.length - 5) + ' más' : ''),
+        title: tg.length === 1 ? '¿Suspender esta cuenta?' : '¿Suspender ' + tg.length + ' cuentas?',
+        notify: ps0.notify !== false
+      };
+    }
+    const cancelSuspend = () => this.setState({ pendingSuspend: null });
+    const confirmSuspend = () => {
+      if (!ps0) return;
+      const tail = ps0.notify !== false ? ' · se envió un aviso por correo' : '';
+      if (ps0.fromDraft && draft) {
+        const p = applyDraft();
+        this.setState({ users: users.map(u => u.id === eu.id ? Object.assign({}, u, p) : u), pendingSuspend: null, editingId: null, draft: null });
+        this.toast('Cuenta de ' + full(p) + ' suspendida' + tail);
+        return;
+      }
+      const ids = ps0.ids;
+      this.setState({ users: users.map(u => ids.indexOf(u.id) >= 0 ? Object.assign({}, u, { active: false, suspendedOn: '' }) : u), pendingSuspend: null, sel: {} });
+      const one = users.find(u => u.id === ids[0]);
+      this.toast((ids.length === 1 && one ? 'Cuenta de ' + full(one) + ' suspendida' : ids.length + ' cuentas suspendidas') + tail);
+    };
+
+    const menuOpen = !!st.menuOpen;
+    return Object.assign({
+      q: q, roleF: roleF, nameF: nameF, sort: sort, counts: counts, rows: rows, tabs: tabs, d: d, pr: pr,
+      shown: rows.length,
+      empty: rows.length === 0,
+      hasSel: selIds.length > 0,
+      selCount: selIds.length,
+      allChecked: allChecked,
+      confirmUser: confirmUser,
+      toast: st.toast || null,
+      menuOpen: menuOpen,
+      sideCls: 'side' + (menuOpen ? ' open' : ''),
+      profileOpen: !!st.profileOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      toggleProfile: () => this.setState({ profileOpen: !st.profileOpen }),
+      viewAsStudent: () => { this.setState({ profileOpen: false }); this.toast('Vista de estudiante activada'); },
+      logout: () => { this.setState({ profileOpen: false }); this.toast('Sesión cerrada'); },
+      onSearch: e => this.setState({ q: e.target.value }),
+      onRoleF: e => this.setState({ roleF: e.target.value }),
+      onNameF: e => this.setState({ nameF: e.target.value }),
+      onSort: e => this.setState({ sort: e.target.value }),
+      resetFilters: () => this.setState({ q: '', roleF: 'todos', statusF: 'todos', nameF: 'todos' }),
+      toggleAll: () => { const n = {}; if (!allChecked) visibleIds.forEach(id => { n[id] = true; }); this.setState({ sel: n }); },
+      clearSel: () => this.setState({ sel: {} }),
+      bulkRole: e => { const v = e.target.value; if (v) askRole(selIds, v, false); },
+      bulkActivate: () => bulk(() => ({ active: true }), '{n} cuentas activadas'),
+      bulkSuspend: () => {
+        const ids = selIds.filter(id => { const u = users.find(x => x.id === id); return u && !u.self && u.active; });
+        if (!ids.length) { this.toast('Las cuentas elegidas ya están suspendidas'); return; }
+        this.setState({ pendingSuspend: { ids: ids, fromDraft: false, notify: true } });
+      },
+      bulkResend: () => bulk(u => u.status === 'pendiente' ? { code: 'Hace un momento' } : {}, 'Código reenviado a las cuentas pendientes'),
+      cancelDelete: () => this.setState({ confirmId: null }),
+      doDelete: () => {
+        if (!confirmUser0) return;
+        const n = Object.assign({}, sel); delete n[confirmUser0.id];
+        this.setState({ users: users.filter(u => u.id !== confirmUser0.id), confirmId: null, sel: n });
+        this.toast('Cuenta de ' + full(confirmUser0) + ' eliminada');
+      },
+      ps: ps,
+      cancelSuspend: cancelSuspend,
+      confirmSuspend: confirmSuspend,
+      toggleSuspendNotify: () => this.setState({ pendingSuspend: Object.assign({}, ps0, { notify: ps0 ? ps0.notify === false : true }) }),
+      cancelRole: cancelRole,
+      confirmRole: confirmRole,
+      toggleNotify: () => this.setState({ pendingRole: Object.assign({}, pending0, { notify: pending0 ? pending0.notify === false : true }) }),
+      closeEdit: closeEdit
+    }, extra);
+  }
+}
+</script>
+</body>
+</html>
