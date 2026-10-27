@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button, Dialog, Field, Input, MensajeError, Select, Skeleton } from "@/shared/ui";
-import { useDocentesParaElegir, useReasignarCurso } from "../hooks";
-import type { DocenteAdmin } from "../tipos";
+import { Button, Dialog, MensajeError } from "@/shared/ui";
+import { SelectorDocente, type DocenteActividad } from "../externos";
+import { useReasignarCurso } from "../hooks";
 
 export interface CursoPorReasignar {
   id: number;
@@ -9,12 +9,11 @@ export interface CursoPorReasignar {
   estudiantes: number;
   /** null = el curso no tiene docente: se asigna en vez de reasignar (HU-F-518). */
   docenteId: string | null;
+  /** Destino ya decidido (asignar desde el detalle del docente): no se muestra el selector. */
+  destino?: { id: string; nombre: string };
   /** Nombre completo de quien lo tiene hoy; null si no tiene. */
   docente: string | null;
 }
-
-const nombreDe = (d: Pick<DocenteAdmin, "nombre" | "apellido">) =>
-  [d.nombre, d.apellido].filter(Boolean).join(" ");
 
 interface PropsFormulario {
   curso: CursoPorReasignar;
@@ -56,23 +55,12 @@ function ResumenDestino({ curso, destino }: { curso: CursoPorReasignar; destino:
 }
 
 function Formulario({ curso, onCerrar, onHecho }: PropsFormulario) {
-  const { data, isPending, error, refetch } = useDocentesParaElegir();
   const reasignar = useReasignarCurso();
-  const [busqueda, setBusqueda] = useState("");
-  const [elegido, setElegido] = useState("");
-
-  if (isPending) return <Skeleton lineas={3} />;
-  if (error) return <MensajeError mensaje={error.message} onReintentar={() => refetch()} />;
-
-  // El backend solo acepta docentes con la cuenta activa y distintos del actual.
-  const candidatos = data.data.filter(
-    (d) =>
-      d.estado === "activa" &&
-      d.id !== curso.docenteId &&
-      `${nombreDe(d)} ${d.email}`.toLowerCase().includes(busqueda.trim().toLowerCase()),
-  );
-  const destino = data.data.find((d) => d.id === elegido);
-  const resumen = destino ? textoResumen(curso, nombreDe(destino)) : null;
+  const [elegido, setElegido] = useState<DocenteActividad | null>(null);
+  const destino = curso.destino
+    ? { docente_id: curso.destino.id, nombre: curso.destino.nombre }
+    : elegido;
+  const resumen = destino ? textoResumen(curso, destino.nombre) : null;
 
   return (
     <form
@@ -81,7 +69,7 @@ function Formulario({ curso, onCerrar, onHecho }: PropsFormulario) {
         evento.preventDefault();
         if (!destino || !resumen) return;
         reasignar.mutate(
-          { cursoId: curso.id, docenteId: destino.id, resumen },
+          { cursoId: curso.id, docenteId: destino.docente_id, resumen },
           {
             onSuccess: () => {
               onCerrar();
@@ -92,33 +80,14 @@ function Formulario({ curso, onCerrar, onHecho }: PropsFormulario) {
       }}
       className="flex flex-col gap-4"
     >
-      <Field etiqueta="Buscar docente" ayuda="Solo aparecen docentes con la cuenta activa.">
-        {(campo) => (
-          <Input
-            {...campo}
-            type="search"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            autoComplete="off"
-          />
-        )}
-      </Field>
-      <Field etiqueta={curso.docente ? "Nuevo docente" : "Docente"}>
-        {(campo) => (
-          <Select {...campo} value={elegido} onChange={(e) => setElegido(e.target.value)}>
-            <option value="">Elige un docente…</option>
-            {candidatos.map((d) => (
-              <option key={d.id} value={d.id}>
-                {nombreDe(d)} · {d.email}
-              </option>
-            ))}
-          </Select>
-        )}
-      </Field>
-      {candidatos.length === 0 && (
-        <p className="text-sm text-muted">No hay docentes activos con esa búsqueda.</p>
+      {!curso.destino && (
+        <SelectorDocente
+          valor={destino?.docente_id ?? ""}
+          onElegir={setElegido}
+          excluir={curso.docenteId}
+        />
       )}
-      {destino && <ResumenDestino curso={curso} destino={nombreDe(destino)} />}
+      {destino && <ResumenDestino curso={curso} destino={destino.nombre} />}
       {reasignar.error && <MensajeError mensaje={reasignar.error.message} />}
       <div className="flex justify-end gap-3">
         <Button variante="fantasma" onClick={onCerrar}>

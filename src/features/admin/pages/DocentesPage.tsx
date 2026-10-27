@@ -4,7 +4,8 @@ import { EstadoVacio, MensajeError, Skeleton, Tabs } from "@/shared/ui";
 import { TrasteDivider } from "@/shared/music";
 import { FormularioPreautorizar } from "../components/FormularioPreautorizar";
 import { TablaPreautorizaciones } from "../components/TablaPreautorizaciones";
-import { PestanaDocentes } from "../cursos/components/PestanaDocentes";
+import { PestanaDocentes } from "../docentes/components/PestanaDocentes";
+import { ResumenDocentes } from "../docentes/components/ResumenDocentes";
 import { usePreautorizaciones } from "../hooks/usePreautorizaciones";
 
 function Lista() {
@@ -39,6 +40,7 @@ function Preautorizaciones() {
 }
 
 const PESTANAS = [
+  { id: "resumen", etiqueta: "Resumen", contenido: <ResumenDocentes /> },
   { id: "docentes", etiqueta: "Docentes", contenido: <PestanaDocentes /> },
   { id: "preautorizaciones", etiqueta: "Preautorizaciones", contenido: <Preautorizaciones /> },
 ];
@@ -47,12 +49,12 @@ const PESTANAS = [
 export default function DocentesPage() {
   const [parametros, setParametros] = useSearchParams();
   const tab = parametros.get("tab");
-  const activa = PESTANAS.some((p) => p.id === tab) ? (tab ?? "docentes") : "docentes";
+  const activa = PESTANAS.some((p) => p.id === tab) ? (tab ?? "resumen") : "resumen";
 
   return (
     <PaginaAtril
       titulo="Docentes"
-      descripcion="Sus cursos y estudiantes, y la autorización del correo de cada profesor antes de que se registre."
+      descripcion="Quién está activo, qué cursos tiene cada docente, qué hizo en la plataforma y la autorización de su correo antes de registrarse."
     >
       <Tabs
         etiqueta="Secciones de docentes"

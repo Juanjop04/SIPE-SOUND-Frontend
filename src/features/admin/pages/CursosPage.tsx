@@ -52,8 +52,8 @@ export default function CursosPage() {
           <h1 className="font-display text-3xl font-semibold text-paper">Cursos</h1>
           <p className="mt-2 max-w-prose text-sm text-muted">
             Todos los cursos de la plataforma, con sus estudiantes inscritos. Aquí asignas o quitas
-            al docente de un curso, retiras el acceso de una persona sin tocar su progreso y creas cursos
-            con o sin docente.
+            al docente de un curso, retiras el acceso de una persona sin tocar su progreso y creas
+            cursos con o sin docente.
           </p>
         </div>
         <Button onClick={() => setCreando(true)}>Nuevo curso</Button>
